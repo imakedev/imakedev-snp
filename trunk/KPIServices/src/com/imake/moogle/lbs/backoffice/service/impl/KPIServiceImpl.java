@@ -1,5 +1,6 @@
 package com.imake.moogle.lbs.backoffice.service.impl;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.imake.moogle.lbs.backoffice.dto.KPIMaster;
+import com.imake.moogle.lbs.backoffice.dto.KpiResult;
+import com.imake.moogle.lbs.backoffice.dto.Threshold;
 import com.imake.moogle.lbs.backoffice.service.KPIService;
 
 /**
@@ -46,15 +49,18 @@ public class KPIServiceImpl implements KPIService {
 	@SuppressWarnings("unchecked")
 	@Transactional(readOnly = true)
 	@Override
-	public List<Integer> listYear() {
+	public List<Integer> listYear(String query) {
 		// TODO Auto-generated method stub
+		
 		List<Integer> list =null;
 		try{
 		
 		 list = this.sessionAnnotationFactory
 				.getCurrentSession()
 				.createSQLQuery(
-						"SELECT distinct result.year FROM "+SCHEMA+".employee_result result order by result.year desc ")
+						query
+						//"SELECT distinct result.year FROM "+SCHEMA+".employee_result result order by result.year desc "
+						)
 						
 				.list();
 		}catch (Exception e) {
@@ -70,6 +76,8 @@ public class KPIServiceImpl implements KPIService {
 	public List<KPIMaster> listMaster(String query) {
 		// TODO Auto-generated method stub
 		List<KPIMaster> master =null;
+		/*List<KPIMaster>  xx=this.sessionAnnotationFactory
+		.getCurrentSession().createQuery("select from KPIMaster").list();*/
 		try{
 		    List result= this.sessionAnnotationFactory
 				.getCurrentSession()
@@ -77,10 +85,17 @@ public class KPIServiceImpl implements KPIService {
 		    if(result!=null && result.size()>0){
 		    	int size=result.size();
 		    	master=new ArrayList<KPIMaster>(size);
+		    	String id="";
 		    	for (int i = 0; i < size; i++) {
 		    		KPIMaster kpiMaster =new KPIMaster();
 		    		Object obj[] =(Object[])result.get(i);
-		    		kpiMaster.setId((String)obj[0]);
+		    		
+		    		 if (obj[0] instanceof Integer) {
+		    			 Integer idObj = (Integer) obj[0];
+						id=idObj.intValue()+"";
+					 }else
+						id=(String)obj[0]; 
+		    		kpiMaster.setId(id);
 		    		kpiMaster.setName((String)obj[1]);
 		    		master.add(kpiMaster);
 				}
@@ -174,6 +189,245 @@ public class KPIServiceImpl implements KPIService {
 			return returnId;
 			
    	 }
+
+	@Transactional(readOnly=true)
+	@Override
+	public List<KpiResult> searchKPI(Integer year, Integer periodNo,
+			String employeeCode, String etl_flag, String approved_flag) {
+
+		// TODO Auto-generated method stub
+		List<com.imake.moogle.lbs.backoffice.dto.KpiResult> kpiResult =null;
+		try{
+			String query ="select result.year,result.period_no,p.period_desc,result.employee_code" +
+					"	,concat(em.employee_name,' ',em.employee_surname) as emp_name , result.kpi_code ,kpi.kpi_name " +
+					"  ,result.target_score,result.actual_score from "+SCHEMA+".kpi_result result left join "+SCHEMA+".kpi kpi " +
+					" on result.kpi_code=kpi.kpi_code left join	"+SCHEMA+".employee em on result.employee_code=em.employee_code  left join "+SCHEMA+".period p  on" +
+					" (result.period_no=p.period_no and result.year =p.year) where kpi.etl_flag='"+etl_flag.trim()+"'" +
+					" and result.approved_flag = '"+approved_flag.trim()+"' and result.year="+year.intValue()+" and result.period_no="+periodNo.intValue()+" and em.employee_code='"+employeeCode+"' " +
+					"";
+			
+		    List result= this.sessionAnnotationFactory
+				.getCurrentSession()
+				.createSQLQuery(query).list();
+		    if(result!=null && result.size()>0){
+		    	int size=result.size();
+		    	kpiResult=new ArrayList<com.imake.moogle.lbs.backoffice.dto.KpiResult>(size);
+		    	for (int i = 0; i < size; i++) {
+		    		com.imake.moogle.lbs.backoffice.dto.KpiResult kpi =new com.imake.moogle.lbs.backoffice.dto.KpiResult();
+		    		Object obj[] =(Object[])result.get(i);
+		    		kpi.setYear(obj[0]!=null?(Integer)obj[0]:null);
+		    		kpi.setPeriodNo(obj[1]!=null?(Integer)obj[1]:null);
+		    		kpi.setPeriodDesc(obj[2]!=null?(String)obj[2]:null);
+		    		kpi.setEmployeeCode(obj[3]!=null?(String)obj[3]:null);
+		    		kpi.setEmpName(obj[4]!=null?(String)obj[4]:null);
+		    		kpi.setKpiCode(obj[5]!=null?(String)obj[5]:null);
+		    		kpi.setKpiName(obj[6]!=null?(String)obj[6]:null);
+		    		kpi.setTargetScore(obj[7]!=null?(BigDecimal)obj[7]:null);
+		    		kpi.setActualScore(obj[8]!=null?(BigDecimal)obj[8]:null);
+		    		
+		    		kpiResult.add(kpi);
+				}
+		    	 
+		    }
+		}catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	//	System.out.println("listYear ="+list);
+		return kpiResult;
+	
+	}
+	@Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor={RuntimeException.class})
+	@Override
+	public int approveKPIResult(Integer[] year, Integer[] periodNo,
+			String[] employeeCode, String[] kpiCode, String approved_flag) {
+		// TODO Auto-generated method stub
+		Session session=sessionAnnotationFactory.getCurrentSession();
+		int returnId=0;
+	try{
+		StringBuffer sb =new StringBuffer();
+		if(employeeCode!=null && employeeCode.length>0){
+			int size= employeeCode.length; 
+			for (int i = 0; i < size; i++) {
+				sb.setLength(0); 
+				sb.append("update "+SCHEMA+".kpi_result set approved_flag=:approved_flag  " + 
+						",updated_dt=now()" +
+						" where year="+year[i]+" and period_no="+periodNo[i] +
+						"	and employee_code='"+employeeCode[i]+"'" +
+						"	and kpi_code='"+kpiCode[i]+"'");
+			Query	query= session.createSQLQuery(sb.toString());
+				query.setParameter("approved_flag", approved_flag); 
+				returnId=query.executeUpdate();
+			}
+		}
+		
+	}catch(Exception e){
+		e.printStackTrace();
+	}finally{
+		if (session != null) {
+			session = null;
+		} 
+	}
+			return returnId;
+	}
+
+	@Override
+	public List<Threshold> searchThreshold(String thresholdName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor={RuntimeException.class})
+	@Override
+	public int updateThreshold(Threshold threshold) {
+		// TODO Auto-generated method stub
+		Session session=sessionAnnotationFactory.getCurrentSession();
+		int returnId=0;
+		try{
+			session.update(threshold);
+			returnId=1;
+		}catch (Exception e) {
+			// TODO: handle exception 
+			e.printStackTrace();
+		}finally{
+			if (session != null) {
+				session = null;
+			} 
+		}
+		return returnId;
+	}
+		@Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor={RuntimeException.class})
+	@Override
+	public int deleteThreshold(Threshold threshold) {
+		// TODO Auto-generated method stub
+			Session session=sessionAnnotationFactory.getCurrentSession();
+			int returnId=0;
+			try{
+				session.delete(threshold);
+				returnId=1;
+			}catch (Exception e) {
+				// TODO: handle exception 
+				e.printStackTrace();
+			}finally{
+				if (session != null) {
+					session = null;
+				} 
+			}
+			return returnId;
+	}
+		@Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor={RuntimeException.class})
+	@Override
+	public int updateObject(Object threshold) {
+		// TODO Auto-generated method stub
+			Session session=sessionAnnotationFactory.getCurrentSession();
+			int returnId=0;
+			try{
+				session.update(threshold);
+				returnId=1;
+			}catch (Exception e) {
+				// TODO: handle exception 
+				e.printStackTrace();
+			}finally{
+				if (session != null) {
+					session = null;
+				} 
+			}
+			return returnId;
+	}
+		@Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor={RuntimeException.class})
+	@Override
+	public int deleteObject(Object threshold) {
+		// TODO Auto-generated method stub
+			Session session=sessionAnnotationFactory.getCurrentSession();
+			int returnId=0;
+			try{
+				session.delete(threshold);
+				returnId=1;
+			}catch (Exception e) {
+				// TODO: handle exception 
+				e.printStackTrace();
+			}finally{
+				if (session != null) {
+					session = null;
+				} 
+			}
+			return returnId;
+	}
+
+		@Override
+		public com.imake.moogle.lbs.backoffice.dto.Threshold findThresholdById(Threshold threshold,Serializable id) {
+			// TODO Auto-generated method stub
+			Session session=sessionAnnotationFactory.getCurrentSession();
+			com.imake.moogle.lbs.backoffice.dto.Threshold threshold_return=null;
+			try{
+				threshold_return=(com.imake.moogle.lbs.backoffice.dto.Threshold)session.get(threshold.getClass(),id); 
+			}catch (Exception e) {
+				// TODO: handle exception 
+				e.printStackTrace();
+			}finally{
+				if (session != null) {
+					session = null;
+				} 
+			}
+			//System.out.println(threshold_return+"xxxxxxxxxxxxxxxxx");
+			return threshold_return;
+		}
+
+		@Override
+		public Object findById(Object obj,Serializable id) {
+			// TODO Auto-generated method stub
+			Session session=sessionAnnotationFactory.getCurrentSession();
+			Object obj_return=null;
+			try{
+				obj_return=session.get(obj.getClass(), id); 
+			}catch (Exception e) {
+				// TODO: handle exception 
+				e.printStackTrace();
+			}finally{
+				if (session != null) {
+					session = null;
+				} 
+			}
+			return obj_return;
+		}
+		@Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor={RuntimeException.class})
+		@Override
+		public int saveThreshold(Threshold threshold) {
+			// TODO Auto-generated method stub
+			Session session=sessionAnnotationFactory.getCurrentSession();
+			int returnId=0;
+			try{
+				Serializable id =session.save(threshold);
+				System.err.println(id+"xxxxxxxxxxxxxxxxxxx");
+				returnId=1;
+			}catch (Exception e) {
+				// TODO: handle exception 
+				e.printStackTrace();
+			}finally{
+				if (session != null) {
+					session = null;
+				} 
+			}
+			return returnId;
+		}
+		@Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor={RuntimeException.class})
+		@Override
+		public int saveObject(Object threshold) {
+			// TODO Auto-generated method stub
+			Session session=sessionAnnotationFactory.getCurrentSession();
+			int returnId=0;
+			try{
+				session.save(threshold);
+				returnId=1;
+			}catch (Exception e) {
+				// TODO: handle exception 
+				e.printStackTrace();
+			}finally{
+				if (session != null) {
+					session = null;
+				} 
+			}
+			return returnId;
+		}
 	 
 	 
 }
