@@ -4,34 +4,23 @@
 <html> 
 <head>
 <title>BackOffice</title>
- <meta charset="UTF-8" />  
-<%-- <link rel="icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon" />
-<link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon" /> 
-  <script  src="<c:url value='/resources/js/jquery-1.8.3.min.js'/>" type="text/javascript"></script> 
-<script type="text/javascript" src="<c:url value='/resources/js/smoothness/jquery-ui-1.9.1.custom.min.js'/>"></script>
- <script type="text/javascript" src="<c:url value='/resources/ckeditor/ckeditor.js'/>"></script>
-<script src="<c:url value='/resources/bootstrap/js/bootstrap.min.js'/>" type="text/javascript"></script>
-<link href="<c:url value='/resources/css/smoothness/jquery-ui-1.9.1.custom.css'/>" type="text/css"  rel="stylesheet" /> 
-<link href="<c:url value='/resources/bootstrap/css/bootstrap.min.css'/>" rel="stylesheet"  type="text/css"/> 
-
-  <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/demo.css'/>" />
-        <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/style3.css'/>" />
-		<link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/animate-custom.css'/>" />
---%>
+ <meta charset="UTF-8" />   
    <script  src="../resources/js/jquery-1.8.3.min.js" type="text/javascript"></script> 
 <script type="text/javascript" src="../resources/js/smoothness/jquery-ui-1.9.2.custom.min.js"></script>
  <script type="text/javascript" src="../resources/ckeditor/ckeditor.js"></script>
 <script src="../resources/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 <link href="../resources/css/smoothness/jquery-ui-1.9.2.custom.css" type="text/css"  rel="stylesheet" /> 
 <link href="../resources/bootstrap/css/bootstrap.min.css" rel="stylesheet"  type="text/css"/> 
-
-<!-- <script src="../resources/js/jquery.colorpicker.js"></script>
-<link href="../resources/css/jquery.colorpicker.css" rel="stylesheet" type="text/css"/>
-<script src="../resources/i18n/jquery.ui.colorpicker-en.js"></script>
-
-<script src="../resources/js/bootstrap-colorpicker.js"></script>
-<link href="../resources/css/colorpicker.css" rel="stylesheet"> -->
-
+ 
+  <!-- 
+	DWR
+	-->
+	<script type="text/javascript"
+        	src="<%=request.getContextPath() %>/dwr/interface/KPIAjax.js"></script>
+	<script type="text/javascript"
+        	src="<%=request.getContextPath() %>/dwr/engine.js"></script> 
+	<script type="text/javascript"
+        	src="<%=request.getContextPath() %>/dwr/util.js"></script>
   <link rel="stylesheet" media="screen" type="text/css" href="../resources/css/colorpicker.css" />
     <script src="../resources/js/colorpicker.js"></script>
 		
@@ -66,6 +55,7 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
 } 
 </style> -->  
 <script type="text/javascript">
+var SCHEMA_G='FSD2';
 var _path='<%=request.getContextPath()%>'+'/'; 
 var mail_toG;
 var mail_subjectG;
@@ -214,7 +204,8 @@ function openMailDialog(todo_id,todo_ref){
          </span> -->
      	</div>
      	<!-- <div class="span7"> -->
-     	<div id="_content" class="span7" style="margin-left:20px;padding-top: 3px">
+     	<!-- <div id="_content" class="span7" style="margin-left:20px;padding-top: 3px"> -->
+     	<div id="_content" class="span7" style="margin-left:20px;padding-top: 3px;">
       	
       	</div>
      	<!-- </div> -->
