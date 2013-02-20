@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -26,12 +25,12 @@ import com.imake.moogle.lbs.backoffice.service.KPIService;
 public class KPIServiceImpl implements KPIService {
 
 	private SessionFactory sessionAnnotationFactory;
-	private static String SCHEMA="FSD";
+	/*private static String SCHEMA="FSD";
 	private static final  ResourceBundle myResources =
 		      ResourceBundle.getBundle("jdbc"); 
 	static{
 		SCHEMA=myResources.getString("SCHEMA");
-	}
+	}*/
 	/*
 	 * @Autowired public BalanceScorecardServiceImpl(SessionFactory
 	 * sessionAnnotationFactory) { this.sessionAnnotationFactory =
@@ -111,21 +110,75 @@ public class KPIServiceImpl implements KPIService {
 
 	@Transactional(readOnly=true)
 	@Override
-	public List<com.imake.moogle.lbs.backoffice.dto.EmployeeResult> searchEmployeeResult(Integer year,Integer periodNo,String employeeCode) {
+	public List<com.imake.moogle.lbs.backoffice.dto.EmployeeResult> searchEmployeeResult(String SCHEMA,String year,String periodNo,
+			String departmentCode,String positionCode,String employeeCode,String employeeName) {
+	//public List<com.imake.moogle.lbs.backoffice.dto.EmployeeResult> searchEmployeeResult(Integer year,Integer periodNo,String employeeCode) {
 		// TODO Auto-generated method stub
 		List<com.imake.moogle.lbs.backoffice.dto.EmployeeResult> employeeResult =null;
+		StringBuffer sb=new StringBuffer(" select em_result.period_no,p.period_desc,em_result.employee_code," +
+				" concat(em.employee_name,' ',em.employee_surname) as emp_name ,em_result.weight_percentage," +
+				" em_result.adjust_percentage,em_result.adjustment_reason" +
+				" ,em_result.final_percentage ,em_result.year  from "+SCHEMA+".employee_result  em_result inner join " +
+				" "+SCHEMA+".employee em on em_result.employee_code=em.employee_code inner join "+SCHEMA+".period p  on" +
+				" (em_result.period_no=p.period_no and em_result.year =p.year) ");
+		boolean haveWhere=false;
+		if(!year.equalsIgnoreCase("all")){
+			if(haveWhere)
+				sb.append(" and em_result.year="+year.trim());
+			else
+				sb.append(" where em_result.year="+year.trim());
+			haveWhere=true;
+		}
+		if(!employeeCode.equalsIgnoreCase("all")  &&  employeeCode.trim().length()>0){
+			if(haveWhere)
+				sb.append(" and em_result.employee_code='"+employeeCode+"' " );
+			else
+				sb.append(" where em_result.employee_code='"+employeeCode+"' ");
+			haveWhere=true;
+		}
+		if(employeeName!=null &&  employeeName.trim().length()>0){ 
+			if(haveWhere)
+				sb.append(" and  concat(em.employee_name,' ',em.employee_surname)='"+employeeName+"' " );
+			else
+				sb.append(" where concat(em.employee_name,' ',em.employee_surname)='"+employeeName+"' ");
+			haveWhere=true;
+		}
+		if(!departmentCode.equalsIgnoreCase("all") &&  departmentCode.trim().length()>0){
+			if(haveWhere)
+				sb.append(" and em.department_code='"+departmentCode+"' " );
+			else
+				sb.append(" where em.department_code='"+departmentCode+"' ");
+			haveWhere=true;
+		}
+		/*if(!positionCode.equalsIgnoreCase("all")){
+			if(haveWhere)
+				sb.append(" and em.position_code='"+positionCode+"' " );
+			else
+				sb.append(" where em.position_code='"+positionCode+"' ");
+			haveWhere=true;
+		}*/
+		if(!positionCode.equalsIgnoreCase("All")){
+			if(haveWhere)
+				sb.append(" and em.position_name='"+positionCode+"' " );
+			else
+				sb.append(" where em.position_name='"+positionCode+"' ");
+			haveWhere=true;
+		}
+		sb.append(" order by  em_result.period_no asc ");
+		System.out.println("Query -->"+sb.toString());
 		try{
-			String query =" select em_result.period_no,p.period_desc,em_result.employee_code," +
+			/*String query =" select em_result.period_no,p.period_desc,em_result.employee_code," +
 					" concat(em.employee_name,' ',em.employee_surname) as emp_name ,em_result.weight_percentage," +
 					" em_result.adjust_percentage,em_result.adjustment_reason" +
-					" ,em_result.final_percentage ,em_result.year  from "+SCHEMA+".employee_result  em_result left join " +
-					" "+SCHEMA+".employee em on em_result.employee_code=em.employee_code left join "+SCHEMA+".period p  on" +
+					" ,em_result.final_percentage ,em_result.year  from "+SCHEMA+".employee_result  em_result inner join " +
+					" "+SCHEMA+".employee em on em_result.employee_code=em.employee_code inner join "+SCHEMA+".period p  on" +
 					" (em_result.period_no=p.period_no and em_result.year =p.year) where" +
-					" em_result.year="+year.intValue()+" and em_result.employee_code='"+employeeCode+"' order by  em_result.period_no asc ";
+					" em_result.year="+year.intValue()+" and em_result.employee_code='"+employeeCode+"' order by  em_result.period_no asc ";*/
 				 
 		    List result= this.sessionAnnotationFactory
 				.getCurrentSession()
-				.createSQLQuery(query).list();
+				.createSQLQuery(sb.toString()).list();
+		    //if(false)
 		    if(result!=null && result.size()>0){
 		    	int size=result.size();
 		    	employeeResult=new ArrayList<com.imake.moogle.lbs.backoffice.dto.EmployeeResult>(size);
@@ -144,8 +197,8 @@ public class KPIServiceImpl implements KPIService {
 		    		
 		    		employeeResult.add(emp);
 				}
-		    	 
-		    }
+		      } 
+
 		}catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -155,7 +208,7 @@ public class KPIServiceImpl implements KPIService {
 	}
 	@Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor={RuntimeException.class})
 	@Override
-	public int updateAdjustPercentage(BigDecimal[] adjustPercentage,BigDecimal[] finalPercentage,
+	public int updateAdjustPercentage(String SCHEMA,BigDecimal[] adjustPercentage,BigDecimal[] finalPercentage,
 			Integer[] year, Integer[] periodNo, String[] employeeCode,String[] reason) {
 		// TODO Auto-generated method stub
 		Session session=sessionAnnotationFactory.getCurrentSession();
@@ -172,9 +225,11 @@ public class KPIServiceImpl implements KPIService {
 						" where year="+year[i]+" and period_no="+periodNo[i] +
 						"	and employee_code='"+employeeCode[i]+"'" );
 			Query	query= session.createSQLQuery(sb.toString());
-				query.setParameter("reason", reason[i]);
+				 query.setParameter("reason", reason[i]);
+			//query.setParameter("reason", "ทดสอบ");
 				query.setParameter("adjust_percentage", adjustPercentage[i]);
 				query.setParameter("final_percentage", finalPercentage[i]);
+				//System.out.println("ทดสอบ ==>"+reason[i]); 
 				returnId=query.executeUpdate();
 			}
 		}
@@ -192,7 +247,7 @@ public class KPIServiceImpl implements KPIService {
 
 	@Transactional(readOnly=true)
 	@Override
-	public List<KpiResult> searchKPI(Integer year, Integer periodNo,
+	public List<KpiResult> searchKPI(String SCHEMA,Integer year, Integer periodNo,
 			String employeeCode, String etl_flag, String approved_flag) {
 
 		// TODO Auto-generated method stub
@@ -200,8 +255,8 @@ public class KPIServiceImpl implements KPIService {
 		try{
 			String query ="select result.year,result.period_no,p.period_desc,result.employee_code" +
 					"	,concat(em.employee_name,' ',em.employee_surname) as emp_name , result.kpi_code ,kpi.kpi_name " +
-					"  ,result.target_score,result.actual_score from "+SCHEMA+".kpi_result result left join "+SCHEMA+".kpi kpi " +
-					" on result.kpi_code=kpi.kpi_code left join	"+SCHEMA+".employee em on result.employee_code=em.employee_code  left join "+SCHEMA+".period p  on" +
+					"  ,result.target_score,result.actual_score from "+SCHEMA+".kpi_result result inner join "+SCHEMA+".kpi kpi " +
+					" on result.kpi_code=kpi.kpi_code inner join	"+SCHEMA+".employee em on result.employee_code=em.employee_code  inner join "+SCHEMA+".period p  on" +
 					" (result.period_no=p.period_no and result.year =p.year) where kpi.etl_flag='"+etl_flag.trim()+"'" +
 					" and result.approved_flag = '"+approved_flag.trim()+"' and result.year="+year.intValue()+" and result.period_no="+periodNo.intValue()+" and em.employee_code='"+employeeCode+"' " +
 					"";
@@ -239,7 +294,7 @@ public class KPIServiceImpl implements KPIService {
 	}
 	@Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor={RuntimeException.class})
 	@Override
-	public int approveKPIResult(Integer[] year, Integer[] periodNo,
+	public int approveKPIResult(String SCHEMA,Integer[] year, Integer[] periodNo,
 			String[] employeeCode, String[] kpiCode, String approved_flag) {
 		// TODO Auto-generated method stub
 		Session session=sessionAnnotationFactory.getCurrentSession();
@@ -428,6 +483,106 @@ public class KPIServiceImpl implements KPIService {
 			}
 			return returnId;
 		}
-	 
+		
+		@Transactional(readOnly=true)
+		@Override
+		public List  searchObject(String query) {
+			// TODO Auto-generated method stub
+		//	List resultObject =null;
+			try{ 
+			    List result= this.sessionAnnotationFactory
+					.getCurrentSession()
+					.createSQLQuery(query).list();
+			    if(result!=null && result.size()>0){ 
+			    	return result;
+			    	//	Object obj[] =(Object[])result.get(i); 
+			    }
+			}catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			} 
+			return null;
+		}
+		@Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor={RuntimeException.class})
+		@Override
+		public int executeQuery(String str) {
+			// TODO Auto-generated method stub
+			Session session=sessionAnnotationFactory.getCurrentSession();
+			int returnId=0;
+		try{ 
+				Query	query= session.createSQLQuery(str.toString()); 
+				 returnId=query.executeUpdate(); 
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if (session != null) {
+				session = null;
+			} 
+		}
+				return returnId;
+		}
+
+		@Override
+		public int assignKPI(String SCHEMA, String query, Integer year,
+				Integer periodNo, String[] kpiCodes,String[] kpiOrders,String[] kpiWeight,String[] targetData,String[] targetScore, String approved_flag) {
+			// TODO Auto-generated method stub
+			
+			Session session=sessionAnnotationFactory.getCurrentSession();
+		int returnId=0;
+		int returnIdAll=0;
+		try{
+			StringBuffer sb =new StringBuffer();
+			Query sqlQuery= session.createSQLQuery(query);
+			List result=sqlQuery.list();
+			int size=result.size();
+	    	// master=new ArrayList<KPIMaster>(size);
+	    	String[] ids=new String[size];
+	    	for (int i = 0; i < size; i++) {
+	    		Object obj[] =(Object[])result.get(i);
+	    		ids[i]=(String)obj[0]; 
+			} 
+	    	for (int i = 0; i < ids.length; i++) {
+	    		for (int j = 0; j < kpiCodes.length; j++) {
+	    			sb.setLength(0); 
+	    			sb.append(" select count(*) from "+SCHEMA+".kpi_result  where year= "+year+" and period_no="+periodNo+" and employee_code='"+ids[i]+"' and " +
+		    				" kpi_code='"+kpiCodes[j]+"'");
+	    			sqlQuery=session.createSQLQuery(sb.toString());
+	    			java.math.BigInteger count=(java.math.BigInteger)sqlQuery.uniqueResult(); 
+    				sb.setLength(0); 
+	    			if(count.intValue()>0){ //update 
+						sb.append("update "+SCHEMA+".kpi_result set approved_flag=:approved_flag  " + 
+								",updated_dt=now()" +
+								" where year="+year+" and period_no="+periodNo +
+								"	and employee_code='"+ids[i]+"'" +
+								"	and kpi_code='"+kpiCodes[j]+"'");
+						sqlQuery= session.createSQLQuery(sb.toString());
+						sqlQuery.setParameter("approved_flag", approved_flag); 
+						returnId=sqlQuery.executeUpdate();
+						returnIdAll=returnIdAll+returnId;
+	    			}else{//save
+	    				 //String[] kpiCodes,String[] kpiOrders,String[] kpiWeight,String[] targetData,String[] targetScore, String approved_flag) {
+	    						
+	    				sb.append("insert into "+SCHEMA+".kpi_result set approved_flag=:approved_flag ,kpi_order="+kpiOrders[j]+",kpi_weight="+kpiWeight[j]+",target_data='"+targetData[j]+"',target_score="+targetScore[j]+", created_dt=now(),updated_dt=now()"+
+	    						",year="+year+",period_no="+periodNo+",employee_code='"+ids[i]+"',kpi_code='"+kpiCodes[j]+"'");
+	    				 
+						sqlQuery= session.createSQLQuery(sb.toString());
+						sqlQuery.setParameter("approved_flag", approved_flag); 
+						returnId=sqlQuery.executeUpdate();
+						returnIdAll=returnIdAll+returnId;
+	    			}
+				} 
+			}
+	    	 
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if (session != null) {
+				session = null;
+			} 
+		}
+				return returnIdAll;
+		}
+		 
 	 
 }
