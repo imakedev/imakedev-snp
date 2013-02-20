@@ -9,15 +9,17 @@ import com.imake.moogle.lbs.backoffice.dto.KPIMaster;
 public interface KPIService {
 	public List<Integer> listYear(String query);
 	public List<KPIMaster> listMaster(String query); 
-	public List<com.imake.moogle.lbs.backoffice.dto.EmployeeResult> searchEmployeeResult(Integer year,Integer periodNo,String employeeCode);	 
+	//public List<com.imake.moogle.lbs.backoffice.dto.EmployeeResult> searchEmployeeResult(Integer year,Integer periodNo,String employeeCode);
+	public List<com.imake.moogle.lbs.backoffice.dto.EmployeeResult> searchEmployeeResult(String SCHEMA,String year,String periodNo,
+			String departmentCode,String positionCode,String employeeCode,String employeeName);
 	
-	public int updateAdjustPercentage(BigDecimal[] adjustPercentage,BigDecimal[] finalPercentage,
+	public int updateAdjustPercentage(String SCHEMA,BigDecimal[] adjustPercentage,BigDecimal[] finalPercentage,
 			Integer[] year, Integer[] periodNo, String[] employeeCode,String[] reason);
 	
 	
 	public List<com.imake.moogle.lbs.backoffice.dto.KpiResult> searchKPI(
-			Integer year,Integer periodNo,String employeeCode,String etl_flag,String approved_flag);
-	public int approveKPIResult(Integer[] year, Integer[] periodNo, String[] employeeCode,String[] kpiCode,String approved_flag);
+			String SCHEMA,Integer year,Integer periodNo,String employeeCode,String etl_flag,String approved_flag);
+	public int approveKPIResult(String SCHEMA,Integer[] year, Integer[] periodNo, String[] employeeCode,String[] kpiCode,String approved_flag);
 	
 	//Threshold
 	public List<com.imake.moogle.lbs.backoffice.dto.Threshold> searchThreshold(
@@ -31,6 +33,13 @@ public interface KPIService {
 	public int deleteObject(Object threshold);
 	public Object findById(Object threshold,Serializable id);
 	public int saveObject(Object threshold);
+	
+	//search
+	public List searchObject(String query);
+	public int executeQuery(String query);
+	public int assignKPI(String SCHEMA, String query, Integer year,
+			Integer periodNo, String[] kpiCodes,String[] kpiOrders,String[] kpiWeight,String[] targetData,String[] targetScore, String approved_flag) ;
+	 
 	
 	//public List<com.imake.moogle.lbs.backoffice.dto.KpiResult> searchApproveKPI(Integer year,Integer periodNo,String employeeCode);
 }
