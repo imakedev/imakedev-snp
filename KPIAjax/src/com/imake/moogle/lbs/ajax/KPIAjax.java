@@ -42,26 +42,29 @@ public class KPIAjax {
 	public List<KPIMaster> listMaster(String query){
 		return kpiService.listMaster(query);
 	}
-	public List<com.imake.moogle.lbs.backoffice.dto.EmployeeResult> searchEmployeeResult(Integer year,Integer periodNo,String employeeCode){
+	/*public List<com.imake.moogle.lbs.backoffice.dto.EmployeeResult> searchEmployeeResult(Integer year,Integer periodNo,String employeeCode){
 		return kpiService.searchEmployeeResult(year, periodNo, employeeCode);
-	}	 
-	public int updateAdjustPercentage(BigDecimal[] adjustPercentage,BigDecimal[] finalPercentage,
+	}*/
+	public List<com.imake.moogle.lbs.backoffice.dto.EmployeeResult> searchEmployeeResult(String SCHEMA,String year,String periodNo,String departmentCode,String positionCode,String employeeCode,String employeeName){
+		return kpiService.searchEmployeeResult(  SCHEMA,year, periodNo,departmentCode,positionCode, employeeCode, employeeName);
+	}
+	public int updateAdjustPercentage(String SCHEMA,BigDecimal[] adjustPercentage,BigDecimal[] finalPercentage,
 			Integer[] year, Integer[] periodNo, String[] employeeCode,String[] reason){
 		try{
-		return kpiService.updateAdjustPercentage(adjustPercentage, finalPercentage, year, periodNo, employeeCode,reason );
+		return kpiService.updateAdjustPercentage(SCHEMA,adjustPercentage, finalPercentage, year, periodNo, employeeCode,reason );
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		return 0;
 	}
 	
-	public List<com.imake.moogle.lbs.backoffice.dto.KpiResult> searchKPI(
+	public List<com.imake.moogle.lbs.backoffice.dto.KpiResult> searchKPI(String SCHEMA,
 			Integer year,Integer periodNo,String employeeCode,String etl_flag,String approved_flag){
-		return kpiService.searchKPI(year,  periodNo,employeeCode, etl_flag, approved_flag);
+		return kpiService.searchKPI(SCHEMA,year,  periodNo,employeeCode, etl_flag, approved_flag);
 	} 
-	public int approveKPIResult(Integer[] year, Integer[] periodNo, String[] employeeCode,String[] kpiCode,String approved_flag){
+	public int approveKPIResult(String SCHEMA,Integer[] year, Integer[] periodNo, String[] employeeCode,String[] kpiCode,String approved_flag){
 		try{
-		return kpiService.approveKPIResult( year, periodNo, employeeCode,kpiCode ,approved_flag);
+		return kpiService.approveKPIResult(SCHEMA, year, periodNo, employeeCode,kpiCode ,approved_flag);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -96,5 +99,21 @@ public class KPIAjax {
 		}
 		public int saveObject(Object threshold){
 			return kpiService.saveObject(threshold);
+		}
+		public List searchObject(String query){
+			return kpiService.searchObject(query);
+		}
+		public int executeQuery(String query){
+			return kpiService.executeQuery(query);
+		}
+		public int assignKPI(String SCHEMA, String query, Integer year,
+				Integer periodNo, String[] kpiCodes,String[] kpiOrders,String[] kpiWeight,String[] targetData,String[] targetScore, String approved_flag) {
+		
+			try{
+			return kpiService.assignKPI(SCHEMA, query,year, periodNo, kpiCodes,kpiOrders,kpiWeight,targetData,targetScore,approved_flag);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			return 0;
 		}
 }
