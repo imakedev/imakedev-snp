@@ -5,12 +5,12 @@
 <title>BackOffice</title>
 <!--  <meta charset="UTF-8" />   --> 
  <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-   <script  src="<%=request.getContextPath() %>/resources/js/jquery-1.8.3.min.js" type="text/javascript"></script> 
-<script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/smoothness/jquery-ui-1.9.2.custom.min.js"></script>
- <script type="text/javascript" src="<%=request.getContextPath() %>/resources/ckeditor/ckeditor.js"></script>
-<script src="<%=request.getContextPath() %>/resources/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-<link href="<%=request.getContextPath() %>/resources/css/smoothness/jquery-ui-1.9.2.custom.css" type="text/css"  rel="stylesheet" /> 
-<link href="<%=request.getContextPath() %>/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet"  type="text/css"/>   
+   <script  src="../resources/js/jquery-1.8.3.min.js" type="text/javascript"></script> 
+<script type="text/javascript" src="../resources/js/smoothness/jquery-ui-1.9.2.custom.min.js"></script>
+ <script type="text/javascript" src="../resources/ckeditor/ckeditor.js"></script>
+<script src="../resources/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<link href="../resources/css/smoothness/jquery-ui-1.9.2.custom.css" type="text/css"  rel="stylesheet" /> 
+<link href="../resources/bootstrap/css/bootstrap.min.css" rel="stylesheet"  type="text/css"/>  
  <!-- 
 	DWR
 	-->
@@ -19,8 +19,7 @@
 	<script type="text/javascript"
         	src="<%=request.getContextPath() %>/dwr/engine.js"></script> 
 	<script type="text/javascript"
-        	src="<%=request.getContextPath() %>/dwr/util.js"></script>  
-
+        	src="<%=request.getContextPath() %>/dwr/util.js"></script> 
 <style>
 .ui-widget { font-family: Trebuchet MS, Tahoma, Verdana,
  Arial, sans-serif; font-size: 12px; }
@@ -36,23 +35,17 @@ font-size: 12px;
 font-weight: normal;
 line-height: normal;
 }
- form {
-margin: 0 0 0px;
-}
+ 
  </style>
 <style type="text/css"> 
 .th_class{text-align: center;
 }
-a{cursor: pointer;} 
-  .ui-autocomplete-loading {
-    background: white url('<%=request.getContextPath() %>/resources/css/smoothness/images/ui-anim_basic_16x16.gif') right center no-repeat;
-  } 
-  #city { width: 140px; }
-</style>  
+a{cursor: pointer;}
+</style> 
 </head> 
 <body>   
      	<div id="_content" style="margin-left:3px;padding-top: 3px;width: 1100px">  
-	<table style="width: 1100px;"><tr><td>
+	<table style="width: 1100px;position:fixed;z-index: 1030"><tr><td>
 	<form class="form-inline"  style="border:1px solid #B3D2EE;background: #F9F9F9;padding-top:20px;padding-bottom:15px" action="" method="post" > 
    <div style="padding-left:20px">
      Year:
@@ -72,15 +65,11 @@ a{cursor: pointer;}
    <span style="padding-left:10px;">
     Employee:
     </span>
-    <span>  
-     <input type="hidden" id="employeeElement" />
-     <input type="text" id="employeeSelection" />
+    <span   id="employeeSelection">  
     </span>  
     <span style="padding-left:20px;">
-    	<a class="btn btn-primary" style="font-size:12px" onclick="distplayEmployee()"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Search</span></a>
+    	<a class="btn" style="font-size:12px" onclick="distplayEmployee()">Search</a>
     </span>
-   <!--  <span> <input id="city" /></span> -->
-   
     </div>
     
 </form>
@@ -90,23 +79,24 @@ a{cursor: pointer;}
  </div> 
 <!-- <div id="dialog-Message" style="margin-top:-15px; display: none;height: 200px; overflow: auto;overflow-x:hidden" > -->
 <!-- <div id="dialog-Message" style="margin-top:-15px; display: none;height: 450px; overflow: auto;overflow-x:scroll;overflow-y:scroll" > -->
-<div id="dialog-Message" style="display: none;width: 1098px;padding-left: 4px;">
-<!-- <table style="width: 1100px"> -->
-<table style="border:1px solid #B3D2EE;background: #F9F9F9;width: 1098px"> 
+<div style="padding-top: 75;">
+<table style="width: 1100px">
 	<tr>
-		<td> 
-<div style="display: block;padding-left: 3px;width: 1088px" >
-<!-- <form     style="border:1px solid #B3D2EE;background: #F9F9F9;padding-top:0px;padding-bottom:8px;width: 1000px" action="" method="post" > -->
+		<td>
+<!-- <div id="dialog-Message" style="margin-top:-15px; display: none;height: 450px;" > --> 
+<!-- <div id="dialog-Message" style="display: none;padding-top: 75;padding-left: 3px;width: 1098px" > -->
+<div id="dialog-Message" style="display: none;padding-left: 3px;width: 1098px" >
+<form     style="border:1px solid #B3D2EE;background: #F9F9F9;padding-top:0px;padding-bottom:8px" action="" method="post" >
 <div> 
-
-	 <!-- <div style="padding: 10px; overflow: auto;height: 300px;overflow-x:hidden"  id="employee_section"> -->
-	  <div style="padding: 10px; overflow: auto;height: 420px;overflow-x:hidden"  id="employee_section">
+	 <div style="padding: 10px;" id="employee_section">
+	  
     </div>
   </div>
-  <div align="center" id="adjust_section">  
+  <div align="center"> 
+ 
       <a class="btn btn-primary"  onclick="adjust()"><i class="icon-ok icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size:12px">Adjust</span></a>
     </div>
-  <!-- </form> -->
+  </form>
   </div>
   </td>
 	</tr>
@@ -115,11 +105,9 @@ a{cursor: pointer;}
    <div id="dialog-Message-alert" title="Message" style="display: none;background: ('images/ui-bg_highlight-soft_75_cccccc_1x100.png') repeat-x scroll 50% 50% rgb(204, 204, 204)">
 	<span id="_message_show"></span>
 </div>
-<%@ include file="/WEB-INF/jsp/schema_test.jsp" %>  
-
      <script type="text/javascript">
 //var _path="/KPIWebTest/";
-//var SCHEMA_G='mcic_kpi_app';
+var SCHEMA_G='mcic_kpi_app_test';
 //var SCHEMA_G='FSD2';
 var _path='<%=request.getContextPath()%>'+'/'; 
 var mail_toG;
@@ -127,8 +115,7 @@ var mail_subjectG;
 var mail_messageG;
 var mail_attachG;   
 var intRegex = /^\d+$/;
-//var floatRegex = /^((\d+(\.\d *)?)|((\d*\.)?\d+))$/;
-var floatRegex = /^((\d+(\.\d *)?)|((\d*\.)?\d+)|(-\d+(\.\d *)?)|((-\d*\.)?\d+))$/;
+var floatRegex = /^((\d+(\.\d *)?)|((\d*\.)?\d+))$/;
 
 
 $(document).ready(function() {   
@@ -220,9 +207,7 @@ function listPosition(){
 	KPIAjax.listMaster(query,{
 		callback:function(data){
 			//alert(data);
-			//var str="<select id=\"positionElement\"  style=\"width: 200px\" onchange=\"listEmployee()\">";
-			var str="<select id=\"positionElement\"  style=\"width: 200px\" onchange=\"clearEmployee()\">";
-			
+			var str="<select id=\"positionElement\"  style=\"width: 200px\" onchange=\"listEmployee()\">";
 			str=str+"<option value=\"all\">All</option>";
 			if(data!=null && data.length>0){ 
 				for(var i=0;i<data.length;i++){
@@ -231,14 +216,10 @@ function listPosition(){
 			}
 			str=str+"</select>";
 			$("#positionSelection").html(str);
-			clearEmployee(); 
+			listEmployee(); 
 		}
     });
 }
-function clearEmployee(){
-	$("#employeeElement").val("");
-	$("#employeeSelection").val("");
-} 
 function listEmployee(){
 	var position_value=$("#positionElement").val();
 	//alert(position_value) 
@@ -285,36 +266,26 @@ function listEmployee(){
 function distplayEmployee(){
 	 var year=$("#yearElement").val();
 	 var employee_code=$("#employeeElement").val(); 
-	 var employee_name=$("#employeeSelection").val(); 
 	 var department_code=$("#departmentElement").val();
-	// alert(jQuery.trim(employee_name).length)
-	  if(jQuery.trim(employee_name).length==0){
-		 employee_code='';
-	 } 
-	// var position_code=$("#positionElement").val();
-	 var position_code=$("#positionElement option:selected").text();
+	 var position_code=$("#positionElement").val();
 	//alert("a")
-	//alert(position_code)
-	KPIAjax.searchEmployeeResult(SCHEMA_G,year,null,department_code,position_code,employee_code,employee_name,{
+	KPIAjax.searchEmployeeResult(year,null,department_code,position_code,employee_code,{
 		callback:function(data){
 			//alert(data);
-			var haveData=false; 
-			if(data!=null && data.length>0){	
-				//var str="<table class=\"table table-hover table-striped table-bordered table-condensed\" border=\"1\" style=\"font-size: 12px;width:1070px\">"+
-				var str="<table class=\"table table-hover table-striped table-bordered table-condensed\" border=\"1\" style=\"font-size: 12px;width:1050px\">"+
-	    		"<thead>"+
-	    		"<tr> "+
-      			"<th width=\"20%\"><div class=\"th_class\">Period</div></th>"+
-        		"<th width=\"10%\"><div class=\"th_class\">Employee Code</div></th>"+
-        		"<th width=\"20%\"><div class=\"th_class\">Employee Name</div></th>"+
-        		"<th width=\"10%\"><div class=\"th_class\">Weight Percentage</div></th>"+ 
-        		"<th width=\"10%\"><div class=\"th_class\">Adjust Percentage</div></th>"+
-        		"<th width=\"20%\"><div class=\"th_class\">AdjustmentReason</div></th>  "+
-        		"<th width=\"10%\"><div class=\"th_class\">Final Percentage</div></th>    "+
-      		"</tr>"+
-    	"</thead>"+
-    	"<tbody>"; 
-				haveData=true;
+			if(data!=null && data.length>0){
+			    var str="<table class=\"table table-hover table-striped table-bordered table-condensed\" border=\"1\" style=\"font-size: 12px;width:1100px\">"+
+			    		"<thead>"+
+			    		"<tr> "+
+	          			"<th width=\"20%\"><div class=\"th_class\">Period</div></th>"+
+	            		"<th width=\"10%\"><div class=\"th_class\">Employee Code</div></th>"+
+	            		"<th width=\"20%\"><div class=\"th_class\">Employee Name</div></th>"+
+	            		"<th width=\"10%\"><div class=\"th_class\">Weight Percentage</div></th>"+ 
+	            		"<th width=\"10%\"><div class=\"th_class\">Adjust Percentage</div></th>"+
+	            		"<th width=\"20%\"><div class=\"th_class\">AdjustmentReason</div></th>  "+
+	            		"<th width=\"10%\"><div class=\"th_class\">Final Percentage</div></th>    "+
+	          		"</tr>"+
+	        	"</thead>"+
+	        	"<tbody>"; 
 				for(var i=0;i<data.length;i++){ 
 					str=str+
 					"<tr style=\"cursor: pointer;\">"+
@@ -325,37 +296,33 @@ function distplayEmployee(){
 	          		"<input type=\"hidden\" name=\"weightPercentage_input\" value=\""+data[i].weightPercentage+"\" />"+
 	          		data[i].periodDesc+"</td>    "+
 	            	"<td style=\"text-align: left;\">"+data[i].employeeCode+"</td>"+
-	            	"<td style=\"font-size: 12px\">"+(data[i].empName!=null?data[i].empName:"")+"</td> "+
+	            	"<td>"+data[i].empName+"</td> "+
 	            	"<td style=\"text-align: right;\">"+data[i].weightPercentage+"</td>"+
 	            	"<td style=\"text-align: right;\"><input  style=\"width: 50px\" name=\"adjustPercentage_input\" value=\""+(data[i].adjustPercentage!=null?data[i].adjustPercentage:"")+"\" /></td>"+
 	            	"<td> <textarea  style=\"width:260px\" name=\"adjustmentReason_input\" cols=\"4\" rows=\"2\">"+(data[i].adjustmentReason!=null?data[i].adjustmentReason:"")+"</textarea></td>"+
 	            	"<td style=\"text-align: right;\"><span id=\"finalPercentage_"+data[i].year+"_"+data[i].periodNo+"_"+data[i].employeeCode+"\">"+data[i].finalPercentage+"</span></td>  "+
 	          	"</tr>  ";
 				}
+				str=str+"</tbody> </table>";
 				
-				 
-			}else{
-			   
-				// $("#dialog-Message").slideUp("slow");
-				str="<table class=\"table table-hover table-striped table-bordered table-condensed\" border=\"1\" style=\"font-size: 12px;width:1070px\">"+
-	    		"<thead>"+
-	    		"<tr> "+
-      			"<th colspan=\"7\" width=\"100%\"><div class=\"th_class\">No Data</div></th>"+ 
-      		"</tr>"+
-    	"</thead>"+
-    	"<tbody>"; 
-				$("#adjust_section").html(""); 
-			}
-			str=str+"</tbody> </table>";
-				
-				$("#employee_section").html(str);   
-				$("#dialog-Message").slideDown("slow"); 
-				if(haveData){
-					var adjust_str="<div align=\"center\" id=\"adjust_section\">"+
-						"<a class=\"btn btn-primary\"  onclick=\"adjust()\"><i class=\"icon-ok icon-white\"></i>&nbsp;<span style=\"color: white;font-weight: bold;font-size:12px\">Adjust</span></a>"+
-						"</div>";
-					$("#adjust_section").html(adjust_str);   
-				    
+				$("#employee_section").html(str);  
+				/* alert($(document).height());
+				$(document).height("1024px");
+				alert($(document).height()); */
+				$("#dialog-Message").slideDown("slow");
+				//$("#employee_section").slideDown("slow");
+				/* $("input[name=adjustPercentage_input]").keypress(function(event) {
+					  if ( event.which == 13 ) {
+					     event.preventDefault();
+					     var txtVal = this.value;
+					  //   var str = $('#myTextBox').val();
+					     if(!(intRegex.test(txtVal) || floatRegex.test(txtVal))) {
+					        alert('Please fill Number !!!'); 
+					        alert("Iteration: " + this.value.index)
+					     }else
+					     	alert(txtVal);
+					   } 
+					}); */
 					$("input[name=adjustPercentage_input]").each(function( index ) { 
 						$(this).keypress(function(event) {
 							  if ( event.which == 13 ) {
@@ -377,9 +344,13 @@ function distplayEmployee(){
 									 
 								     }
 								   } 
-								}); 
+								});
+						 // console.log( index + ": " + $(this).text() );
 						});
-				}
+				 
+			}else{
+			    $("#dialog-Message").slideUp("slow");
+			}
 		}
 			
  });		 
@@ -420,7 +391,7 @@ function adjust(){
 		//kpipService.updateAdjustPercentage(adjustPercentage, finalPercentage, year, periodNo, employeeCode, reason);
 		//alert(finalPercentageArray.length)
 		 
-		KPIAjax.updateAdjustPercentage(SCHEMA_G,adjustPercentageArray,finalPercentageArray,yearArray
+		KPIAjax.updateAdjustPercentage(adjustPercentageArray,finalPercentageArray,yearArray
 				,period_noArray,employee_codeArray,adjustmentReasonArray,{
 			callback:function(data){
 				//alert("return adjust="+data);
@@ -492,109 +463,7 @@ function searchKPIResult(){
 	$("#emp_name").val("วินัย ทองอยู่"); */
 	$("#dialog-Message").slideDown("slow"); 
 	distplayEmployee();
-} 
-$( "#employeeSelection" ).autocomplete({
-  source: function( request, response ) {
-	  var position_value=$("#positionElement").val();
-		//alert(position_value) 
-		var department_value=$("#departmentElement").val();
-		//alert(department_value)
-		var where_query="";
-		var haveWhere=false;
-		if(department_value!='all'){
-			if(haveWhere)
-				where_query=where_query+" and department_code ='"+department_value+"'";
-			else
-				where_query=where_query+" where department_code ='"+department_value+"'";
-			haveWhere=true;
-		}
-		if(position_value!='all'){
-			if(haveWhere)
-				where_query=where_query+" and position_code ='"+position_value+"'";
-			else
-				where_query=where_query+" where position_code ='"+position_value+"'";
-			haveWhere=true;
-		}
-	  var query="select * from (select distinct employee_code, concat(employee_name,' ',employee_surname) " +
-		" as emp_name ,department_code,position_code from "+SCHEMA_G+".employee  "+where_query+" order by emp_name "+
-		") as xx where emp_name like '%"+request.term+"%'";
-	 
-		/* var query="select distinct employee_code, concat(employee_name,' ',employee_surname) " +
-			" as emp_name ,department_code,position_code from "+SCHEMA_G+".employee where  department_code = '"+department_value+"'" +
-			"  and   position_code = '"+position_value+"' order by emp_name"; */
-			//alert(request.term);
-		KPIAjax.listMaster(query,{
-			callback:function(data){
-				//alert(data);
-				/* var str="<select id=\"employeeElement\"  style=\"width: 140px\" >";
-				str=str+"<option value=\"all\">All</option>";
-				if(data!=null && data.length>0){ 
-					for(var i=0;i<data.length;i++){
-						str=str+"<option value=\""+data[i].id+"\">"+data[i].name+"</option>";
-					} 
-				}
-				str=str+"</select>"; 
-				alert(str); */
-				//$("#employeeSelection").html(str);
-				//distplayEmployee();
-				if(data!=null && data.length>0){
-					response( $.map( data, function( item ) {
-			          return {
-			        	  label: item.name,
-			        	  value: item.id
-			            //label: item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", " + item.countryName,
-			            //value: item.name 
-			          }
-			        }));
-				}else{
-					var xx=[];
-					//alert("not have data")
-					response( $.map(xx));
-				}
-			}
-	 });
-  /*   $.ajax({
-      url: "http://ws.geonames.org/searchJSON",
-      dataType: "jsonp",
-      data: {
-        featureClass: "P",
-        style: "full",
-        maxRows: 12,
-        name_startsWith: request.term
-      },
-      success: function( data ) {
-    	//  alert(data.geonames)
-        response( $.map( data.geonames, function( item ) {
-          return {
-            label: item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", " + item.countryName,
-            value: item.name
-          }
-        }));
-      }
-    }); */
-  },
-  minLength: 2,
-  select: function( event, ui ) {
-	 /*  if( ui.item ){
-		  alert(ui.item.label)
-	  }else{
-		  alert( this.value)
-	  }  */
-	 // this.value=ui.item.label;
-	 //alert(this.value+" label ="+ui.item.label+" value="+ui.item.value);  
-	//  $("#city" ).val(ui.item.label);
-	  this.value = ui.item.label;
-	  $("#employeeElement").val(ui.item.value);
-      return false;
-  },
-  open: function() {
-    $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
-  },
-  close: function() {
-    $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
-  }
-}); 
-
+}
 </script> 
 </body>
 </html> 
