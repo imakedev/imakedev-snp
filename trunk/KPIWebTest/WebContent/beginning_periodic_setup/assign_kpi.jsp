@@ -5,12 +5,13 @@
 <title>BackOffice</title>
 <!--  <meta charset="UTF-8" />   --> 
  <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-   <script  src="../resources/js/jquery-1.8.3.min.js" type="text/javascript"></script> 
-<script type="text/javascript" src="../resources/js/smoothness/jquery-ui-1.9.2.custom.min.js"></script>
- <script type="text/javascript" src="../resources/ckeditor/ckeditor.js"></script>
-<script src="../resources/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-<link href="../resources/css/smoothness/jquery-ui-1.9.2.custom.css" type="text/css"  rel="stylesheet" /> 
-<link href="../resources/bootstrap/css/bootstrap.min.css" rel="stylesheet"  type="text/css"/>  
+   <script  src="<%=request.getContextPath() %>/resources/js/jquery-1.8.3.min.js" type="text/javascript"></script> 
+<script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/smoothness/jquery-ui-1.9.2.custom.min.js"></script>
+ <script type="text/javascript" src="<%=request.getContextPath() %>/resources/ckeditor/ckeditor.js"></script>
+<script src="<%=request.getContextPath() %>/resources/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<link href="<%=request.getContextPath() %>/resources/css/smoothness/jquery-ui-1.9.2.custom.css" type="text/css"  rel="stylesheet" /> 
+<link href="<%=request.getContextPath() %>/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet"  type="text/css"/>    
+ 
  <!-- 
 	DWR
 	-->
@@ -34,17 +35,48 @@ input[type=text] {
 	height: 30px;
 	line-height: 30px
 }
+textarea,fieldset ,select,a{font-size: 12px
+}
+table > tbody{font-size: 12px;
+}
+table th, .table td {
+line-height: 10px;
+}
+input {
+font-size: 12px;
+font-weight: normal;
+line-height: normal;
+}
+ form {
+margin: 0 0 0px;
+}
+.input_number{
+width: 100px;
+text-align:right;
+}
+.input_text{
+width: 350px;
+}
+ 
  </style>
  <style>
  .ui-datepicker-trigger{
  cursor: pointer;
  }
+  
 </style>
 <style type="text/css">
 /*.th_class{font-family: Tahoma;font-size: 13px;text-align: center;*/
 .th_class{text-align: center;
 }
 a{cursor: pointer;}
+.ui-autocomplete-loading {
+    background: white url('<%=request.getContextPath() %>/resources/css/smoothness/images/ui-anim_basic_16x16.gif') right center no-repeat;
+  } 
+.input_kpi{
+ height: 20px;
+ line-height: 20px;
+ }
 </style>
 <!-- <style type="text/css"> 
 th{ font-family:Tahoma; font-size:12px; font-weight:bold;
@@ -54,174 +86,428 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
 
 </head> 
 <body> 
-  <div class="row-fluid"  style="position:fixed;">
-     	<div class="span7"> 
-              <div class="navbar" style="padding-top: 8px;padding-left: 10px;padding-right: 10px;height: 22px;width: 1029px">
-              <div class="navbar-inner" style="width: 1029px">
-                <div class="container"> 
-                  <div class="nav-collapse collapse navbar-responsive-collapse">
-                    <ul class="nav">
-                     <li id="employee_link"><a onclick="togle_page('assign_kpi','employee_link')">Assign KPI</a></li>
-                    </ul>  
-                  </div>
-                </div>
-              </div>
-            </div> 
-     	</div>
-     	<div class="span7">
-     	<div id="_content" class="span7" style="margin-left:-8px;padding-top: 3px;">
-      		 <fieldset style="font-family: sans-serif;padding-top:0px;width: 1048px">  
-<form class="form-horizontal"  style="border:1px solid #B3D2EE;background: #F9F9F9;padding-top:20px" action="" method="post" >
-    <div class="control-group">
-    <label class="control-label" for="inputEmail">Year:</label>
-    <div class="controls">
-     <select style="width: 75px">
-     	<option>2012</option>
-     	<option>2013</option>
-     </select>
+<!--   <div class="row-fluid"  style="position:fixed;">
+     	<div class="span7"> -->
+     	<div id="_content" style="margin-left:3px;padding-top: 3px;width: 1100px">
+      		<!--   <fieldset style="font-family: sans-serif;padding-top:0px;width: 1048px"> --> 
+      		<table style="border:1px solid #B3D2EE;background: #F9F9F9;padding-top:20px;padding-bottom:15px;width: 1100px;"><tr><td>
+<!-- <form class="form-horizontal"  style="border:1px solid #B3D2EE;background: #F9F9F9;padding-top:20px" action="" method="post" >
+   -->
+  <div style="padding-left:20px;padding-top: 5px">
+     Year:
+    <span   id="yearSelection"> 
+    </span>  
+     <span style="padding-left:10px;">
+    Period:
+    </span>
+    <span   id="periodSelection"> 
+    </span>
+     <span style="padding-left:10px;">
+    Department:
+    </span>
+    <span   id="departmentSelection"> 
+    </span>
+   
+     <span style="padding-left:10px;">
+    Position:
+    </span>
+    <span   id="positionSelection"> 
+    </span> 
+  
+   
+   <!--  <span> <input id="city" /></span> -->
+   
     </div>
+    </td></tr>
+    <tr><td> 
+     <span style="padding-left:20px;">
+    Employee:
+    </span>
+     <span>  
+     <input type="hidden" id="employeeElement" />
+     <input type="text" id="employeeSelection" />
+     <!-- <a class="btn btn-primary" style="font-size:12px;margin-top: -10px" onclick="distplayKPI()"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Search</span></a> -->
+    </span>  
+     
+     <span style="padding-left:20px;">
+    	<a class="btn btn-primary" style="font-size:12px;margin-top: -10px" onclick="showPage('2')"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Manage KPI</span></a>
+    </span>
+     <span style="padding-left:20px;">
+    	<a class="btn btn-primary" style="font-size:12px;margin-top: -10px" onclick="showPage('1')"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Assign KPI</span></a>
+    </span>
+<!-- </form> -->
+   </td>
+	</tr>
+  </table> 
   </div>
-  <div class="control-group">
-    <label class="control-label">Period:</label>
-    <div class="controls">
-     <select>
-     	<option>การประเมิณผลงานครั้งที่ 1</option> 
-     </select>
+  <div id="dialog-Message"  style="display: none;width: 1098px;padding-left: 4px;padding-top:1px">
+  <table style="border:1px solid #B3D2EE;background: #F9F9F9;width: 1098px"> 
+	<tr>
+		<td> 
+		<div style="display: block;padding-left: 3px;width: 1088px" >
+<!-- <form  class="well"  style="border:1px solid #B3D2EE;background: #F9F9F9;padding-top:20px;" action="" method="post" > -->
+<div> 
+	 <div style="padding: 10px; overflow: auto;height: 377px;overflow-x:hidden"  id="employee_section"> 
+    </div>
+    <div align="center" id="assign_kpi_section">  
+      <a class="btn btn-primary"  onclick="assignKPI()"><i class="icon-ok icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size:12px">Submit</span></a>
     </div>
   </div> 
-   <div class="control-group">
-    <label class="control-label">Department:</label>
-    <div class="controls">
-      <select>
-     	<option>ฝ่ายการตลาด-การขาย</option> 
-     </select>
-    </div>
+  <!-- </form> -->
   </div> 
-  <div class="control-group">
-    <label class="control-label">Position:</label>
-    <div class="controls">
-      <select>
-     	<option>พนักงานขาย</option> 
-     </select>
-    </div>
+<div id="dialog-form"  style="display: none;margin-left:3px;padding-top: 3px;width: 1100px">
+      		   <!-- <fieldset style="font-family: sans-serif;padding-top:0px;width: 1048px"> -->  
+      		   <table style="width: 1100px;">
+     			<tr>
+     				<td>
+<form class="form-inline"  style="border:1px solid #B3D2EE;background: #F9F9F9;padding-top:20px;padding-bottom:15px" action="" method="post" >
+ <div  style="padding-left:20px">
+  <span style="padding-left:10px;">
+    KPI Code: <input type="text" id="kpiCode" style="width: 90px"/>
+    </span> 
+     <span style="padding-left:10px;">
+    KPI Name: <input type="text" id="kpiName" style="width: 300px"/>
+    </span> 
+   </div>
+   <div  style="padding-left:20px;padding-top: 10px">
+    <span style="padding-left:10px;">
+     <input type="hidden" id="kpiCode_hidden"/>
+     <input type="hidden" id="kpiName_hidden"/>
+     <input type="text" id="kpiName_result" readonly="readonly" style="width: 410px"/>
+    </span>
+     <span style="padding-left:20px;">
+    	<a class="btn btn-primary" style="font-size:12px" onclick="selectKPI()"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Get KPI</span></a>
+    </span>   
   </div> 
-  <div class="control-group">
-    <label class="control-label">Employee:</label>
-    <div class="controls">
-      <select>
-     	<option>วิชัย เก่งกาจ</option> 
-     </select>
-    </div>
-  </div>   
-  <div style="padding: 10px">
-  <table class="table table-hover table-striped table-bordered table-condensed" border="1" style="font-size: 12px">
-        	<thead>
-          		<tr> 
-            		<th width="10%"><div class="th_class">KPI Order</div></th>
-            		<th width="42%"><div class="th_class">KPI Name</div></th> 
-            		<th width="14%"><div class="th_class">KPI Weight</div></th> 
-            		<th width="14%"><div class="th_class">Target Data</div></th>
-            		<th width="14%"><div class="th_class">Target Score</div></th>
-          		</tr>
-        	</thead>
-        	<tbody>   
-          	<tr> 
-            	<td style="text-align: right;">1</td>
-            	<td>ยอดขายเทียบเป้า</td>
-            	<td style="text-align: right;">50</td> 
-            	<td style="text-align: right;"> 
-            	 5,000,000
-            	</td>
-            	<td style="text-align: right;"> 
-            	 50
-            	</td>
-          	</tr> 
-          	 <tr> 
-            	<td style="text-align: right;">2</td>
-            	<td>ความพึงพอใจของลูกค้า</td>
-            	<td style="text-align: right;">30</td> 
-            	<td style="text-align: right;"> 
-            	 10
-            	</td>
-            	<td style="text-align: right;"> 
-            	30
-            	</td>
-          	</tr> 
-  		 </tbody>
-   </table>
-    </div>
-  <div class="control-group">
+   
+  <!-- <div class="control-group">
     <div class="controls"> 
-      <a class="btn btn-primary" ><i class="icon-ok icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;">Assign KPI</span></a>
+      <a class="btn btn-primary" ><i class="icon-ok icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;">Submit</span></a>
     </div>
+  </div> -->
+</form>
+<div id="dialog-confirmDelete" title="Delete KPI Result" style="display: none;background: ('images/ui-bg_highlight-soft_75_cccccc_1x100.png') repeat-x scroll 50% 50% rgb(204, 204, 204)">
+	Are you sure you want to delete KPI Result ?
+</div>
+</td>
+				</tr>
+  			</table>
+ </div>
+  
+   </td>
+	</tr>
+  </table>
+ </div>  
+ <div id="dialog-Message2"  style="display: none;width: 1098px;padding-left: 4px;padding-top:1px">
+  <table style="border:1px solid #B3D2EE;background: #F9F9F9;width: 1098px"> 
+	<tr>
+		<td> 
+		<div style="display: block;padding-left: 3px;width: 1088px" >
+<!-- <form  class="well"  style="border:1px solid #B3D2EE;background: #F9F9F9;padding-top:20px;" action="" method="post" > -->
+<div> 
+	 <div style="padding: 10px; overflow: auto;height: 377px;overflow-x:hidden"  id="employee_section2"> 
+    </div>
+   <!--  <div align="center" id="assign_kpi_section2">  
+      <a class="btn btn-primary"  onclick="assignKPI()"><i class="icon-ok icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size:12px">Submit</span></a>
+    </div> -->
+  </div> 
+  <!-- </form> -->
+  </div> 
+<div id="dialog-form2"  style="display: none;margin-left:3px;padding-top: 3px;width: 1100px">
+      		   <!-- <fieldset style="font-family: sans-serif;padding-top:0px;width: 1048px"> -->  
+      		   <table style="width: 1100px;">
+     			<tr>
+     				<td>
+<form  id="form-input" class="form-inline"  style="border:1px solid #B3D2EE;background: #F9F9F9;padding-top:20px;padding-bottom:15px" action="" method="post" >
+ <div  style="padding-left:20px">
+  <span style="padding-left:10px;">
+    KPI Code: <input type="text" id="kpiCode2" style="width: 90px"/>
+    </span> 
+     <span style="padding-left:10px;">
+    KPI Name: <input type="text" id="kpiName2" style="width: 300px"/>
+    </span> 
+   </div>
+   <div  style="padding-left:20px;padding-top: 10px">
+    <span style="padding-left:10px;">
+     <input type="hidden" id="kpiCode_hidden2"/>
+     <input type="hidden" id="kpiName_hidden2"/>
+     <input type="text" id="kpiName_result2" readonly="readonly" style="width: 410px"/>
+    </span>
+    <!--  <span style="padding-left:20px;">
+    	<a class="btn btn-primary" style="font-size:12px" onclick="selectKPI2()"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Get KPI</span></a>
+    </span> -->   
+  </div> 
+   
+  <!-- <div class="control-group">
+    <div class="controls"> 
+      <a class="btn btn-primary" ><i class="icon-ok icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;">Submit</span></a>
+    </div>
+  </div> -->
+</form>
+<div>
+<div style="padding-top: 10px">
+<form class="form-inline"  style="border:1px solid #B3D2EE;background: #F9F9F9;padding-top:20px;padding-bottom:15px" action="" method="post" >
+ <input type="hidden" id="mode"/>
+ <div  style="padding-left:20px">
+ 	<span> KPI Order: <input type="text"  id="kpiOrder2"  style="width:30px;"/></span>
+ <input type="hidden" id="year_input2"/>
+ <input type="hidden" id="period_no_input2"/>
+ <input type="hidden" id="employee_code_input2"/>
+ <input type="hidden" id="kpi_code_input2"/>	
+ 	<span style="padding-left: 3px">KPI Weight:  <input type="text"  id="kpiWeight2"  style="width:80px;"/></span>
+ 	<span style="padding-left: 3px">Target Data: <input type="text"  id="targetData2"  style="width:100px;"/></span>
+ 	<span style="padding-left: 3px">Target Score: <input type="text"  id="targetScore2" style="width:80px;"/></span>
   </div>
-</form> 
+  
+  <div style="padding-top: 20px" align="center"><a class="btn btn-primary" onclick="doSubmitAction()"><i class="icon-ok icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;">Submit</span></a></div>
+  
+  </form>
+  </div>
+  </div> 
+</td>
+				</tr>
+  			</table>
+ </div>
+  
+   </td>
+	</tr>
+  </table>
+  <table style="width: 1100px;">
+     			<tr>
+     				<td>
 
-</fieldset>
-      	</div>
-     	</div>
-     </div> 
+  </td>
+  </tr>
+  </table> 
+ </div>  
+ <%@ include file="/WEB-INF/jsp/schema_test.jsp" %>  
      <script type="text/javascript">
 //var _path="/KPIWebTest/";
-var SCHEMA_G='mcic_kpi_app_test';
+//var SCHEMA_G='mcic_kpi_app_test';
 //var SCHEMA_G='FSD2';
 var _path='<%=request.getContextPath()%>'+'/'; 
 var mail_toG;
 var mail_subjectG;
 var mail_messageG;
-var mail_attachG;   
+var mail_attachG; 
+var intRegex = /^\d+$/;
+//var floatRegex = /^((\d+(\.\d *)?)|((\d*\.)?\d+))$/;
+var floatRegex = /^((\d+(\.\d *)?)|((\d*\.)?\d+)|(-\d+(\.\d *)?)|((-\d*\.)?\d+))$/;
+
 $(document).ready(function() {  
-	/* $('#togle_emp').click(function() {
-		 //$("#dialog-Message").slideDown("slow"); 
-		     $('#dialog-Message').toggle('slow', function() { 
- 
-		  });  
-		}); */
-	//listYear();
-	//listDepartment();
+	listYear();
+	listDepartment();
+	$( "#kpiCode" ).autocomplete({
+		  source: function( request, response ) { 
+				var query="SELECT kpi_code,kpi_name FROM "+SCHEMA_G+".kpi where kpi_code like '%"+request.term+"%'";// and etl_flag = 'Y' ";		      
+				KPIAjax.searchObject(query,{
+					callback:function(data){ 
+						if(data!=null && data.length>0){
+							response( $.map( data, function( item ) {
+					          return {
+					        	  label: item[0],
+					        	  value: item[1] 
+					          }
+					        }));
+						}else{
+							var xx=[]; 
+							response( $.map(xx));
+						}
+					}
+			 });		  
+		  },
+		  minLength: 2,
+		  select: function( event, ui ) { 
+			  this.value = ui.item.label;
+			  $("#kpiName_result").val(ui.item.value);
+			  $("#kpiName").val("");
+			  
+			  $("#kpiCode_hidden").val(ui.item.label);
+			  $("#kpiName_hidden").val(ui.item.value); 
+			 
+		      return false;
+		  },
+		  open: function() {
+		    $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+		  },
+		  close: function() {
+		    $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+		  }
+		}); 
+	$( "#kpiName" ).autocomplete({
+		  source: function( request, response ) { 
+				var query="SELECT kpi_code,kpi_name FROM "+SCHEMA_G+".kpi where kpi_name like '%"+request.term+"%' ";// and etl_flag = 'Y' ";		      
+				KPIAjax.searchObject(query,{
+					callback:function(data){ 
+						if(data!=null && data.length>0){
+							response( $.map( data, function( item ) {
+					          return {
+					        	  label: item[1],
+					        	  value: item[0] 
+					          }
+					        }));
+						}else{
+							var xx=[]; 
+							response( $.map(xx));
+						}
+					}
+			 });		  
+		  },
+		  minLength: 2,
+		  select: function( event, ui ) { 
+			  this.value = ui.item.label;
+			   $("#kpiName_result").val(ui.item.label);
+			   $("#kpiCode").val("");
+			   
+			   $("#kpiCode_hidden").val(ui.item.value);
+			   $("#kpiName_hidden").val(ui.item.label); 
+		      return false;
+		  },
+		  open: function() {
+		    $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+		  },
+		  close: function() {
+		    $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+		  }
+		});
+	$( "#employeeSelection" ).autocomplete({
+		  source: function( request, response ) {
+			  var position_value=$("#positionElement").val();
+				var department_value=$("#departmentElement").val();
+				var where_query="";
+				var haveWhere=false;
+				if(department_value!='all'){
+					if(haveWhere)
+						where_query=where_query+" and department_code ='"+department_value+"'";
+					else
+						where_query=where_query+" where department_code ='"+department_value+"'";
+					haveWhere=true;
+				}
+				if(position_value!='all'){
+					if(haveWhere)
+						where_query=where_query+" and position_code ='"+position_value+"'";
+					else
+						where_query=where_query+" where position_code ='"+position_value+"'";
+					haveWhere=true;
+				}
+			  var query="select * from (select distinct employee_code, concat(employee_name,' ',employee_surname) " +
+				" as emp_name ,department_code,position_code from "+SCHEMA_G+".employee  "+where_query+" order by emp_name "+
+				") as xx where emp_name like '%"+request.term+"%'";
+			  
+				KPIAjax.listMaster(query,{
+					callback:function(data){
+						 
+						if(data!=null && data.length>0){
+							response( $.map( data, function( item ) {
+					          return {
+					        	  label: item.name,
+					        	  value: item.id 
+					          }
+					        }));
+						}else{
+							var xx=[]; 
+							response( $.map(xx));
+						}
+					}
+			 });
+		  
+		  },
+		  minLength: 2,
+		  select: function( event, ui ) { 
+			  this.value = ui.item.label;
+			  $("#employeeElement").val(ui.item.value);
+		      return false;
+		  },
+		  open: function() {
+		    $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+		  },
+		  close: function() {
+		    $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+		  }
+		}); 
+	$( "#kpiCode2" ).autocomplete({
+		  source: function( request, response ) { 
+				var query="SELECT kpi_code,kpi_name FROM "+SCHEMA_G+".kpi where kpi_code like '%"+request.term+"%'";// and etl_flag = 'Y' ";		      
+				KPIAjax.searchObject(query,{
+					callback:function(data){ 
+						if(data!=null && data.length>0){
+							response( $.map( data, function( item ) {
+					          return {
+					        	  label: item[0],
+					        	  value: item[1] 
+					          }
+					        }));
+						}else{
+							var xx=[]; 
+							response( $.map(xx));
+						}
+					}
+			 });		  
+		  },
+		  minLength: 2,
+		  select: function( event, ui ) { 
+			  this.value = ui.item.label;
+			  $("#kpiName_result2").val(ui.item.value);
+			  $("#kpiName2").val("");
+			  
+			  $("#kpiCode_hidden2").val(ui.item.label);
+			  $("#kpiName_hidden2").val(ui.item.value); 
+			 
+		      return false;
+		  },
+		  open: function() {
+		    $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+		  },
+		  close: function() {
+		    $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+		  }
+		}); 
+	$( "#kpiName2" ).autocomplete({
+		  source: function( request, response ) { 
+				var query="SELECT kpi_code,kpi_name FROM "+SCHEMA_G+".kpi where kpi_name like '%"+request.term+"%' ";// and etl_flag = 'Y' ";		      
+				KPIAjax.searchObject(query,{
+					callback:function(data){ 
+						if(data!=null && data.length>0){
+							response( $.map( data, function( item ) {
+					          return {
+					        	  label: item[1],
+					        	  value: item[0] 
+					          }
+					        }));
+						}else{
+							var xx=[]; 
+							response( $.map(xx));
+						}
+					}
+			 });		  
+		  },
+		  minLength: 2,
+		  select: function( event, ui ) { 
+			  this.value = ui.item.label;
+			   $("#kpiName_result2").val(ui.item.label);
+			   $("#kpiCode2").val("");
+			   
+			   $("#kpiCode_hidden2").val(ui.item.value);
+			   $("#kpiName_hidden2").val(ui.item.label); 
+		      return false;
+		  },
+		  open: function() {
+		    $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+		  },
+		  close: function() {
+		    $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+		  }
+		});
+	//distplayKPI();
 }); 
-function loadDynamicPage(pageId){  
-	pageId=_path+"ending_periodic_data_entry/template/"+pageId+".jsp";  
-			$.ajax({
-				  type: "get",
-				  url: pageId,
-				  cache: false 
-				}).done(function( data ) {
-					if(data!=null){
-						  appendContent(data);
-					  }
-				});
-}
-function togle_page(pageId,id_active){  
-	$("ul[class=nav] > li").removeClass("active"); 
-	    $("#"+id_active).addClass("active");
-		loadDynamicPage(pageId);
-}
-function appendContentWithId(data,contentId){
-	if(data.indexOf("j_username")!=-1 || data.indexOf("loginform")!=-1){ 
-		  window.location.href="<c:url value='/logout'/>"; 
-	  }else{ 
-			  $("#"+contentId).html(data); 
-	  }
-	
-}
-function appendContent(data){ 
-	appendContentWithId(data,"_content"); 
-}
-function parseDouble(value){
-	  if(typeof value == "string") {
-	    value = value.match(/^-?\d*/)[0];
-	  }
-	  
-	  return !isNaN(parseFloat(value)) ? value * 1 : NaN;
-	}
+
 function listYear(){
 	var query="SELECT distinct result.year FROM "+SCHEMA_G+".employee_result result order by result.year desc ";
 	KPIAjax.listYears(query,{
 		callback:function(data){
 			//alert(data);
 			   var str="<select id=\"yearElement\" style=\"width: 75px\" onchange=\"listDepartment()\">";
-			   str=str+"<option value=\"all\">All</option>";
+			  // str=str+"<option value=\"all\">All</option>";
 			if(data!=null && data.length>0){ 
 				for(var i=0;i<data.length;i++){
 					str=str+"<option value=\""+data[i]+"\">"+data[i]+"</option>";
@@ -246,7 +532,7 @@ function listPeriod(){
 		callback:function(data){
 			//alert(data);
 			 var str="<select id=\"periodElement\">";
-			    str=str+"<option value=\"all\">All</option>";
+			 //   str=str+"<option value=\"all\">All</option>";
 			if(data!=null && data.length>0){ 
 				for(var i=0;i<data.length;i++){
 					str=str+"<option value=\""+data[i].id+"\">"+data[i].name+"</option>";
@@ -266,7 +552,7 @@ function listDepartment(){
 		callback:function(data){
 			//alert(data);
 			var str="<select id=\"departmentElement\" onchange=\"listPosition()\">";
-			 str=str+"<option value=\"all\">All</option>";
+			// str=str+"<option value=\"all\">All</option>";
 			if(data!=null && data.length>0){ 
 				for(var i=0;i<data.length;i++){
 					str=str+"<option value=\""+data[i].id+"\">"+data[i].name+"</option>";
@@ -290,7 +576,8 @@ function listPosition(){
 	KPIAjax.listMaster(query,{
 		callback:function(data){
 			//alert(data);
-			var str="<select id=\"positionElement\" onchange=\"listEmployee()\">";
+			//var str="<select id=\"positionElement\" onchange=\"listEmployee()\">";
+			var str="<select id=\"positionElement\"    onchange=\"clearEmployee()\">";
 			str=str+"<option value=\"all\">All</option>";
 			if(data!=null && data.length>0){ 
 				for(var i=0;i<data.length;i++){
@@ -299,168 +586,760 @@ function listPosition(){
 			}
 			str=str+"</select>";
 			$("#positionSelection").html(str);
-			listEmployee(); 
+			clearEmployee(); 
 		}
     });
 }
-function listEmployee(){
-	var position_value=$("#positionElement").val();
-	//alert(position_value) 
-	var department_value=$("#departmentElement").val();
-	//alert(department_value)
-	var where_query="";
-	var haveWhere=false;
-	if(department_value!='all'){
-		if(haveWhere)
-			where_query=where_query+" and department_code ='"+department_value+"'";
-		else
-			where_query=where_query+" where department_code ='"+department_value+"'";
-		haveWhere=true;
-	}
-	if(position_value!='all'){
-		if(haveWhere)
-			where_query=where_query+" and position_code ='"+position_value+"'";
-		else
-			where_query=where_query+" where position_code ='"+position_value+"'";
-		haveWhere=true;
-	}
-	var query="select distinct employee_code, concat(employee_name,' ',employee_surname) " +
-	" as emp_name ,department_code,position_code from "+SCHEMA_G+".employee  "+where_query+" order by emp_name";
-	/* var query="select distinct employee_code, concat(employee_name,' ',employee_surname) " +
-		" as emp_name ,department_code,position_code from "+SCHEMA_G+".employee where  department_code = '"+department_value+"'" +
-		"  and   position_code = '"+position_value+"' order by emp_name"; */
-	KPIAjax.listMaster(query,{
-		callback:function(data){
-			//alert(data);
-			var str="<select id=\"employeeElement\" onchange=\"distplayApproveKPIResult()\">";
-			str=str+"<option value=\"all\">All</option>";
-			if(data!=null && data.length>0){ 
-				for(var i=0;i<data.length;i++){
-					str=str+"<option value=\""+data[i].id+"\">"+data[i].name+"</option>";
-				}
-				//str=str+"</select> &nbsp; &nbsp;<a class=\"btn\" onclick=\"searchKPIResult()\">Search</a>"; 
-			}
-			str=str+"</select>"; 
-			$("#employeeSelection").html(str);
-			distplayApproveKPIResult();
-		}
- });
-}
-function distplayApproveKPIResult(){
-	 var year=$("#yearElement").val();
+function clearEmployee(){
+	$("#employeeElement").val("");
+	$("#employeeSelection").val("");
+} 
+function distplayKPI(){  
+			//alert(data);  
+				var str="<div align=\"left\" style=\"padding-bottom: 4px;width:1070px\"> <a class=\"btn\" onclick=\"showForm('dataTable')\"><i class=\"icon-plus-sign\"></i>&nbsp;<span style=\"font-weight: normal;\">Add KPI</span></a>"+
+					"<span  style=\"padding-left: 4px\"><a class=\"btn\" onclick=\"deleteRow('dataTable')\"><i class=\"icon-minus-sign\"></i>&nbsp;<span style=\"font-weight: normal;\">Delete KPI</span></a></span></div>";
+					
+				    str=str+"<table id=\"dataTable\" class=\"table table-hover table-striped table-bordered table-condensed\" border=\"1\" style=\"font-size: 12px\">"+
+		    		"<thead>"+
+		    		"<tr> "+ 
+		    		"<th width=\"5%\"><div class=\"th_class\"><input type=\"checkbox\"  name=\"chkAll\" onClick=\"togleChk(this,'chk_input')\"/></div></th>"+
+         		"<th width=\"10%\"><div class=\"th_class\">KPI Order</div></th>"+
+         		"<th width=\"35%\"><div class=\"th_class\">KPI Name</div></th>"+
+         		"<th width=\"10%\"><div class=\"th_class\">KPI Weight</div></th>"+ 
+         		"<th width=\"20%\"><div class=\"th_class\">Target Data</div></th>"+
+         		"<th width=\"20%\"><div class=\"th_class\">Target Score</div></th>"+ 
+         		
+       		"</tr>"+
+     	"</thead>"+
+     	"<tbody>";
+	        	
+				/* for(var i=0;i<data.length;i++){  
+						str=str+
+					"<tr style=\"cursor: pointer;\">"+ 
+					"<td style=\"text-align: center;\">"+
+					"<input type=\"checkbox\"  name=\"chk\"/>"+
+	          		"<input type=\"hidden\" name=\"year_input\" value=\""+data[i][0]+"\" />"+
+	          		"<input type=\"hidden\" name=\"period_no_input\" value=\""+data[i][1]+"\" />"+
+	          		"<input type=\"hidden\" name=\"employee_code_input\" value=\""+data[i][3]+"\" />"+
+	          		"<input type=\"hidden\" name=\"kpi_code_input\" value=\""+data[i][5]+"\" />"+ 
+	          		"<input type=\"hidden\" name=\"kpi_result_id\" value=\""+data[i][0]+"_"+data[i][1]+"_"+data[i][3]+"_"+data[i][5]+"\" />"+
+	          		 
+	          		"</td>"+
+	            	"<td style=\"text-align: left;\">"+data[i][3]+"</td>"+
+	            	"<td>"+data[i][4]+"</td> "+
+	            	"<td style=\"text-align: left;\">"+data[i][5]+"</td>"+
+	            	"<td>"+data[i][6]+"</td> "+
+	            	"<td>"+data[i][6]+"</td> "+
+	            	
+	          		"</tr>  ";
+				} */
+				 
+			 
+			str=str+"</tbody> </table>";
+			
+			$("#employee_section").html(str);
+			$("#dialog-Message2").slideUp("slow"); 
+			$("#dialog-Message").slideDown("slow"); 
+}  
+function distplayKPI2(){
+	/*  var year=$("#yearElement").val();
 	 var employeeCode=$("#employeeElement").val();
 	 var periodNo=$("#periodElement").val();
 	 var etl_flag='N';
-	 var approved_flag='N';
+	 var approved_flag='0'; */
 	//alert("a") 
-	KPIAjax.searchKPI(year,  periodNo,employeeCode, etl_flag, approved_flag,{
-		callback:function(data){
-			//alert(data);
+		
+		 var year=jQuery.trim($("#yearElement").val());
+		 var periodNo=jQuery.trim($("#periodElement").val());
+		 var department_code=jQuery.trim($("#departmentElement").val());
+		 var position_code=jQuery.trim($("#positionElement option:selected").text());
+		 var employee_code=jQuery.trim($("#employeeElement").val());
+		 var employee_name=jQuery.trim($("#employeeSelection").val()); 
+		 
+		 if(periodNo=='all' ){
+			 alert("Please select Period.");
+			 return false;
+		 }
+		 if(department_code=='all' ){
+			 alert("Please select Department.");
+			 return false;
+		 }
 			 
+		/*  var etl_flag='N';
+		 var approved_flag='0';  */
+		  
+		 var approveKPIWhere=""; 
+		 var haveWhere=false;
+		// alert(jQuery.trim(employee_name).length)
+		  if(jQuery.trim(employee_name).length==0){
+			 employee_code='';
+		 }   
+		if(year.length>0){		
+			if(haveWhere)
+				approveKPIWhere=approveKPIWhere+" and result.year ="+year+"";
+			else
+				approveKPIWhere=approveKPIWhere+" where result.year ="+year+"";
+			haveWhere=true;
+		}
+		if(periodNo.length>0 && periodNo!='all'){		
+			if(haveWhere)
+				approveKPIWhere=approveKPIWhere+" and result.period_no="+periodNo+"";
+			else
+				approveKPIWhere=approveKPIWhere+" where result.period_no="+periodNo+"";
+			haveWhere=true;
+		}
+		if(department_code.length>0 && department_code!='all'){		
+			if(haveWhere)
+				approveKPIWhere=approveKPIWhere+" and em.department_code ='"+department_code+"'";
+			else
+				approveKPIWhere=approveKPIWhere+" where em.department_code = '"+department_code+"'";
+			haveWhere=true;
+		}
+		if(position_code.length>0 && position_code!='All'){		
+			if(haveWhere)
+				approveKPIWhere=approveKPIWhere+" and em.position_name ='"+position_code+"'";
+			else
+				approveKPIWhere=approveKPIWhere+" where em.position_name = '"+position_code+"'";
+			haveWhere=true;
+		}
+		if(employee_code.length>0){		
+			if(haveWhere)
+				approveKPIWhere=approveKPIWhere+" and em.employee_code='"+employee_code+"'";
+			else
+				approveKPIWhere=approveKPIWhere+" where em.employee_code ='"+employee_code+"'";
+			haveWhere=true;
+		}
+		if(employee_name.length>0){
+			if(haveWhere)
+				approveKPIWhere=approveKPIWhere+" and  concat(em.employee_name,' ',em.employee_surname)='"+employee_name+"' ";
+			else
+				approveKPIWhere=approveKPIWhere+" where  concat(em.employee_name,' ',em.employee_surname)='"+employee_name+"' ";
+			haveWhere=true;
+		}
+		
+		/* if(etl_flag.length>0){		
+			if(haveWhere)
+				approveKPIWhere=approveKPIWhere+" and kpi.etl_flag='"+etl_flag+"'";
+			else
+				approveKPIWhere=approveKPIWhere+" where kpi.etl_flag='"+etl_flag+"'";
+			haveWhere=true;
+		}  */
+		
+		/* if(approved_flag.length>0){		
+			if(haveWhere)
+				approveKPIWhere=approveKPIWhere+" and result.approved_flag ='"+approved_flag+"'";
+			else
+				approveKPIWhere=approveKPIWhere+" where result.approved_flag = '"+approved_flag+"'";
+			haveWhere=true;
+		}   */
+		var query ="select result.year,result.period_no,p.period_desc,result.employee_code" +
+						"	,concat(em.employee_name,' ',em.employee_surname) as emp_name , result.kpi_code ,kpi.kpi_name " +
+						"  ,result.target_score,result.actual_score,result.kpi_order,result.kpi_weight,result.target_data,result.target_score from "+SCHEMA_G+".kpi_result result inner join "+SCHEMA_G+".kpi kpi " +
+						" on result.kpi_code=kpi.kpi_code inner join	"+SCHEMA_G+".employee em on result.employee_code=em.employee_code  inner join "+SCHEMA_G+".period p  on" +
+						" (result.period_no=p.period_no and result.year =p.year) "+approveKPIWhere +" order by em.employee_code, kpi.kpi_code";
+		
+		KPIAjax.searchObject(query,{ 
+	//KPIAjax.searchKPI(year,  periodNo,employeeCode, etl_flag, approved_flag,{
+		callback:function(data){
+			//alert(data); 
 			if(data!=null && data.length>0){
-			    var str="<table class=\"table table-hover table-striped table-bordered table-condensed\" border=\"1\" style=\"font-size: 12px\">"+
-			    		"<thead>"+
-			    		"<tr> "+ 
-	            		"<th width=\"5%\"><div class=\"th_class\"></div></th>"+
-	            		"<th width=\"10%\"><div class=\"th_class\">Employee Code</div></th>"+
-	            		"<th width=\"25%\"><div class=\"th_class\">Employee Name</div></th>"+
-	            		"<th width=\"10%\"><div class=\"th_class\">KPI Code</div></th>"+ 
-	            		"<th width=\"30%\"><div class=\"th_class\">KPI Name</div></th>"+
-	            		"<th width=\"10%\"><div class=\"th_class\">Target</div></th>  "+
-	            		"<th width=\"10%\"><div class=\"th_class\">Actual</div></th>    "+
-	          		"</tr>"+
-	        	"</thead>"+
-	        	"<tbody>";
+				//var str="<div align=\"left\" style=\"padding-bottom: 4px;width:1070px\"> <a class=\"btn\" onclick=\"showForm('dataTable')\"><i class=\"icon-plus-sign\"></i>&nbsp;<span style=\"font-weight: normal;\">Add KPI</span></a>"+
+				//var str="<span  style=\"padding-left: 4px\"><a class=\"btn\" onclick=\"deleteRow('dataTable')\"><i class=\"icon-minus-sign\"></i>&nbsp;<span style=\"font-weight: normal;\">Delete KPI</span></a></span></div>";
+				var str="<div align=\"left\" style=\"padding-bottom: 4px\"><span><a class=\"btn\" onclick=\"deleteRow('dataTable2')\"><i class=\"icon-minus-sign\"></i>&nbsp;<span style=\"font-weight: normal;\">Delete KPI</span></a></span></div>";
+				str=str+"<table id=\"dataTable2\" class=\"table table-hover table-striped table-bordered table-condensed\" border=\"1\" style=\"font-size: 12px\">"+
+		    		"<thead>"+
+		    		"<tr> "+  
+		    		"<th width=\"5%\"><div class=\"th_class\"><input type=\"checkbox\"  name=\"chkAll2\" onClick=\"togleChk(this,'chk')\"/></div></th>"+
+		    		"<th width=\"10%\"><div class=\"th_class\">Employee Code</div></th>"+
+	         		"<th width=\"31%\"><div class=\"th_class\">Employee Name</div></th>"+
+	         		"<th width=\"7%\"><div class=\"th_class\">KPI Order</div></th>"+ 
+	         		"<th width=\"7%\"><div class=\"th_class\">KPI Code</div></th>"+ 
+	         		"<th width=\"35%\"><div class=\"th_class\">KPI Name</div></th>"+ 
+	         		"<th width=\"5%\"><div class=\"th_class\"></div></th>"+
+         		
+       		"</tr>"+
+     	"</thead>"+
+     	"<tbody>";
 	        	
-				for(var i=0;i<data.length;i++){
-				//for(var z=0;z<10;z++){
-					//var i=0;
-					str=str+
-					"<tr style=\"cursor: pointer;\">"+
-	          		"<td style=\"text-align: left;\">"+
-	          		"<input type=\"hidden\" name=\"year_input\" value=\""+data[i].year+"\" />"+
-	          		"<input type=\"hidden\" name=\"period_no_input\" value=\""+data[i].periodNo+"\" />"+
-	          		"<input type=\"hidden\" name=\"employee_code_input\" value=\""+data[i].employeeCode+"\" />"+
-	          		"<input type=\"hidden\" name=\"kpi_code_input\" value=\""+data[i].kpiCode+"\" />"+ 
-	          		"<input type=\"checkbox\" name=\"kpi_result_id\" value=\""+data[i].year+"_"+data[i].periodNo+"_"+data[i].employeeCode+"_"+data[i].kpiCode+"\" />"+
+				for(var i=0;i<data.length;i++){  
+					 var kpi_order_inner=data[i][9];
+		            	var kpi_weight_inner=data[i][10];
+		            	var target_data_inner=data[i][11];
+		            	var target_score_inner=data[i][12];
+				
+						str=str+
+					"<tr style=\"cursor: pointer;\">"+ 
+					"<td style=\"text-align: center;\">"+
+					"<input type=\"checkbox\"  name=\"chk\" value=\""+data[i][0]+"|"+data[i][1]+"|"+data[i][3]+"|"+data[i][5]+"\" />"+
+	          		"<input type=\"hidden\" name=\"year_input\" value=\""+data[i][0]+"\" />"+
+	          		"<input type=\"hidden\" name=\"period_no_input\" value=\""+data[i][1]+"\" />"+
+	          		"<input type=\"hidden\" name=\"employee_code_input\" value=\""+data[i][3]+"\" />"+
+	          		"<input type=\"hidden\" name=\"kpi_code_input\" value=\""+data[i][5]+"\" />"+ 
+	          		"<input type=\"hidden\" name=\"kpi_result_id\" value=\""+data[i][0]+"_"+data[i][1]+"_"+data[i][3]+"_"+data[i][5]+"\" />"+
+	          		
 	          		"</td>"+
-	            	"<td style=\"text-align: left;\">"+data[i].employeeCode+"</td>"+
-	            	"<td>"+data[i].empName+"</td> "+
-	            	"<td style=\"text-align: left;\">"+data[i].kpiCode+"</td>"+
-	            	"<td>"+data[i].kpiName+"</td> "+
-	            	"<td style=\"text-align: right;\">"+(data[i].targetScore!=null?data[i].targetScore:"")+"</td>  "+
-	            	"<td style=\"text-align: right;\">"+(data[i].actualScore!=null?data[i].actualScore:"")+"</td>  "+
-	          	"</tr>  ";
+	            	"<td style=\"text-align: left;\">"+data[i][3]+"</td>"+
+	            	"<td>"+data[i][4]+"</td> "+
+	            	"<td style=\"text-align: left;\">"+kpi_order_inner+"</td>"+
+	            	"<td style=\"text-align: left;\">"+data[i][5]+"</td>"+
+	            	"<td>"+data[i][6]+"</td> "+
+	            	"<td>"+
+	            	//result.kpi_order,result.kpi_weight,result.target_data,result.target_score
+	       		 
+	            	 " <i title=\"Add KPI\" onclick=\"showForm2('add','"+data[i][0]+"','"+data[i][1]+"','"+data[i][3]+"','"+data[i][5]+"','"+kpi_order_inner+"','"+kpi_weight_inner+"','"+target_data_inner+"','"+target_score_inner+"')\" style=\"cursor: pointer;\" class=\"icon-plus\"></i>&nbsp;&nbsp;"+
+	          		 " <i title=\"Edit KPI\" onclick=\"showForm2('edit','"+data[i][0]+"','"+data[i][1]+"','"+data[i][3]+"','"+data[i][5]+"','"+kpi_order_inner+"','"+kpi_weight_inner+"','"+target_data_inner+"','"+target_score_inner+"')\" style=\"cursor: pointer;\" class=\"icon-edit\"></i>&nbsp;&nbsp;"+
+	          		
+	            	"</td> "+
+	            	
+	          		"</tr>  ";
 				}
-				str=str+"</tbody> </table>";
+				/* str=str+"</tbody> </table>";
 				
 				$("#employee_section").html(str);  
-				$("#dialog-Message").slideDown("slow");
+				$("#dialog-Message").slideDown("slow"); */
 			}else{
-			    $("#dialog-Message").slideUp("slow");
+			   // $("#dialog-Message").slideUp("slow");
+			   //str="<div align=\"left\" style=\"padding-bottom: 4px\"> <a class=\"btn\" onclick=\"showForm('add')\"><i class=\"icon-plus-sign\"></i>&nbsp;<span style=\"font-weight: normal;\">Add KPI</span></a></div>";
+			//   str=str+"<div align=\"left\" style=\"padding-bottom: 4px;width:1070px\"> <a class=\"btn\" onclick=\"showForm('add')\"><i class=\"icon-minus-sign\"></i>&nbsp;<span style=\"font-weight: normal;\">Delete KPI</span></a></div>";
+			  
+			str="<table id=\"dataTable2\" class=\"table table-hover table-striped table-bordered table-condensed\" border=\"1\" style=\"font-size: 12px;width:1070px\">"+
+	    		"<thead>"+
+	    		"<tr> "+
+      			"<th colspan=\"5\" width=\"100%\"><div class=\"th_class\">No Data</div></th>"+ 
+      		"</tr>"+
+    	"</thead>"+
+    	"<tbody>";  
+				
+			//	$("#approve_section").html("");  
+		 
 			}
+			str=str+"</tbody> </table>";
+			
+			$("#employee_section2").html(str);  
+			$("#dialog-Message").slideUp("slow");  
+			$("#dialog-Message2").slideDown("slow");
+			
 			 
 		}
 			
 });		 
+}  
+
+function showForm2(mode,year_input,period_no_input,employee_code_input,kpi_code_input,kpi_order_input,kpi_weight_input,target_data_input,target_score_input){ 
+	//	$("#id_element").show();  
+	$("#year_input2").val(year_input);
+	$("#period_no_input2").val(period_no_input);
+	$("#employee_code_input2").val(employee_code_input);
+	$("#kpi_code_input2").val(kpi_code_input);
+	
+	$("#kpiOrder2").val(""); 
+	$("#kpiWeight2").val("");
+	$("#targetData2").val("");
+	$("#targetScore2").val(""); 
+	
+	$("#kpiCode2").val(""); 
+	$("#kpiName2").val(""); 
+	$("#kpiCode_hidden2").val(""); 
+	$("#kpiName_hidden2").val(""); 
+	$("#kpiName_result2").val(""); 
+	    
+	$("#mode").val(mode);
+		var height=299;	
+		$("#form-input").css("display","block");		
+		 if(mode=='edit'){
+			 height=189;
+			 $("#form-input").css("display","none"); 
+			 $("#year_input2").val(year_input);
+				$("#period_no_input2").val(period_no_input);
+				$("#employee_code_input2").val(employee_code_input);
+				$("#kpi_code_input2").val(kpi_code_input);
+				
+					$("#kpiOrder2").val(kpi_order_input); 
+					$("#kpiWeight2").val(kpi_weight_input);
+					$("#targetData2").val(target_data_input);
+					$("#targetScore2").val(target_score_input); 
+		 
+ 		 }
+				$( "#dialog-form2" ).dialog({ 
+					position: 'top',
+					 height: height,
+					 width:650,
+					modal: true,
+					 hide: 'fold',
+				     show: 'blind' 
+				}); 
+			 
 }
- 
-function approve (){
-	/* 	var employee_code_input=document.getElementsByName("employee_code_input"); // period_no_input , year_input , adjustPercentage_input , weightPercentage_input
-		var period_no_input=document.getElementsByName("period_no_input");
-		var year_input=document.getElementsByName("year_input");
-		var kpi_code_input=document.getElementsByName("kpi_code_input"); */ 
-		var kpi_result_ids=document.getElementsByName("kpi_result_id");
-		
-		var valueArray=[];
-		var value="";
-		var yearArray=[];
-		var period_noArray=[];
-		var employee_codeArray=[];
-		var kpi_codeArray=[];
-		if(kpi_result_ids!=null && kpi_result_ids.length>0){  
-			for(var i=0;i<kpi_result_ids.length;i++){
-				if(kpi_result_ids[i].checked){
-					value=kpi_result_ids[i].value; 
-					//alert(value);
-					valueArray= value.split("_");
-					yearArray.push(parseInt(valueArray[0]));
-					period_noArray.push(parseInt(valueArray[1]));
-					employee_codeArray.push(valueArray[2]);
-					kpi_codeArray.push(valueArray[3]);
-				}
-			}  
+function showForm(mode){ 
+	//	$("#id_element").show(); 
+	 var year=jQuery.trim($("#yearElement").val());
+	 var periodNo=jQuery.trim($("#periodElement").val());
+	 var department_code=jQuery.trim($("#departmentElement").val());
+	 var position_code=jQuery.trim($("#positionElement option:selected").text());
+	 var employee_code=jQuery.trim($("#employeeElement").val());
+	 var employee_name=jQuery.trim($("#employeeSelection").val()); 
+	 
+	 if(periodNo=='all' ){
+		 alert("Please select Period.");
+		 return false;
+	 }
+	 if(department_code=='all' ){
+		 alert("Please select Department.");
+		 return false;
+	 }
+	 
+	$("#kpiCode").val("");
+	$("#kpiName").val("");
+	$("#kpiCode_hidden").val("");
+	$("#kpiName_hidden").val("");
+	$("#kpiName_result").val("");
+	
+	$( "#dialog-form" ).dialog({ 
+		position: 'top',
+		 height: 163,
+		 width:650,
+		modal: true,
+		 hide: 'fold',
+	     show: 'blind' 
+	}); 
+}
+function doSubmitAction(){  
+	var year_input2 =$("#year_input2").val();
+	var period_no_input2 =$("#period_no_input2").val();
+	var employee_code_input2 =$("#employee_code_input2").val();
+	var kpi_code_input2 =$("#kpi_code_input2").val(); 
+	
+	var kpiOrder2=$("#kpiOrder2").val(); 
+	var kpiWeight2=$("#kpiWeight2").val();
+	var targetData2=$("#targetData2").val();
+	var targetScore2=$("#targetScore2").val(); 
+	
+		var mode=$("#mode").val();
+		var query="";
+		var queryCheckDuplicate="";  
+		if(mode=='add'){
+				kpi_code_input2=$("#kpiCode_hidden2").val();
+				query="insert into "+SCHEMA_G+".kpi_result set kpi_order="+kpiOrder2+",kpi_weight="+kpiWeight2+",target_data='"+targetData2+"',target_score="+targetScore2+", created_dt=now(),updated_dt=now()"+
+				",year="+year_input2+",period_no="+period_no_input2+",employee_code='"+employee_code_input2+"',kpi_code='"+kpi_code_input2+"'";
+				queryCheckDuplicate=" SELECT * FROM "+SCHEMA_G+".kpi_result  where year="+year_input2+" and period_no="+period_no_input2+" and employee_code='"+employee_code_input2+"' and kpi_code='"+kpi_code_input2+"'";
+		}else {//edit
+			  query="update  "+SCHEMA_G+".kpi_result  set kpi_order="+kpiOrder2+",kpi_weight="+kpiWeight2+",target_data='"+targetData2+"',target_score="+targetScore2+", updated_dt=now() "+
+			  " where year="+year_input2+" and period_no="+period_no_input2+" and employee_code='"+employee_code_input2+"' and kpi_code='"+kpi_code_input2+"'";
 		}
-		//alert(yearArray.length)
-		//if(false)
-		if(yearArray.length>0){ 
-			KPIAjax.approveKPIResult(yearArray
-					,period_noArray,employee_codeArray,kpi_codeArray,"Y",{
-				callback:function(data){
-					//alert("return adjust="+data);
-					if(data!=null && data!=0){
-						$("#_message_show").html("Approve Success."); 
-					}else{
-						$("#_message_show").html("Approve not Success."); 
-					}
-					$( "#dialog-Message-alert" ).dialog({
-						/* height: 140, */
-						modal: true,
-						buttons: {
-							"Ok": function() { 
-								$( this ).dialog( "close" );
-								distplayApproveKPIResult();
-							}
-						} 
-					}); 
-				},
-				 errorHandler:function(errorString, exception) { 
-					 alert(errorString+","+exception)
-				 }
-		 });
-		}  
-	}  
- 
+		if(queryCheckDuplicate.length>0){
+			KPIAjax.searchObject(queryCheckDuplicate,{
+				callback:function(data){ 
+					 if(data!=null && data.length>0){
+							alert("ไม่สามารถเพิ่มข้อมูลได้เนื่องจาก key ซ้ำ ");
+					 }else{
+						 doSubmit(query);
+					 } 
+				}
+			});
+		}else
+			doSubmit(query);
+		
+		 
+	}
+function doSubmit(query){ 
+	KPIAjax.executeQuery(query,{
+		callback:function(data){ 
+			if(data!=0){					
+				showPage('2'); 
+				$( "#dialog-form2" ).dialog("close");
+			}
+		}
+	});
+		 
+}
+function doAction(ids){ 
+	if(ids.length>0){
+		var whereStr="";
+		for(var i=0;i<ids.length;i++){
+			var id_array=ids[i].split("|");
+			whereStr=whereStr+"( year="+id_array[0]+" and period_no="+id_array[1]+" and employee_code='"+id_array[2]+"' and kpi_code='"+id_array[3]+"' ) ";
+			if((i+1)!=ids.length)
+				whereStr=whereStr+" or ";
+		}
+	   //alert(whereStr)	;
+	   //return false;
+	   var query="delete  FROM "+SCHEMA_G+".kpi_result where "+whereStr;
+		KPIAjax.executeQuery(query,{
+			callback:function(data){
+				if(data==0)
+					alert("Can not delete because this record is in use.");
+				showPage('2');
+			}
+		}); 
+	}
+}  
+function confirmDelete(id1,id2){
+	$( "#dialog-confirmDelete" ).dialog({
+		/* height: 140, */
+		modal: true,
+		buttons: {
+			"Yes": function() { 
+				$( this ).dialog( "close" );
+				$("#mode").val('delete');
+				doAction(id1,id2);
+			},
+			"No": function() {
+				$( this ).dialog( "close" );
+				return false;
+			}
+		}
+	});
+}
+function assignKPI(){
+	 var year=jQuery.trim($("#yearElement").val());
+	 var periodNo=jQuery.trim($("#periodElement").val());
+	 var department_code=jQuery.trim($("#departmentElement").val());
+	 var position_code=jQuery.trim($("#positionElement option:selected").text());
+	 var employee_code=jQuery.trim($("#employeeElement").val());
+	 var employee_name=jQuery.trim($("#employeeSelection").val()); 
+	 if(employee_name.length==0)
+		 employee_code=""; 
+	 
+	 var kpiCode_add=document.getElementsByName("kpiCode_add");
+	 var kpiOrder=document.getElementsByName("kpiOrder");
+	 var kpiWeight=document.getElementsByName("kpiWeight");
+	 var targetData=document.getElementsByName("targetData");
+	 var targetScore=document.getElementsByName("targetScore");
+	 var sum=0;
+	 var isBreak=false;
+	 
+	 
+	 var kpiCode_add_array=[];
+	 if(kpiCode_add!=null && kpiCode_add.length>0){
+		 for(var i=0;i<kpiCode_add.length;i++){ 
+			 kpiCode_add_array.push(jQuery.trim(kpiCode_add[i].value));
+		 }
+	 }
+	 
+	 var kpiOrders_array=[];
+	 if(kpiOrder!=null && kpiOrder.length>0){
+		 for(var i=0;i<kpiOrder.length;i++){
+			 var isBank=checkBank(jQuery.trim(kpiOrder[i].value));
+			 if(isBank){
+				 alert("Please fill Data. kpiOrder");
+				 isBreak=true;
+				 break;
+			 } 
+			 var isNumber=checkNumber(jQuery.trim(kpiOrder[i].value));
+			 if(isNumber){
+				 alert('Please fill Number kpiOrder !!!');  
+				 isBreak=true; 
+				 break;				 
+			 }
+			 kpiOrders_array.push(jQuery.trim(kpiOrder[i].value));
+		 }
+	 }
+	 if(isBreak)
+		 return false;
+	 var kpiWeight_array=[];
+	 if(kpiWeight!=null && kpiWeight.length>0){
+		 for(var i=0;i<kpiWeight.length;i++){
+			 var isBank=checkBank(jQuery.trim(kpiWeight[i].value));
+			 if(isBank){
+				 alert("Please fill Data. kpiWeight");
+				 isBreak=true;
+				 break;
+			 } 
+			 var isNumber=checkNumber(jQuery.trim(kpiWeight[i].value));
+			 if(isNumber){
+				 alert('Please fill Number kpiWeight !!!');  
+				 isBreak=true; 
+				 break;
+				 
+			 }
+			 var weigth=parseFloat(kpiWeight[i].value);
+			 sum=sum+weigth;
+			 kpiWeight_array.push(jQuery.trim(kpiWeight[i].value));
+		 }
+	 }
+	 if(isBreak)
+		 return false;
+	 
+	var targetData_array=[];
+	 if(targetData!=null && targetData.length>0){
+		 for(var i=0;i<targetData.length;i++){
+			 var isBank=checkBank(jQuery.trim(targetData[i].value));
+			 if(isBank){
+				 alert("Please fill Data. targetData");
+				 isBreak=true;
+				 break;
+			 } 
+			 var isNumber=checkNumber(jQuery.trim(targetData[i].value));
+			 if(isNumber){
+				 alert('Please fill Number targetData!!!');  
+				 isBreak=true; 
+				 break;
+				 
+			 }
+			 targetData_array.push(jQuery.trim(targetData[i].value));
+			 
+		 }
+	 }
+	 if(isBreak)
+		 return false;
+	 
+	 var targetScore_array=[]
+	 if(targetScore!=null && targetScore.length>0){
+		 for(var i=0;i<targetScore.length;i++){
+			 var isBank=checkBank(jQuery.trim(targetScore[i].value));
+			 if(isBank){
+				 alert("Please fill Data.targetScore");
+				 isBreak=true;
+				 break;
+			 } 
+			 var isNumber=checkNumber(jQuery.trim(targetScore[i].value));
+			 if(isNumber){
+				 alert('Please fill Number targetScore!!!');  
+				 isBreak=true; 
+				 break;
+				 
+			 } 
+			 targetScore_array.push(jQuery.trim(targetScore[i].value));
+			 
+		 }
+	 }
+	 if(isBreak)
+		 return false;
+	 
+	 if(sum!=100){
+		 alert("Total KPI Weight must be 100.");
+		 return false;
+	 }
+	 var year=jQuery.trim($("#yearElement").val());
+	 var periodNo=jQuery.trim($("#periodElement").val());
+	 var department_code=jQuery.trim($("#departmentElement").val());
+	 var position_code=jQuery.trim($("#positionElement option:selected").text());
+	 var employee_code=jQuery.trim($("#employeeElement").val());
+	 var employee_name=jQuery.trim($("#employeeSelection").val()); 
+	 
+	 if(periodNo=='all' ){
+		 alert("Please select Period.");
+		 return false;
+	 }
+	 if(department_code=='all' ){
+		 alert("Please select Department.");
+		 return false;
+	 }
+		 
+	/*  var etl_flag='N';*/
+	 var approved_flag='0';  
+	  
+	 var approveKPIWhere=""; 
+	 var haveWhere=false;
+	// alert(jQuery.trim(employee_name).length)
+	  if(jQuery.trim(employee_name).length==0){
+		 employee_code='';
+	 }   
+	/* if(year.length>0){		
+		if(haveWhere)
+			approveKPIWhere=approveKPIWhere+" and result.year ="+year+"";
+		else
+			approveKPIWhere=approveKPIWhere+" where result.year ="+year+"";
+		haveWhere=true;
+	}
+	if(periodNo.length>0 && periodNo!='all'){		
+		if(haveWhere)
+			approveKPIWhere=approveKPIWhere+" and result.period_no="+periodNo+"";
+		else
+			approveKPIWhere=approveKPIWhere+" where result.period_no="+periodNo+"";
+		haveWhere=true;
+	} */
+	if(department_code.length>0 && department_code!='all'){		
+		if(haveWhere)
+			approveKPIWhere=approveKPIWhere+" and em.department_code ='"+department_code+"'";
+		else
+			approveKPIWhere=approveKPIWhere+" where em.department_code = '"+department_code+"'";
+		haveWhere=true;
+	}
+	if(position_code.length>0 && position_code!='All'){		
+		if(haveWhere)
+			approveKPIWhere=approveKPIWhere+" and em.position_name ='"+position_code+"'";
+		else
+			approveKPIWhere=approveKPIWhere+" where em.position_name = '"+position_code+"'";
+		haveWhere=true;
+	}
+	if(employee_code.length>0){		
+		if(haveWhere)
+			approveKPIWhere=approveKPIWhere+" and em.employee_code='"+employee_code+"'";
+		else
+			approveKPIWhere=approveKPIWhere+" where em.employee_code ='"+employee_code+"'";
+		haveWhere=true;
+	}
+	if(employee_name.length>0){
+		if(haveWhere)
+			approveKPIWhere=approveKPIWhere+" and  concat(em.employee_name,' ',em.employee_surname)='"+employee_name+"' ";
+		else
+			approveKPIWhere=approveKPIWhere+" where  concat(em.employee_name,' ',em.employee_surname)='"+employee_name+"' ";
+		haveWhere=true;
+	}
+	
+	/* if(etl_flag.length>0){		
+		if(haveWhere)
+			approveKPIWhere=approveKPIWhere+" and kpi.etl_flag='"+etl_flag+"'";
+		else
+			approveKPIWhere=approveKPIWhere+" where kpi.etl_flag='"+etl_flag+"'";
+		haveWhere=true;
+	}  */
+	
+	/* if(approved_flag.length>0){		
+		if(haveWhere)
+			approveKPIWhere=approveKPIWhere+" and result.approved_flag ='"+approved_flag+"'";
+		else
+			approveKPIWhere=approveKPIWhere+" where result.approved_flag = '"+approved_flag+"'";
+		haveWhere=true;
+	}   */
+	var query ="select em.employee_code" +
+	"	,concat(em.employee_name,' ',em.employee_surname) as emp_name from  "+SCHEMA_G+".employee em  "+approveKPIWhere +" order by em.employee_code ";
+	KPIAjax.assignKPI(SCHEMA_G,query,year,periodNo,kpiCode_add_array,kpiOrders_array,kpiWeight_array,targetData_array,targetScore_array,approved_flag,	
+			//Integer periodNo, String[] kpiCodes,String[] kpiOrders,String[] kpiWeight,String[] targetData,String[] targetScore, String approved_flag) {
+		{
+			callback:function(data){ 
+				if(data==0)
+					alert("Can not assign KPI.");
+				showPage('2');
+				// alert(data.length);
+			}
+    });	
+}
+function addRow(tableID,kpiName,kpiCode) {
+	 
+    var table = document.getElementById(tableID);
+
+    var rowCount = table.rows.length;
+    var row = table.insertRow(rowCount);
+
+    var colCount = table.rows[0].cells.length;
+    var newcell1 = row.insertCell(0);
+    newcell1.setAttribute("style","text-align: center; align=\"center\""); 
+    
+    newcell1.innerHTML="<input type=\"checkbox\"  name=\"chk_input\" class=\"input_kpi\"/>";
+    var newcell2 = row.insertCell(1);
+     newcell2.innerHTML="<input type=\"text\"  name=\"kpiOrder\"  class=\"input_kpi\" style=\"width:30px;height: 20px;line-height: 20px;\"/> "+
+     					"<input type=\"hidden\"  name=\"kpiCode_add\"  value=\""+kpiCode+"\"/>";
+    var newcell3 = row.insertCell(2);
+    newcell3.innerHTML=kpiName;
+    var newcell4 = row.insertCell(3);
+    newcell4.innerHTML="<input type=\"text\"  name=\"kpiWeight\"  class=\"input_kpi\" style=\"width:130px;height: 20px;line-height: 20px;\"/> ";
+    var newcell5 = row.insertCell(4);
+    newcell5.innerHTML="<input type=\"text\"  name=\"targetData\"  class=\"input_kpi\" style=\"width:130px;height: 20px;line-height: 20px;\"/> ";
+    var newcell6 = row.insertCell(5);
+    newcell6.innerHTML="<input type=\"text\"  name=\"targetScore\" class=\"input_kpi\" style=\"width:130px;height: 20px;line-height: 20px;\"/> ";
+    $( "#dialog-form" ).dialog("close");
+    /*  
+    for(var i=0; i<colCount; i++) {
+
+        var newcell = row.insertCell(i);
+
+        newcell.innerHTML = table.rows[0].cells[i].innerHTML;
+        //alert(newcell.childNodes);
+     switch(newcell.childNodes[0].type) {
+            case "text":
+                    newcell.childNodes[0].value = "";
+                    break;
+            case "checkbox":
+                    newcell.childNodes[0].checked = false;
+                    break;
+            case "select-one":
+                    newcell.childNodes[0].selectedIndex = 0;
+                    break;
+        } 
+    }
+    */
+}
+
+function deleteRow(tableID) {
+//	alert(tableID) 
+    try {
+    var table = document.getElementById(tableID);
+    var rowCount = table.rows.length;
+ //alert(rowCount)
+ var ids=[];
+    for(var i=1; i<rowCount; i++) {
+        var row = table.rows[i];
+        var chkbox = row.cells[0].childNodes[0];
+        if(null != chkbox && true == chkbox.checked) {
+            if(rowCount <= 1) {
+                alert("Cannot delete all the rows.");
+                break;
+            }
+            if(tableID=='dataTable2'){
+            	//alert(chkbox.value)
+            	ids.push(chkbox.value);
+            }
+            table.deleteRow(i);
+            rowCount--;
+            i--;
+        } 
+    }
+    if(tableID=='dataTable2')
+    	doAction(ids);
+    }catch(e) {
+        alert(e);
+    }
+}
+function selectKPI2(){
+ 	var kpiName =jQuery.trim($("#kpiName_hidden2").val());
+ 	var kpiCode =jQuery.trim($("#kpiCode_hidden2").val());
+ 	//alert(kpiCode+","+kpiName);
+ 	if(kpiName.length==0 && kpiCode.length==0){
+ 		alert("Please fill KPI Code or KPI Name.")
+ 		return false;
+ 	}
+ 	//addRow('dataTable',kpiName,kpiCode)
+ 		//alert(kpiName);
+ 	
+ }
+function selectKPI(){
+ 	var kpiName =jQuery.trim($("#kpiName_hidden").val());
+ 	var kpiCode =jQuery.trim($("#kpiCode_hidden").val());
+ 	//alert(kpiCode+","+kpiName);
+ 	if(kpiName.length==0 && kpiCode.length==0){
+ 		alert("Please fill KPI Code or KPI Name.")
+ 		return false;
+ 	}
+ 	addRow('dataTable',kpiName,kpiCode)
+ 		//alert(kpiName);
+ 	
+ }
+ function checkNumber(txtVal){
+	// alert(txtVal) 
+	 if(!(intRegex.test(txtVal) || floatRegex.test(txtVal))) {
+	      //  alert('Please fill Number !!!');
+	      return true;
+	    }
+	 return false;
+ } 
+ function checkBank(txtVal){
+	 if(txtVal.length==0){
+	      //  alert('Please fill Number !!!');
+	      return true;
+	    }
+	 return false;
+ }
+ function showPage(page){
+	 if(page=='1'){
+		 distplayKPI();
+	 }else if(page=='2'){
+		 // dialog-Message2
+		 distplayKPI2();
+	 }
+ }
+ function togleChk(obj,name){
+	 
+  //  alert(obj.checked);
+	var checkElments= document.getElementsByName(name);
+	if(checkElments!=null && checkElments.length>0){
+		for(var i=0;i<checkElments.length;i++){
+			checkElments[i].checked=obj.checked;
+		}
+	}
+	
+ } 
 </script> 
 </body>
 </html>  
