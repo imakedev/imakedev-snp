@@ -308,7 +308,7 @@ function distplayEmployee(){
         		"<th width=\"10%\"><div class=\"th_class\">Employee Code</div></th>"+
         		"<th width=\"20%\"><div class=\"th_class\">Employee Name</div></th>"+
         		"<th width=\"10%\"><div class=\"th_class\">Weight Percentage</div></th>"+ 
-        		"<th width=\"10%\"><div class=\"th_class\">Adjust Percentage</div></th>"+
+        		"<th width=\"10%\"><div class=\"th_class\"  style=\"color: blue;\">Adjust Percentage</div></th>"+
         		"<th width=\"20%\"><div class=\"th_class\">AdjustmentReason</div></th>  "+
         		"<th width=\"10%\"><div class=\"th_class\">Final Percentage</div></th>    "+
       		"</tr>"+
