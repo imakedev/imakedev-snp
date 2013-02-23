@@ -106,11 +106,21 @@ public class KPIAjax {
 		public int executeQuery(String query){
 			return kpiService.executeQuery(query);
 		}
-		public int assignKPI(String SCHEMA, String query, Integer year,
+		public List<String[]> assignKPI(String SCHEMA, String query, Integer year,
 				Integer periodNo, String[] kpiCodes,String[] kpiOrders,String[] kpiWeight,String[] targetData,String[] targetScore, String approved_flag) {
 		
 			try{
-			return kpiService.assignKPI(SCHEMA, query,year, periodNo, kpiCodes,kpiOrders,kpiWeight,targetData,targetScore,approved_flag);
+			return  kpiService.assignKPI(SCHEMA, query,year, periodNo, kpiCodes,kpiOrders,kpiWeight,targetData,targetScore,approved_flag);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			return null;
+		}
+		public int assignKPIUpdate(String SCHEMA, String query, Integer year,
+				Integer periodNo, String[] kpiCodes,String[] kpiOrders,String[] kpiWeight,String[] targetData,String[] targetScore, String approved_flag) {
+		
+			try{
+			return  kpiService.assignKPIUpdate(SCHEMA, query,year, periodNo, kpiCodes,kpiOrders,kpiWeight,targetData,targetScore,approved_flag);
 			}catch(Exception e){
 				e.printStackTrace();
 			}
