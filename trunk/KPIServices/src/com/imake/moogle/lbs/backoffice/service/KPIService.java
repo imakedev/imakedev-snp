@@ -37,9 +37,13 @@ public interface KPIService {
 	//search
 	public List searchObject(String query);
 	public int executeQuery(String query);
-	public int assignKPI(String SCHEMA, String query, Integer year,
+	public List<String[]> assignKPI(String SCHEMA, String query, Integer year,
 			Integer periodNo, String[] kpiCodes,String[] kpiOrders,String[] kpiWeight,String[] targetData,String[] targetScore, String approved_flag) ;
-	 
+ 
+	public int assignKPIUpdate(String SCHEMA, String query, Integer year,
+			Integer periodNo, String[] kpiCodes,String[] kpiOrders,String[] kpiWeight,String[] targetData,String[] targetScore, String approved_flag);
+		// TODO Auto-generated method stub
+	
 	
 	//public List<com.imake.moogle.lbs.backoffice.dto.KpiResult> searchApproveKPI(Integer year,Integer periodNo,String employeeCode);
 }

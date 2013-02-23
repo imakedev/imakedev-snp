@@ -523,13 +523,14 @@ public class KPIServiceImpl implements KPIService {
 		}
 
 		@Override
-		public int assignKPI(String SCHEMA, String query, Integer year,
+		public List<String[]> assignKPI(String SCHEMA, String query, Integer year,
 				Integer periodNo, String[] kpiCodes,String[] kpiOrders,String[] kpiWeight,String[] targetData,String[] targetScore, String approved_flag) {
 			// TODO Auto-generated method stub
 			
 			Session session=sessionAnnotationFactory.getCurrentSession();
 		int returnId=0;
 		int returnIdAll=0;
+		List<String[]> results=new ArrayList<String[]>();
 		try{
 			StringBuffer sb =new StringBuffer();
 			Query sqlQuery= session.createSQLQuery(query);
@@ -569,6 +570,108 @@ public class KPIServiceImpl implements KPIService {
 						sqlQuery.setParameter("approved_flag", approved_flag); 
 						returnId=sqlQuery.executeUpdate();
 						returnIdAll=returnIdAll+returnId;
+						sb.setLength(0);
+					
+						/*sb.append("select result.year,result.period_no,p.period_desc,result.employee_code" +
+								"	,concat(em.employee_name,' ',em.employee_surname) as emp_name , result.kpi_code ,kpi.kpi_name " +
+								"  ,result.target_score,result.actual_score,result.kpi_order,result.kpi_weight,''),concat(result.target_data,''),concat(result.target_score,'') from "+SCHEMA+".kpi_result result inner join "+SCHEMA+".kpi kpi " +
+								" on result.kpi_code=kpi.kpi_code inner join	"+SCHEMA+".employee em on result.employee_code=em.employee_code  inner join "+SCHEMA+".period p  on" +
+								" (result.period_no=p.period_no and result.year =p.year)  where result.year="+year+" and result.period_no="+periodNo +" and result.employee_code='"+ids[i]+"' and result.kpi_code='"+kpiCodes[j]+"' order by em.employee_code, kpi.kpi_code");
+						*/
+						sb.append("select result.year,result.period_no,p.period_desc,result.employee_code" +
+								"	,concat(em.employee_name,' ',em.employee_surname) as emp_name , result.kpi_code ,kpi.kpi_name " +
+								"  ,result.target_score,result.actual_score,cast(result.kpi_order as char),cast(result.kpi_weight as char),cast(result.target_data as char),cast(result.target_score as char) from "+SCHEMA+".kpi_result result inner join "+SCHEMA+".kpi kpi " +
+								" on result.kpi_code=kpi.kpi_code inner join	"+SCHEMA+".employee em on result.employee_code=em.employee_code  inner join "+SCHEMA+".period p  on" +
+								" (result.period_no=p.period_no and result.year =p.year)  where result.year="+year+" and result.period_no="+periodNo +" and result.employee_code='"+ids[i]+"' and result.kpi_code='"+kpiCodes[j]+"' order by em.employee_code, kpi.kpi_code");
+						
+						sqlQuery= session.createSQLQuery(sb.toString());
+						List result_kpi=sqlQuery.list();
+						int size_kpi=result_kpi.size();
+				    	// master=new ArrayList<KPIMaster>(size);
+				    
+				    	for (int k = 0; k < size_kpi; k++) {
+				    		Object obj[] =(Object[])result_kpi.get(k);
+				    		String[] kpi_result=new String[8];
+				    		kpi_result[0]=obj[3]!=null?((String)obj[3]):"";
+				    		kpi_result[1]=obj[4]!=null?((String)obj[4]):"";
+				    	//	kpi_result[2]=obj[9]!=null?(((Integer)obj[9]).intValue()+""):"";
+				    		kpi_result[2]=obj[9]!=null?((String)obj[9]):"";
+				    		kpi_result[3]=obj[5]!=null?((String)obj[5]):"";
+				    		kpi_result[4]=obj[6]!=null?((String)obj[6]):"";
+				    		kpi_result[5]=obj[10]!=null?((String)obj[10]):"";
+				    		kpi_result[6]=obj[11]!=null?((String)obj[11]):"";
+				    		kpi_result[7]=obj[12]!=null?((String)obj[12]):"";
+				    		//ids[i]=(String)obj[0]; 
+				    		results.add(kpi_result);
+						} 
+						
+						//List<String[]> results=new ArrayList<String[]>();
+						
+	    			}
+				} 
+			}
+	    	 
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			if (session != null) {
+				session = null;
+			} 
+		}
+				return results;
+		}
+		 
+		@Override
+		public int assignKPIUpdate(String SCHEMA, String query, Integer year,
+				Integer periodNo, String[] kpiCodes,String[] kpiOrders,String[] kpiWeight,String[] targetData,String[] targetScore, String approved_flag) {
+			// TODO Auto-generated method stub
+			
+			Session session=sessionAnnotationFactory.getCurrentSession();
+		int returnId=0;
+		int returnIdAll=0;
+		List<String[]> results=new ArrayList<String[]>();
+		try{
+			StringBuffer sb =new StringBuffer();
+			Query sqlQuery= session.createSQLQuery(query);
+			List result=sqlQuery.list();
+			int size=result.size();
+	    	// master=new ArrayList<KPIMaster>(size);
+	    	String[] ids=new String[size];
+	    	for (int i = 0; i < size; i++) {
+	    		Object obj[] =(Object[])result.get(i);
+	    		ids[i]=(String)obj[0]; 
+			} 
+	    	for (int i = 0; i < ids.length; i++) {
+	    		for (int j = 0; j < kpiCodes.length; j++) {
+	    			sb.setLength(0); 
+	    			sb.append(" select count(*) from "+SCHEMA+".kpi_result  where year= "+year+" and period_no="+periodNo+" and employee_code='"+ids[i]+"' and " +
+		    				" kpi_code='"+kpiCodes[j]+"'");
+	    			sqlQuery=session.createSQLQuery(sb.toString());
+	    			java.math.BigInteger count=(java.math.BigInteger)sqlQuery.uniqueResult(); 
+    				sb.setLength(0); 
+	    			if(count.intValue()>0){ //update 
+						sb.append("update "+SCHEMA+".kpi_result set approved_flag=:approved_flag  ,kpi_order="+kpiOrders[j]+",kpi_weight="+kpiWeight[j]+",target_data='"+targetData[j]+"',target_score="+targetScore[j]+", updated_dt=now()"+
+	    						//",year="+year+",period_no="+periodNo+",employee_code='"+ids[i]+"',kpi_code='"+kpiCodes[j]+"'"+
+								//",updated_dt=now()" +
+								" where year="+year+" and period_no="+periodNo +
+								"	and employee_code='"+ids[i]+"'" +
+								"	and kpi_code='"+kpiCodes[j]+"'");
+						sqlQuery= session.createSQLQuery(sb.toString());
+						sqlQuery.setParameter("approved_flag", approved_flag); 
+						returnId=sqlQuery.executeUpdate();
+						returnIdAll=returnIdAll+returnId;
+	    			}else{//save
+	    				 //String[] kpiCodes,String[] kpiOrders,String[] kpiWeight,String[] targetData,String[] targetScore, String approved_flag) {
+	    						
+	    				sb.append("insert into "+SCHEMA+".kpi_result set approved_flag=:approved_flag ,kpi_order="+kpiOrders[j]+",kpi_weight="+kpiWeight[j]+",target_data='"+targetData[j]+"',target_score="+targetScore[j]+", created_dt=now(),updated_dt=now()"+
+	    						",year="+year+",period_no="+periodNo+",employee_code='"+ids[i]+"',kpi_code='"+kpiCodes[j]+"'");
+	    				 
+						sqlQuery= session.createSQLQuery(sb.toString());
+						sqlQuery.setParameter("approved_flag", approved_flag); 
+						returnId=sqlQuery.executeUpdate();
+						returnIdAll=returnIdAll+returnId; 
+						
 	    			}
 				} 
 			}
@@ -583,6 +686,5 @@ public class KPIServiceImpl implements KPIService {
 		}
 				return returnIdAll;
 		}
-		 
 	 
 }
