@@ -54,6 +54,9 @@ margin: 0 0 0px;
 .th_class{text-align: center;
 }
 a{cursor: pointer;}
+.ui-autocomplete-loading {
+    background: white url('<%=request.getContextPath() %>/resources/css/smoothness/images/ui-anim_basic_16x16.gif') right center no-repeat;
+  }
 </style> 
 </head> 
 <body> 
@@ -140,7 +143,43 @@ $(document).ready(function() {
      searchUOM();
    } 
 });
-	searchUOM();
+	$( "#uomName" ).autocomplete({
+		  source: function( request, response ) { 
+				var query="SELECT uom_id,uom_name FROM "+SCHEMA_G+".uom where uom_name like '%"+request.term+"%'";
+			   
+				KPIAjax.listMaster(query,{
+					callback:function(data){ 
+						if(data!=null && data.length>0){
+							response( $.map( data, function( item ) {
+					          return {
+					        	  label: item.name,
+					        	  value: item.name
+					            //label: item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", " + item.countryName,
+					            //value: item.name 
+					          }
+					        }));
+						}else{
+							var xx=[];
+							//alert("not have data")
+							response( $.map(xx));
+						}
+					}
+			 }); 
+		  },
+		  minLength: 2,
+		  select: function( event, ui ) { 
+			  this.value = ui.item.label;
+			 // $("#employeeElement").val(ui.item.value);
+		      return false;
+		  },
+		  open: function() {
+		    $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+		  },
+		  close: function() {
+		    $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+		  }
+		}); 
+	//searchUOM();
 }); 
 function searchUOM(){
 	var uomName =jQuery.trim($("#uomName").val());

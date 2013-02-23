@@ -54,6 +54,9 @@ margin: 0 0 0px;
 .th_class{text-align: center;
 }
 a{cursor: pointer;}
+ .ui-autocomplete-loading {
+    background: white url('<%=request.getContextPath() %>/resources/css/smoothness/images/ui-anim_basic_16x16.gif') right center no-repeat;
+  } 
 </style> 
 </head> 
 <body> 
@@ -66,6 +69,8 @@ a{cursor: pointer;}
  <div class="control-group">
     <label class="control-label">Data Source Name:</label>
     <div class="controls">
+   <!--  <input type="hidden" id="employeeElement" />
+     <input type="text" id="employeeSelection" /> -->
       <input class="input_snp" type="text"  id="dataSourceName"> <a class="btn btn-primary" onclick="searchDataSource()"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Search</span></a>
     </div> 
   </div> 
@@ -134,13 +139,50 @@ var mail_subjectG;
 var mail_messageG;
 var mail_attachG;   
 $(document).ready(function() {   
-	$("#dataSourceName").keypress(function(event) {
+	 $("#dataSourceName").keypress(function(event) {
   if ( event.which == 13 ) {
      event.preventDefault();
      searchDataSource();
    } 
-});
-	searchDataSource();
+});   
+	$( "#dataSourceName" ).autocomplete({
+		  source: function( request, response ) { 
+				var query="SELECT data_source_id,data_source_name FROM "+SCHEMA_G+".data_source where data_source_name like '%"+request.term+"%'";
+			   
+				KPIAjax.listMaster(query,{
+					callback:function(data){ 
+						if(data!=null && data.length>0){
+							response( $.map( data, function( item ) {
+					          return {
+					        	  label: item.name,
+					        	  value: item.name
+					            //label: item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", " + item.countryName,
+					            //value: item.name 
+					          }
+					        }));
+						}else{
+							var xx=[];
+							//alert("not have data")
+							response( $.map(xx));
+						}
+					}
+			 }); 
+		  },
+		  minLength: 2,
+		  select: function( event, ui ) { 
+			  this.value = ui.item.label;
+			 // $("#employeeElement").val(ui.item.value);
+		      return false;
+		  },
+		  open: function() {
+		    $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+		  },
+		  close: function() {
+		    $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+		  }
+		}); 
+
+	//searchDataSource();
 }); 
 function searchDataSource(){
 	var dataSourceName =jQuery.trim($("#dataSourceName").val());
