@@ -85,12 +85,12 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
     KPI Code: <input type="text" id="kpiCode" style="width: 90px"/>
     </span> 
      <span style="padding-left:10px;">
-    KPI Name: <input type="text" id="kpiName" style="width: 300px"/>
+    KPI Name: <input type="text" id="kpiName" style="width: 250px"/>
     </span> 
     <span style="padding-left:10px;">
      <input type="hidden" id="kpiCode_hidden"/>
      <input type="hidden" id="kpiName_hidden"/>
-     <input type="text" id="kpiName_result" readonly="readonly" style="width: 300px"/>
+     <input type="text" id="kpiName_result" readonly="readonly" style="width: 400px"/>
     </span>
      <span style="padding-left:20px;">
     	<a class="btn btn-primary" style="font-size:12px" onclick="distplayKPIBaseline()"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Search</span></a>
@@ -255,7 +255,7 @@ $(document).ready(function() {
 		  minLength: 2,
 		  select: function( event, ui ) { 
 			  this.value = ui.item.label;
-			  $("#kpiName_result").val(ui.item.value);
+			  $("#kpiName_result").val(ui.item.label+" "+ui.item.value);
 			  $("#kpiName").val("");
 			  
 			  $("#kpiCode_hidden").val(ui.item.label);
@@ -292,7 +292,7 @@ $(document).ready(function() {
 		  minLength: 2,
 		  select: function( event, ui ) { 
 			  this.value = ui.item.label;
-			   $("#kpiName_result").val(ui.item.label);
+			   $("#kpiName_result").val(ui.item.value+" "+ui.item.label);
 			   $("#kpiCode").val("");
 			   
 			   $("#kpiCode_hidden").val(ui.item.value);

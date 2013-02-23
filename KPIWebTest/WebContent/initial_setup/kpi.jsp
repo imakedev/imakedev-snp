@@ -60,6 +60,9 @@ margin: 0 0 0px;
 .th_class{text-align: center;
 }
 a{cursor: pointer;}
+.ui-autocomplete-loading {
+    background: white url('<%=request.getContextPath() %>/resources/css/smoothness/images/ui-anim_basic_16x16.gif') right center no-repeat;
+  }
 </style>
 <!-- <style type="text/css"> 
 th{ font-family:Tahoma; font-size:12px; font-weight:bold;
@@ -78,10 +81,10 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
    <form class="form-inline"  style="border:1px solid #B3D2EE;background: #F9F9F9;padding-top:20px;padding-bottom:15px" action="" method="post" >
  <div  style="padding-left:20px">
       <span style="padding-left:10px;">
-    KPI Code: <input type="text" id="kpiCode"/>
+    KPI Code: <input type="text" id="kpiCode" style="width: 100px"/>
     </span> 
      <span style="padding-left:10px;">
-    KPI Name: <input type="text" id="kpiName"/>
+    KPI Name: <input type="text" id="kpiName" style="width: 400px"/>
     </span> 
       <span style="padding-left:20px;">
     	<a class="btn btn-primary" style="font-size:12px" onclick="searchKPI()"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Search</span></a>
@@ -267,7 +270,78 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
                searchKPI();
              } 
           });
-     	searchKPI();
+     	$( "#kpiName" ).autocomplete({
+  		  source: function( request, response ) { 
+  				var query="SELECT kpi_code,kpi_name FROM "+SCHEMA_G+".kpi where kpi_name like '%"+request.term+"%'";
+  			   
+  				KPIAjax.listMaster(query,{
+  					callback:function(data){ 
+  						if(data!=null && data.length>0){
+  							response( $.map( data, function( item ) {
+  					          return {
+  					        	  label: item.name,
+  					        	  value: item.name
+  					            //label: item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", " + item.countryName,
+  					            //value: item.name 
+  					          }
+  					        }));
+  						}else{
+  							var xx=[];
+  							//alert("not have data")
+  							response( $.map(xx));
+  						}
+  					}
+  			 }); 
+  		  },
+  		  minLength: 2,
+  		  select: function( event, ui ) { 
+  			  this.value = ui.item.label;
+  			 // $("#employeeElement").val(ui.item.value);
+  		      return false;
+  		  },
+  		  open: function() {
+  		    $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+  		  },
+  		  close: function() {
+  		    $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+  		  }
+  		}); 
+     	$( "#kpiCode" ).autocomplete({
+  		  source: function( request, response ) { 
+  			var query="SELECT kpi_code,kpi_name FROM "+SCHEMA_G+".kpi where kpi_code like '%"+request.term+"%'";
+  				KPIAjax.listMaster(query,{
+  					callback:function(data){ 
+  						if(data!=null && data.length>0){
+  							response( $.map( data, function( item ) {
+  					          return {
+  					        	  label: item.id,
+  					        	  value: item.id
+  					            //label: item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", " + item.countryName,
+  					            //value: item.name 
+  					          }
+  					        }));
+  						}else{
+  							var xx=[];
+  							//alert("not have data")
+  							response( $.map(xx));
+  						}
+  					}
+  			 }); 
+  		  },
+  		  minLength: 2,
+  		  select: function( event, ui ) { 
+  			  this.value = ui.item.label;
+  			 // $("#employeeElement").val(ui.item.value);
+  		      return false;
+  		  },
+  		  open: function() {
+  		    $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+  		  },
+  		  close: function() {
+  		    $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+  		  }
+  		}); 
+     	//searchKPI();
      }); 
      function searchKPI(){
      	var kpiName =jQuery.trim($("#kpiName").val());
