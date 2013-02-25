@@ -760,9 +760,9 @@ function distplayKPI2(){
 		
 		var query ="select result.year,result.period_no,p.period_desc,result.employee_code" +
 						"	,concat(em.employee_name,' ',em.employee_surname) as emp_name , result.kpi_code ,kpi.kpi_name " +
-						"  ,result.target_score,result.actual_score,result.kpi_order,result.kpi_weight,result.target_data,result.target_score from "+SCHEMA_G+".kpi_result result inner join "+SCHEMA_G+".kpi kpi " +
+						"  ,result.target_score,result.actual_score,result.kpi_order,result.kpi_weight,result.target_data,result.target_score , kpi.etl_flag from "+SCHEMA_G+".kpi_result result inner join "+SCHEMA_G+".kpi kpi " +
 						" on result.kpi_code=kpi.kpi_code inner join	"+SCHEMA_G+".employee em on result.employee_code=em.employee_code  inner join "+SCHEMA_G+".period p  on" +
-						" (result.period_no=p.period_no and result.year =p.year) "+approveKPIWhere +" order by em.employee_code, kpi.kpi_code";
+						" (result.period_no=p.period_no and result.year =p.year) "+approveKPIWhere +" order by em.employee_code, kpi.kpi_code,result.kpi_order";
 		
 		KPIAjax.searchObject(query,{ 
 		callback:function(data){
@@ -820,6 +820,8 @@ function distplayKPI2(){
 	          		"<input type=\"hidden\" name=\"kpi_code_input\" value=\""+data[i][5]+"\" />"+ 
 	          		"<input type=\"hidden\" name=\"kpi_result_id\" value=\""+data[i][0]+"_"+data[i][1]+"_"+data[i][3]+"_"+data[i][5]+"\" />"+
 	          		"<input type=\"hidden\" name=\"kpiCode_add2\" value=\""+data[i][5]+"\" />"+
+	          		"<input type=\"hidden\" name=\"etl_flag2\" value=\""+data[i][13]+"\" />"+
+	          		
 	            	data[i][3]+"</td>"+
 	            	"<td>"+data[i][4]+"</td> "+
 	            	"<td style=\"text-align: left;\"><input type=\"text\"  name=\"kpiOrder2\"  value=\""+kpi_order_inner+"\" class=\"input_kpi\" style=\"width:30px;height: 20px;line-height: 20px;\"/></td>"+
@@ -945,7 +947,7 @@ function distplayKPI3(){
 					"	,concat(em.employee_name,' ',em.employee_surname) as emp_name , result.kpi_code ,kpi.kpi_name " +
 					"  ,result.target_score,result.actual_score,result.kpi_order,result.kpi_weight,result.target_data,result.target_score from "+SCHEMA_G+".kpi_result result inner join "+SCHEMA_G+".kpi kpi " +
 					" on result.kpi_code=kpi.kpi_code inner join	"+SCHEMA_G+".employee em on result.employee_code=em.employee_code  inner join "+SCHEMA_G+".period p  on" +
-					" (result.period_no=p.period_no and result.year =p.year) "+approveKPIWhere +" order by em.employee_code, kpi.kpi_code";
+					" (result.period_no=p.period_no and result.year =p.year) "+approveKPIWhere +" order by em.employee_code, kpi.kpi_code,result.kpi_order";
 	
 	KPIAjax.searchObject(query,{ 
 //KPIAjax.searchKPI(year,  periodNo,employeeCode, etl_flag, approved_flag,{
@@ -1180,7 +1182,7 @@ function distplayKPI4(data){
 		str="<table id=\"dataTable4\" class=\"table table-hover table-striped table-bordered table-condensed\" border=\"1\" style=\"font-size: 12px;width:1070px\">"+
    		"<thead>"+
    		"<tr> "+
- 			"<th colspan=\"5\" width=\"100%\"><div class=\"th_class\">No Data</div></th>"+ 
+ 			"<th colspan=\"5\" width=\"100%\"><div class=\"th_class\">No Data Inserted</div></th>"+ 
  		"</tr>"+
 	"</thead>"+
 	"<tbody>";  
@@ -1337,8 +1339,14 @@ function doSubmitAction(){
 	var targetData2=$("#targetData2").val();
 	var targetScore2=$("#targetScore2").val();  
 		var mode=$("#mode").val();
+	var queryEtlFlag="SELECT  kpi.etl_flag,kpi_code  FROM mcic_kpi_app_test.kpi kpi where kpi_code='"+kpi_code_input2+"'";
+	
+		KPIAjax.searchObject(queryEtlFlag,{
+			callback:function(data){ 
+				addRowManageKPI('dataTable2',kpiName_hidden2,kpi_code_input2,kpiOrder2,kpiWeight2,targetData2,targetScore2,data[0][0]);
+			}
+		});
 		
-		addRowManageKPI('dataTable2',kpiName_hidden2,kpi_code_input2,kpiOrder2,kpiWeight2,targetData2,targetScore2);
 	/*
 		var query="";
 		var queryCheckDuplicate="";  
@@ -1452,6 +1460,7 @@ function assignKPI(){
 	 var kpiWeight=document.getElementsByName("kpiWeight");
 	 var targetData=document.getElementsByName("targetData");
 	 var targetScore=document.getElementsByName("targetScore");
+	 var etl_flag=document.getElementsByName("etl_flag");
 	 var sum=0;
 	 var isBreak=false;
 	 
@@ -1460,6 +1469,13 @@ function assignKPI(){
 	 if(kpiCode_add!=null && kpiCode_add.length>0){
 		 for(var i=0;i<kpiCode_add.length;i++){ 
 			 kpiCode_add_array.push(jQuery.trim(kpiCode_add[i].value));
+		 }
+	 }
+	 
+	 var etl_flag_array=[];
+	 if(etl_flag!=null && etl_flag.length>0){
+		 for(var i=0;i<etl_flag.length;i++){ 
+			 etl_flag_array.push(jQuery.trim(etl_flag[i].value));
 		 }
 	 }
 	 
@@ -1642,14 +1658,14 @@ function assignKPI(){
 	}   */
 	var query ="select em.employee_code" +
 	"	,concat(em.employee_name,' ',em.employee_surname) as emp_name from  "+SCHEMA_G+".employee em  "+approveKPIWhere +" order by em.employee_code ";
-	KPIAjax.assignKPI(SCHEMA_G,query,year,periodNo,kpiCode_add_array,kpiOrders_array,kpiWeight_array,targetData_array,targetScore_array,approved_flag,	
+	KPIAjax.assignKPI(SCHEMA_G,query,year,periodNo,kpiCode_add_array,kpiOrders_array,kpiWeight_array,targetData_array,targetScore_array,etl_flag_array,	
 			//Integer periodNo, String[] kpiCodes,String[] kpiOrders,String[] kpiWeight,String[] targetData,String[] targetScore, String approved_flag) {
 		{
 			callback:function(data){ 
-				if(data.length==0){
-					alert("Can not assign KPI.");
+				/* if(data.length==0){
+					alert("Can not assign KPI 1.");
 					return false;
-				}
+				} */
 				 distplayKPI4(data);
 				// alert(data.length);
 			}
@@ -1670,6 +1686,7 @@ function assignKPI2(){
 	 var kpiWeight=document.getElementsByName("kpiWeight2");
 	 var targetData=document.getElementsByName("targetData2");
 	 var targetScore=document.getElementsByName("targetScore2");
+	 var etl_flag=document.getElementsByName("etl_flag2");
 	 var sum=0;
 	 var isBreak=false;
 	 
@@ -1680,7 +1697,12 @@ function assignKPI2(){
 			 kpiCode_add_array.push(jQuery.trim(kpiCode_add[i].value));
 		 }
 	 }
-	 
+	 var etl_flag_array=[];
+	 if(etl_flag!=null && etl_flag.length>0){
+		 for(var i=0;i<etl_flag.length;i++){ 
+			 etl_flag_array.push(jQuery.trim(etl_flag[i].value));
+		 }
+	 }
 	 var kpiOrders_array=[];
 	 if(kpiOrder!=null && kpiOrder.length>0){
 		 for(var i=0;i<kpiOrder.length;i++){
@@ -1831,7 +1853,7 @@ function assignKPI2(){
 	
 	var query ="select em.employee_code" +
 	"	,concat(em.employee_name,' ',em.employee_surname) as emp_name from  "+SCHEMA_G+".employee em  "+approveKPIWhere +" order by em.employee_code ";
-	KPIAjax.assignKPIUpdate(SCHEMA_G,query,year,periodNo,kpiCode_add_array,kpiOrders_array,kpiWeight_array,targetData_array,targetScore_array,approved_flag,	
+	KPIAjax.assignKPIUpdate(SCHEMA_G,query,year,periodNo,kpiCode_add_array,kpiOrders_array,kpiWeight_array,targetData_array,targetScore_array,etl_flag_array,	
 			//Integer periodNo, String[] kpiCodes,String[] kpiOrders,String[] kpiWeight,String[] targetData,String[] targetScore, String approved_flag) {
 		{
 			callback:function(data){ 
@@ -1839,7 +1861,7 @@ function assignKPI2(){
 					alert("Can not assign KPI.");
 					return false;
 				}else{
-					alert("Updated ");
+					alert("Manage KPI has been done.");
 				 	showPage('2');
 				}
 				
@@ -1847,7 +1869,7 @@ function assignKPI2(){
 			}
     });	
 }
-function addRow(tableID,kpiName,kpiCode) {
+function addRow(tableID,kpiName,kpiCode,etlFlag) {
 	 
     var table = document.getElementById(tableID);
 
@@ -1861,7 +1883,8 @@ function addRow(tableID,kpiName,kpiCode) {
     newcell1.innerHTML="<input type=\"checkbox\"  name=\"chk_input\" class=\"input_kpi\"/>";
     var newcell2 = row.insertCell(1);
      newcell2.innerHTML="<input type=\"text\"  name=\"kpiOrder\"  class=\"input_kpi\" style=\"width:30px;height: 20px;line-height: 20px;\"/> "+
-     					"<input type=\"hidden\"  name=\"kpiCode_add\"  value=\""+kpiCode+"\"/>";
+     					"<input type=\"hidden\"  name=\"kpiCode_add\"  value=\""+kpiCode+"\"/>"+
+     					"<input type=\"hidden\"  name=\"etl_flag\"  value=\""+etlFlag+"\"/>";
     var newcell3 = row.insertCell(2);
     newcell3.innerHTML=kpiName;
     var newcell4 = row.insertCell(3);
@@ -1938,12 +1961,19 @@ function selectKPI2(){
 function selectKPI(){
  	var kpiName =jQuery.trim($("#kpiName_hidden").val());
  	var kpiCode =jQuery.trim($("#kpiCode_hidden").val());
- 	//alert(kpiCode+","+kpiName);
+ 	//alert(kpiCode+","+kpiName); 
  	if(kpiName.length==0 && kpiCode.length==0){
  		alert("Please fill KPI Code or KPI Name.")
  		return false;
  	}
- 	addRow('dataTable',kpiName,kpiCode)
+ 	var queryEtlFlag="SELECT  kpi.etl_flag,kpi_code  FROM mcic_kpi_app_test.kpi kpi where kpi_code='"+kpiCode+"'";
+	
+	KPIAjax.searchObject(queryEtlFlag,{
+		callback:function(data){ 
+			addRow('dataTable',kpiName,kpiCode,data[0][0]) ; 
+		}
+	});
+ 	
  		//alert(kpiName);
  	
  }
@@ -1984,8 +2014,8 @@ function selectKPI(){
 		}
 	}
 	
- } 
- function addRowManageKPI(tableID,kpiName,kpiCode,kpiOrder,kpiWeight,targetData,targetScore) {
+ }
+ function addRowManageKPI(tableID,kpiName,kpiCode,kpiOrder,kpiWeight,targetData,targetScore,etl_flag) {
 	 
 		
 		var year_input=$("#year_input2").val();
@@ -2025,7 +2055,8 @@ function selectKPI(){
 			"<input type=\"hidden\" name=\"employee_code_input\" value=\""+employee_code_input+"\" />"+
 			"<input type=\"hidden\" name=\"kpi_code_input\" value=\""+kpiCode+"\" />"+ 
 			"<input type=\"hidden\" name=\"kpi_result_id\" value=\""+year_input+"_"+period_no_input+"_"+employee_code_input+"_"+kpiCode+"\" />"+
-			"<input type=\"hidden\" name=\"kpiCode_add2\" value=\""+kpiCode+"\" />";
+			"<input type=\"hidden\" name=\"kpiCode_add2\" value=\""+kpiCode+"\" />"+
+		 	"<input type=\"hidden\" name=\"etl_flag2\" value=\""+etl_flag+"\" />";
 	     newcell2.setAttribute("style","text-align: left"); 
 	     					
 	    var newcell3 = row.insertCell(1);

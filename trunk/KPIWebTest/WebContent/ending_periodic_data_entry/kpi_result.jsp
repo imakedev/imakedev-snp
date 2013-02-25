@@ -150,7 +150,7 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
    	</tr>
    	<tr>
    		<td>Employee Code:</td>
-   		<td colspan="3"><input type="text" id="employee_code_input" class="input_number" readonly="readonly" /><span style="padding-left: 20px"><input type="text" id="employee_name_input" class="input_text" readonly="readonly" /></span></td> 
+   		<td colspan="3"><input type="text" id="employee_code_input" class="input_number" style="width: 118px" readonly="readonly" /><span style="padding-left: 2px"><input type="text" id="employee_name_input" class="input_text" readonly="readonly" /></span></td> 
    		
    	</tr>
    	<tr>
@@ -659,7 +659,8 @@ Weight Percentage = KPI Weighting * Performance Percentage
 				var actual_score_value_init=0;
 					if($("#actual_score_input").val()!=null && jQuery.trim($("#actual_score_input").val()).length>0)
 						actual_score_value_init=parseFloat($("#actual_score_input").val()).toFixed(2);
-				var Actual_vs_Target=((actual_score_value_init)*100)/(parseFloat($("#target_score_input").val()).toFixed(2));
+				//var Actual_vs_Target=((actual_score_value_init)*100)/(parseFloat($("#target_score_input").val()).toFixed(2));
+				var Actual_vs_Target=parseFloat(((actual_score_value_init)*100)/(parseFloat($("#target_score_input").val()))).toFixed(2);
 				if(Actual_vs_Target>100)
 					Actual_vs_Target=100;
 				if(Actual_vs_Target!=0)
@@ -719,8 +720,9 @@ Weight Percentage = KPI Weighting * Performance Percentage
 							    					   actual_score_value=parseFloat(data2).toFixed(2);
 							    					   
 							    					 }
-							    					Actual_vs_Target=((actual_score_value)*100)/(parseFloat($("#target_score_input").val()).toFixed(2));
-						    						if(Actual_vs_Target>100)
+							    					//Actual_vs_Target=((actual_score_value)*100)/(parseFloat($("#target_score_input").val()).toFixed(2));
+							    					Actual_vs_Target=parseFloat(((actual_score_value)*100)/(parseFloat($("#target_score_input").val()))).toFixed(2);
+							    					if(Actual_vs_Target>100)
 						    							Actual_vs_Target=100;
 						    						if(Actual_vs_Target!=0)
 						    							$("#actual_vs_target_input").val(Actual_vs_Target+"%"); 
@@ -732,7 +734,8 @@ Weight Percentage = KPI Weighting * Performance Percentage
 						    							}
 						    						}
 						    						$("#performance_percentage_input_hidden").val(performance_percentage_value);
-							    						var weight_percentage_value=parseFloat((parseFloat($("#weight_input").val()).toFixed(2))*(Actual_vs_Target)).toFixed(2);
+							    						//var weight_percentage_value=parseFloat(((parseFloat($("#weight_input").val()).toFixed(2))*(Actual_vs_Target))/100).toFixed(2);
+							    						var weight_percentage_value=parseFloat((parseFloat($("#weight_input").val())*Actual_vs_Target)/100).toFixed(2);
 							    						/* if(weight_percentage_value>100)
 							    							weight_percentage_value=100; */
 							    						if(weight_percentage_value!=0)
@@ -773,10 +776,10 @@ Weight Percentage = KPI Weighting * Performance Percentage
 							    					   actual_score_value=parseFloat(data2).toFixed(2);
 							    					   
 							    					 }else{
-							    						 alert("ค่าของ baseline ไม่ได้ถูก set ไว้.");
-							    						 return false;
+							    						 alert("ค่าของ baseline ไม่ได้ถูก set ไว้."); 
+							    						 return true;
 							    					 }
-							    					Actual_vs_Target=((actual_score_value)*100)/(parseFloat($("#target_score_input").val()).toFixed(2));
+							    					Actual_vs_Target=parseFloat(((actual_score_value)*100)/(parseFloat($("#target_score_input").val()))).toFixed(2);
 						    						if(Actual_vs_Target>100)
 						    							Actual_vs_Target=100;
 						    						if(Actual_vs_Target!=0)
@@ -789,7 +792,8 @@ Weight Percentage = KPI Weighting * Performance Percentage
 						    							}
 						    						}
 						    						$("#performance_percentage_input_hidden").val(performance_percentage_value);
-							    						var weight_percentage_value=parseFloat((parseFloat($("#weight_input").val()).toFixed(2))*(Actual_vs_Target)).toFixed(2);
+							    						//var weight_percentage_value=parseFloat(((parseFloat($("#weight_input").val()).toFixed(2))*(Actual_vs_Target))/100).toFixed(2);
+							    						var weight_percentage_value=parseFloat((parseFloat($("#weight_input").val())*Actual_vs_Target)/100).toFixed(2);
 							    						/* if(weight_percentage_value>100)
 							    							weight_percentage_value=100; */
 							    						if(weight_percentage_value!=0)
@@ -823,25 +827,38 @@ Weight Percentage = KPI Weighting * Performance Percentage
 */
 // 	var mode=$("#mode").val();
 //$("#actual_vs_target_hidden_input").val(Actual_vs_Target);
-	var query="";
-	  //edit
-		  query="update  "+SCHEMA_G+".kpi_result set lookup_baseline_value="+jQuery.trim($("#baseline_data_input").val())+
-		  ",weight_percentage="+jQuery.trim($("#weight_percentage_input_hidden").val())+
-		  ",actual_data="+jQuery.trim($("#actual_data_input").val())+
-		  ",actual_score="+$("#actual_score_input").val()+
-		  ",performance_percentage="+$("#actual_vs_target_hidden_input").val()+ 
-		  ",updated_dt=now() where "+
-		  "  year="+$("#year_input").val()+
-		  " and period_no="+$("#period_code_input").val()+" and employee_code='"+$("#employee_code_input").val()+"' and kpi_code='"+$("#kpi_code_input").val()+"'";
-			
-	KPIAjax.executeQuery(query,{
-		callback:function(data){ 
-			if(data!=0){
-				distplayKPI(); 
-				$( "#dialog-form" ).dialog("close");
-			}
-		}
-	});
+ var query2="select actual_score from "+SCHEMA_G+".kpi_baseline  where kpi_code ='"+$("#kpi_code_input").val()+"' and "+$("#baseline_data_input").val()+" between begin_baseline and end_baseline ";
+							    	  
+							    	 KPIAjax.searchObject(query2,{ 
+							    				callback:function(data2){ 
+							    					if(data2!=null && data2.length>0){
+							    						var query=""; 
+							    						  query="update  "+SCHEMA_G+".kpi_result set lookup_baseline_value="+jQuery.trim($("#baseline_data_input").val())+
+							    						  ",weight_percentage="+jQuery.trim($("#weight_percentage_input_hidden").val())+
+							    						  ",actual_data="+jQuery.trim($("#actual_data_input").val())+
+							    						  ",actual_score="+$("#actual_score_input").val()+
+							    						  ",performance_percentage="+$("#actual_vs_target_hidden_input").val()+ 
+							    						  ",approved_flag = 'N'"+
+							    						  ",updated_dt=now() where "+
+							    						  "  year="+$("#year_input").val()+
+							    						  " and period_no="+$("#period_code_input").val()+" and employee_code='"+$("#employee_code_input").val()+"' and kpi_code='"+$("#kpi_code_input").val()+"'";
+							    							
+							    					KPIAjax.executeQuery(query,{
+							    						callback:function(data){ 
+							    							if(data!=0){
+							    								distplayKPI(); 
+							    								$( "#dialog-form" ).dialog("close");
+							    							}
+							    						}
+							    					});
+							    					   
+							    					 }else{
+							    						 alert("ค่าของ baseline ไม่ได้ถูก set ไว้.");
+							    						 return true;
+							    					 }
+							    				}
+							    	 });
+	
 	 
 }
   

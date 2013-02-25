@@ -46,6 +46,13 @@ line-height: normal;
  form {
 margin: 0 0 0px;
 }
+.input_number{
+width: 100px;
+text-align:right;
+}
+.input_text{
+width: 350px;
+}
  </style>
 <style type="text/css">
 /*.th_class{font-family: Tahoma;font-size: 13px;text-align: center;*/
@@ -135,6 +142,78 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
 	</tr>
   </table>
  </div>  
+  <div id="dialog-form"  style="display: none;">
+<form class="form-horizontal"  style="border:1px solid #B3D2EE;background: #F9F9F9;padding-top:20px;padding: 20px" action="" method="post" >
+   <input type="hidden" id="mode" />
+   <table>
+   	<tr>
+   		<td>Year:  </td>
+   		<td><input type="text" id="year_input" class="input_number" readonly="readonly" /> </td> 
+   		<td colspan="2" style="padding-left:20px">Period: <span style="padding-left: 10px"><input type="hidden" id="period_code_input" /><input type="text" id="period_input" style="width: 297px" readonly="readonly"  /></span></td>
+   		<!-- <td><input type="text"/> </td> --> 
+   		
+   	</tr>
+   	<tr>
+   		<td>Employee Code:</td>
+   		
+   		<td colspan="3"><input type="text" id="employee_code_input" class="input_number" style="width: 118px" readonly="readonly" /><span style="padding-left: 2px"><input type="text" id="employee_name_input" class="input_text" readonly="readonly" /></span></td>
+   	</tr>
+   	<tr>
+   		<td>KPI Code:</td>
+   		 <td colspan="3"><input type="text" id="kpi_code_input" class="input_number" readonly="readonly" /><span style="padding-left: 20px"><input type="text" id="kpi_name_input" class="input_text" readonly="readonly" /></span></td> 
+   	</tr>
+   	<tr>
+   		<td>Target Data:</td>
+   		<td><input type="text" id="target_data_input" class="input_number" readonly="readonly" /> </td> 
+   		<td style="padding-left:20px">Target Score:</td>
+   		<td><input type="text"  id="target_score_input" class="input_number" readonly="readonly" /> </td>
+   	</tr>
+   	<tr>
+   		<td style="">Actual Data:</td>
+   		<td><input type="text" id="actual_data_input" class="input_number" readonly="readonly"/> </td> 
+   		<td style="padding-left:20px;">Baseline Data:</td>
+   		<td><input type="text" id="baseline_data_input" class="input_number" readonly="readonly"/> </td> 
+   	</tr>
+   	<tr>
+   		<td>Actual Score:</td>
+   		<td><input type="text" id="actual_score_input" class="input_number" readonly="readonly" /></td> 
+   		<td style="padding-left:20px">% Actual vs Target:</td>
+   		<td><input type="text" id="actual_vs_target_input" class="input_number" readonly="readonly" /> 
+   		<input type="hidden" id="actual_vs_target_hidden_input" class="input_number" readonly="readonly" />
+   		</td> 
+   	</tr>
+   	<tr>
+   		<td>Weight:</td>
+   		<td><input type="text" id="weight_input" class="input_number" readonly="readonly" /> </td> 
+   		<td style="padding-left:20px">Weight Percentage:</td>
+   		<td><input type="text" id="weight_percentage_input" class="input_number" readonly="readonly" /> 
+   		<input type="hidden" id="weight_percentage_input_hidden" />
+   		<input type="hidden" id="performance_percentage_input_hidden" />
+   		  </td> 
+   	</tr>
+   <!-- 	<tr>
+   		<td style="padding-top: 10px" align="center" colspan="4"> <a class="btn btn-primary" onclick="doSubmitAction()"><i class="icon-ok icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;">Submit</span></a></td> 
+   	</tr> -->
+   </table>
+ <!--  <div class="control-group" id="id_element">
+    <label class="control-label" for="inputEmail">Data Source ID:</label>
+    <div class="controls">
+      <input class="input_snp" type="text" id="dataSourceID_form" readonly="readonly">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">Data Source Name:</label>
+    <div class="controls">
+      <input class="input_snp"  type="text" id="dataSourceName_form" >
+    </div>
+  </div> 
+  <div class="control-group">
+    <div class="controls"> 
+      <a class="btn btn-primary" onclick="doSubmitAction()"><i class="icon-ok icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;">Submit</span></a>
+    </div>
+  </div> -->
+</form> 
+</div>
  <!--  </form>
   </div>
   
@@ -490,7 +569,7 @@ function distplayApproveKPIResult(){
 			    var str="<table class=\"table table-hover table-striped table-bordered table-condensed\" border=\"1\" style=\"font-size: 12px\">"+
 			    		"<thead>"+
 			    		"<tr> "+ 
-	            		"<th width=\"5%\"><div class=\"th_class\"></div></th>"+
+	            		"<th width=\"5%\"><div class=\"th_class\"><input type=\"checkbox\"  name=\"chkAll2\" onClick=\"togleChk(this,'kpi_result_id')\"/></div></th>"+
 	            		"<th width=\"10%\"><div class=\"th_class\">Employee Code</div></th>"+
 	            		"<th width=\"25%\"><div class=\"th_class\">Employee Name</div></th>"+
 	            		"<th width=\"10%\"><div class=\"th_class\">KPI Code</div></th>"+ 
@@ -504,7 +583,7 @@ function distplayApproveKPIResult(){
 				for(var i=0;i<data.length;i++){ 
 					str=str+
 					"<tr style=\"cursor: pointer;\">"+
-	          		"<td style=\"text-align: left;\">"+
+	          		"<td align=\"center\" style=\"text-align: center;\">"+
 	          		"<input type=\"hidden\" name=\"year_input\" value=\""+data[i][0]+"\" />"+
 	          		"<input type=\"hidden\" name=\"period_no_input\" value=\""+data[i][1]+"\" />"+
 	          		"<input type=\"hidden\" name=\"employee_code_input\" value=\""+data[i][3]+"\" />"+
@@ -512,8 +591,8 @@ function distplayApproveKPIResult(){
 	          		"<input type=\"checkbox\" name=\"kpi_result_id\" value=\""+data[i][0]+"_"+data[i][1]+"_"+data[i][3]+"_"+data[i][5]+"\" />"+
 	          		"</td>"+
 	            	"<td style=\"text-align: left;\">"+data[i][3]+"</td>"+
-	            	"<td>"+data[i][4]+"</td> "+
-	            	"<td style=\"text-align: left;\">"+data[i][5]+"</td>"+
+	            	"<td>"+data[i][4]+"</td> "+ 
+	            	"<td style=\"text-align: left;text-decoration:underline;\" onclick=\"showForm('edit','"+data[i][0]+"','"+data[i][1]+"','"+data[i][3]+"','"+data[i][5]+"')\" style=\"cursor: pointer;\">"+data[i][5]+"</td>"+
 	            	"<td>"+data[i][6]+"</td> "+
 	            	"<td style=\"text-align: right;\">"+(data[i][7]!=null?data[i][7]:"")+"</td>  "+
 	            	"<td style=\"text-align: right;\">"+(data[i][8]!=null?data[i][8]:"")+"</td>  "+
@@ -604,6 +683,198 @@ function searchKPIResult(){
 	$("#dialog-Message").slideDown("slow"); 
 	distplayApproveKPIResult();
 }
+function showForm(mode,year_input,period_no_input,employee_code_input,kpi_code_input){ 
+	//	$("#id_element").show();  
+		  
+		var query="SELECT result.year,result.period_no,p.period_desc,result.employee_code"+
+		" ,concat(em.employee_name,' ',em.employee_surname) as emp_name ,result.kpi_code,kpi.kpi_name,"+
+		" result.kpi_order,result.kpi_weight,result.target_data ,"+
+		" result.target_score,result.actual_data,result.actual_score,result.lookup_baseline_value,result.performance_percentage,result.weight_percentage, "+
+		//"result.approved_flag,result.created_dt,result.updated_dt FROM "+SCHEMA_G+".kpi_result result inner join "+SCHEMA_G+".kpi kpi " +
+		"result.approved_flag  FROM "+SCHEMA_G+".kpi_result result inner join "+SCHEMA_G+".kpi kpi " +
+		" on result.kpi_code=kpi.kpi_code inner join	"+SCHEMA_G+".employee em on result.employee_code=em.employee_code  inner join "+SCHEMA_G+".period p  on" +
+		" (result.period_no=p.period_no and result.year =p.year) where  result.year="+year_input+
+		" and result.period_no="+period_no_input+" and result.employee_code='"+employee_code_input+"' and result.kpi_code='"+kpi_code_input+"'";
+		KPIAjax.searchObject(query,{
+			callback:function(data){
+				//alert(data); 
+				/*   8. 
+9. เมื่อทำการใส่ข้อมูล Baseline Data (บันทึกลง field lookup_baseline_value) ให้ระบบคำนวณ 
+เอา kpi code กับ baseline data ไปหา actual score ที่ table kpi_baseline 
+
+select actual_score 
+from kpi_baseline
+where kpi_code = ${kpi_code} ของ record ที่แก้ไขข้อมูล
+and ${baseline_data} between begin_baseline and end_baseline  
+% Actual vs Target = (Actual Score*100)/Target Score ได้เกิน 100% ก็ปรับให้เหลือ 100%
+Weight Percentage = KPI Weighting * Performance Percentage 
+ 55*44
+10. เมื่อทำการบันทึกข้อมูล ให้ระบบเซ็ตค่า field approved_flag = 'N' */
+				$("#year_input").val(data[0][0]);
+				$("#period_code_input").val(data[0][1]);
+				$("#period_input").val(data[0][2]);
+				$("#employee_code_input").val(data[0][3]);
+				$("#employee_name_input").val(data[0][4]);
+				$("#kpi_code_input").val(data[0][5]);
+				$("#kpi_name_input").val(data[0][6]);
+				$("#target_data_input").val(data[0][9]);
+				$("#target_score_input").val(data[0][10]);
+				$("#actual_data_input").val(data[0][11]);
+				$("#baseline_data_input").val(data[0][13]);
+				$("#actual_score_input").val(data[0][12]);
+				//alert(parseInt($("#actual_score_input").val()));
+				var actual_score_value_init=0;
+					if($("#actual_score_input").val()!=null && jQuery.trim($("#actual_score_input").val()).length>0)
+						actual_score_value_init=parseFloat($("#actual_score_input").val()).toFixed(2);
+				//var Actual_vs_Target=((actual_score_value_init)*100)/(parseFloat($("#target_score_input").val()).toFixed(2));
+				var Actual_vs_Target=parseFloat(((actual_score_value_init)*100)/(parseFloat($("#target_score_input").val()))).toFixed(2);
+				if(Actual_vs_Target>100)
+					Actual_vs_Target=100;
+				if(Actual_vs_Target!=0)
+					$("#actual_vs_target_input").val(Actual_vs_Target+"%"); 
+				$("#actual_vs_target_hidden_input").val(Actual_vs_Target);
+				
+				$("#weight_input").val(data[0][8]);
+				//alert("data[0][15]="+data[0][15])
+				if(data[0][15]!=null && data[0][15]!='null'){
+					$("#weight_percentage_input").val(data[0][15]+"%");
+					$("#weight_percentage_input_hidden").val(data[0][15]);
+				}else{
+					$("#weight_percentage_input").val("0%"); 
+					$("#weight_percentage_input_hidden").val("0");
+				}
+				if(data[0][14]!=null && data[0][14]!='null'){ 
+					$("#performance_percentage_input_hidden").val(data[0][14]);
+				}else
+					$("#performance_percentage_input_hidden").val("0");
+				  
+				
+				$( "#dialog-form" ).dialog({ 
+					position: 'top',
+					 height: 360,
+					 width:650,
+					modal: true,
+					 hide: 'fold',
+				     show: 'blind' 
+				});
+				//
+				/*  $("#actual_data_input").keypress(function(event) {
+						  if ( event.which == 13 ) {
+							     event.preventDefault();
+							     var txtVal = this.value;
+							     var baseline_data_input=jQuery.trim($("#baseline_data_input").val());
+							    // alert(actual_data_input);
+							   //  alert(index); 
+							     if(!(intRegex.test(txtVal) || floatRegex.test(txtVal))) {
+							        alert('Please fill Number !!!');  
+							     }else  if(!(intRegex.test(baseline_data_input) || floatRegex.test(baseline_data_input))) {
+							    	 alert('Please fill Number !!!');
+							     }else{ 
+							    	 var query2="select actual_score from "+SCHEMA_G+".kpi_baseline  where kpi_code ='"+$("#kpi_code_input").val()+"' and "+$("#baseline_data_input").val()+" between begin_baseline and end_baseline ";
+							    	  
+							    	 KPIAjax.searchObject(query2,{ 
+							    				callback:function(data2){
+							    				//	alert(data2); 
+							    					var actual_score_value=0;
+							    					var performance_percentage_value=0; 
+							    					if(data2!=null && data2.length>0){
+							    						$("#actual_score_input").val(data2);  
+							    					   actual_score_value=parseFloat(data2).toFixed(2);
+							    					   
+							    					 }
+							    					//Actual_vs_Target=((actual_score_value)*100)/(parseFloat($("#target_score_input").val()).toFixed(2));
+							    					Actual_vs_Target=parseFloat(((actual_score_value)*100)/(parseFloat($("#target_score_input").val()))).toFixed(2);
+							    					if(Actual_vs_Target>100)
+						    							Actual_vs_Target=100;
+						    						if(Actual_vs_Target!=0)
+						    							$("#actual_vs_target_input").val(Actual_vs_Target+"%"); 
+						    						$("#actual_vs_target_hidden_input").val(Actual_vs_Target);
+						    						
+						    						if($("#performance_percentage_input_hidden").val()!=null){
+						    							if(jQuery.trim($("#performance_percentage_input_hidden").val()).length>0){
+						    								performance_percentage_value=parseFloat($("#performance_percentage_input_hidden").val()).toFixed(2);
+						    							}
+						    						}
+						    						$("#performance_percentage_input_hidden").val(performance_percentage_value);
+							    					
+							    						var weight_percentage_value=parseFloat((parseFloat($("#weight_input").val())*Actual_vs_Target)/100).toFixed(2);
+							    					 
+							    						if(weight_percentage_value!=0)
+							    							$("#weight_percentage_input").val(weight_percentage_value+"%");
+							    						$("#weight_percentage_input_hidden").val(weight_percentage_value);
+							    						
+							    				}
+							    			});
+							     }
+							   } 
+							}); 
+					$("#baseline_data_input").keypress(function(event) {
+						  if ( event.which == 13 ) {
+							     event.preventDefault();
+							     var txtVal = this.value;
+							     var actual_data_input=jQuery.trim($("#actual_data_input").val());
+							    // alert(actual_data_input);
+							   //  alert(index); 
+							     if(!(intRegex.test(txtVal) || floatRegex.test(txtVal))) {
+							        alert('Please fill Number !!!');  
+							     }else  if(!(intRegex.test(actual_data_input) || floatRegex.test(actual_data_input))) {
+							    	 alert('Please fill Number !!!');
+							     }else{ 
+							    	 var query2="select actual_score from "+SCHEMA_G+".kpi_baseline  where kpi_code ='"+$("#kpi_code_input").val()+"' and "+$("#baseline_data_input").val()+" between begin_baseline and end_baseline ";
+							    	  
+							    	 KPIAjax.searchObject(query2,{ 
+							    				callback:function(data2){
+							    					  //alert(data2) 
+							    					var actual_score_value=0;
+							    					var performance_percentage_value=0; 
+							    					if(data2!=null && data2.length>0){
+							    						$("#actual_score_input").val(data2);  
+							    					   actual_score_value=parseFloat(data2).toFixed(2);
+							    					   
+							    					 }else{
+							    						 alert("ค่าของ baseline ไม่ได้ถูก set ไว้.");
+							    						 return false;
+							    					 }
+							    					Actual_vs_Target=parseFloat(((actual_score_value)*100)/(parseFloat($("#target_score_input").val()))).toFixed(2);
+						    						if(Actual_vs_Target>100)
+						    							Actual_vs_Target=100;
+						    						if(Actual_vs_Target!=0)
+						    							$("#actual_vs_target_input").val(Actual_vs_Target+"%"); 
+						    						$("#actual_vs_target_hidden_input").val(Actual_vs_Target);
+						    						
+						    						if($("#performance_percentage_input_hidden").val()!=null){
+						    							if(jQuery.trim($("#performance_percentage_input_hidden").val()).length>0){
+						    								performance_percentage_value=parseFloat($("#performance_percentage_input_hidden").val()).toFixed(2);
+						    							}
+						    						}
+						    						$("#performance_percentage_input_hidden").val(performance_percentage_value);
+							    						//var weight_percentage_value=parseFloat(((parseFloat($("#weight_input").val()).toFixed(2))*(Actual_vs_Target))/100).toFixed(2);
+							    						var weight_percentage_value=parseFloat((parseFloat($("#weight_input").val())*Actual_vs_Target)/100).toFixed(2);
+							    						 
+							    						if(weight_percentage_value!=0)
+							    							$("#weight_percentage_input").val(weight_percentage_value+"%");
+							    						$("#weight_percentage_input_hidden").val(weight_percentage_value);
+							    				 
+							    				}
+							    			});
+							     }
+							   } 
+							});  */
+				
+			}
+		}); 
+}
+function togleChk(obj,name){
+	 
+	  //  alert(obj.checked);
+		var checkElments= document.getElementsByName(name);
+		if(checkElments!=null && checkElments.length>0){
+			for(var i=0;i<checkElments.length;i++){
+				checkElments[i].checked=obj.checked;
+			}
+		}
+		
+	 }
 </script> 
 </body>
 </html>  
