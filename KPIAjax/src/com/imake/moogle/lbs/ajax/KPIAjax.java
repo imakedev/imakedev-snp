@@ -107,7 +107,7 @@ public class KPIAjax {
 			return kpiService.executeQuery(query);
 		}
 		public List<String[]> assignKPI(String SCHEMA, String query, Integer year,
-				Integer periodNo, String[] kpiCodes,String[] kpiOrders,String[] kpiWeight,String[] targetData,String[] targetScore, String approved_flag) {
+				Integer periodNo, String[] kpiCodes,String[] kpiOrders,String[] kpiWeight,String[] targetData,String[] targetScore, String[] approved_flag) {
 		
 			try{
 			return  kpiService.assignKPI(SCHEMA, query,year, periodNo, kpiCodes,kpiOrders,kpiWeight,targetData,targetScore,approved_flag);
@@ -117,7 +117,7 @@ public class KPIAjax {
 			return null;
 		}
 		public int assignKPIUpdate(String SCHEMA, String query, Integer year,
-				Integer periodNo, String[] kpiCodes,String[] kpiOrders,String[] kpiWeight,String[] targetData,String[] targetScore, String approved_flag) {
+				Integer periodNo, String[] kpiCodes,String[] kpiOrders,String[] kpiWeight,String[] targetData,String[] targetScore, String[] approved_flag) {
 		
 			try{
 			return  kpiService.assignKPIUpdate(SCHEMA, query,year, periodNo, kpiCodes,kpiOrders,kpiWeight,targetData,targetScore,approved_flag);
