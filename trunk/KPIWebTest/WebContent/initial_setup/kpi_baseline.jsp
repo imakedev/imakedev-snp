@@ -478,7 +478,13 @@ function doSubmitAction(){
 		  query="update  "+SCHEMA_G+".kpi_baseline set "+
 			"begin_baseline="+begin_baseline_input+",end_baseline="+end_baseline_input+",actual_score="+actual_score_input+",updated_dt=now() where kpi_code='"+kpicode_hidden+"' and baseline_id='"+baselineID_input+"'"; 
 		  queryCheck=queryCheck+" and baseline_id != '"+baselineID_input +"' and kpi_code ='"+kpicode_hidden+"'";
-	}
+	} 
+	  var begin_baseline_input_number= parseFloat(jQuery.trim($("#begin_baseline_input").val()));
+	   var end_baseline_input_number= parseFloat(jQuery.trim($("#end_baseline_input").val()));
+	   if(begin_baseline_input_number>=end_baseline_input_number){
+		   alert("End Baseline must greater than Start Baseline !!!");
+			return false;
+	   }
 	// alert("ss")
 	 KPIAjax.searchObject(queryCheck,{
 			callback:function(data){ 
