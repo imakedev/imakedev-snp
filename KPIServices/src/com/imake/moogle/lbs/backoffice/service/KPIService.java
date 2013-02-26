@@ -38,10 +38,10 @@ public interface KPIService {
 	public List searchObject(String query);
 	public int executeQuery(String query);
 	public List<String[]> assignKPI(String SCHEMA, String query, Integer year,
-			Integer periodNo, String[] kpiCodes,String[] kpiOrders,String[] kpiWeight,String[] targetData,String[] targetScore, String approved_flag) ;
+			Integer periodNo, String[] kpiCodes,String[] kpiOrders,String[] kpiWeight,String[] targetData,String[] targetScore, String[] approved_flag) ;
  
 	public int assignKPIUpdate(String SCHEMA, String query, Integer year,
-			Integer periodNo, String[] kpiCodes,String[] kpiOrders,String[] kpiWeight,String[] targetData,String[] targetScore, String approved_flag);
+			Integer periodNo, String[] kpiCodes,String[] kpiOrders,String[] kpiWeight,String[] targetData,String[] targetScore, String[] approved_flag);
 		// TODO Auto-generated method stub
 	
 	
