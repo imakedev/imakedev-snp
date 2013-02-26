@@ -164,7 +164,7 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
    		<td><input type="text"  id="target_score_input" class="input_number" readonly="readonly" /> </td>
    	</tr>
    	<tr>
-   		<td style="color: blue;">Actual Data:</td>
+   		<td>Actual Data:</td>
    		<td><input type="text" id="actual_data_input" class="input_number"/> </td> 
    		<td style="padding-left:20px;color: blue;">Baseline Data:</td>
    		<td><input type="text" id="baseline_data_input" class="input_number"/> </td> 
@@ -328,7 +328,7 @@ function parseDouble(value){
 	  return !isNaN(parseFloat(value)) ? value * 1 : NaN;
 	}
 function listYear(){
-	var query="SELECT distinct result.year FROM "+SCHEMA_G+".employee_result result order by result.year desc ";
+	var query="SELECT distinct result.year FROM "+SCHEMA_G+".kpi_result result order by result.year desc ";
 	KPIAjax.listYears(query,{
 		callback:function(data){
 			//alert(data);

@@ -544,7 +544,8 @@ $(document).ready(function() {
 }); 
 
 function listYear(){
-	var query="SELECT distinct result.year FROM "+SCHEMA_G+".employee_result result order by result.year desc ";
+
+	var query="SELECT distinct result.year FROM "+SCHEMA_G+".period result order by result.year desc ";
 	KPIAjax.listYears(query,{
 		callback:function(data){
 			//alert(data);
@@ -762,7 +763,8 @@ function distplayKPI2(){
 						"	,concat(em.employee_name,' ',em.employee_surname) as emp_name , result.kpi_code ,kpi.kpi_name " +
 						"  ,result.target_score,result.actual_score,result.kpi_order,result.kpi_weight,result.target_data,result.target_score , kpi.etl_flag from "+SCHEMA_G+".kpi_result result inner join "+SCHEMA_G+".kpi kpi " +
 						" on result.kpi_code=kpi.kpi_code inner join	"+SCHEMA_G+".employee em on result.employee_code=em.employee_code  inner join "+SCHEMA_G+".period p  on" +
-						" (result.period_no=p.period_no and result.year =p.year) "+approveKPIWhere +" order by em.employee_code, kpi.kpi_code,result.kpi_order";
+						//" (result.period_no=p.period_no and result.year =p.year) "+approveKPIWhere +" order by em.employee_code, kpi.kpi_code,result.kpi_order";
+						" (result.period_no=p.period_no and result.year =p.year) "+approveKPIWhere +" order by em.employee_code,  result.kpi_order";
 		
 		KPIAjax.searchObject(query,{ 
 		callback:function(data){
@@ -947,7 +949,8 @@ function distplayKPI3(){
 					"	,concat(em.employee_name,' ',em.employee_surname) as emp_name , result.kpi_code ,kpi.kpi_name " +
 					"  ,result.target_score,result.actual_score,result.kpi_order,result.kpi_weight,result.target_data,result.target_score from "+SCHEMA_G+".kpi_result result inner join "+SCHEMA_G+".kpi kpi " +
 					" on result.kpi_code=kpi.kpi_code inner join	"+SCHEMA_G+".employee em on result.employee_code=em.employee_code  inner join "+SCHEMA_G+".period p  on" +
-					" (result.period_no=p.period_no and result.year =p.year) "+approveKPIWhere +" order by em.employee_code, kpi.kpi_code,result.kpi_order";
+					//" (result.period_no=p.period_no and result.year =p.year) "+approveKPIWhere +" order by em.employee_code, kpi.kpi_code,result.kpi_order";
+					" (result.period_no=p.period_no and result.year =p.year) "+approveKPIWhere +" order by em.employee_code,result.kpi_order";
 	
 	KPIAjax.searchObject(query,{ 
 //KPIAjax.searchKPI(year,  periodNo,employeeCode, etl_flag, approved_flag,{

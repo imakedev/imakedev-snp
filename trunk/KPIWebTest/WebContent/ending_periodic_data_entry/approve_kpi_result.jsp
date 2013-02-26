@@ -332,7 +332,7 @@ function parseDouble(value){
 	  return !isNaN(parseFloat(value)) ? value * 1 : NaN;
 	}
 function listYear(){
-	var query="SELECT distinct result.year FROM "+SCHEMA_G+".employee_result result order by result.year desc ";
+	var query="SELECT distinct result.year FROM "+SCHEMA_G+".kpi_result result order by result.year desc ";
 	KPIAjax.listYears(query,{
 		callback:function(data){
 			//alert(data);
