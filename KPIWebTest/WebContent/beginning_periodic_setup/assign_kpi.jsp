@@ -135,7 +135,7 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
     	<a class="btn btn-primary" style="font-size:12px;margin-top: -10px" onclick="showPage('2')"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Manage KPI</span></a>
     </span>
      <span style="padding-left:20px;">
-    	<a class="btn btn-primary" style="font-size:12px;margin-top: -10px" onclick="showPage('3')"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Delete KPI</span></a>
+    	<a class="btn btn-primary" style="font-size:12px;margin-top: -10px" onclick="showPage('3')"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Search KPI</span></a>
     </span>
 <!-- </form> -->
    </td>
@@ -549,7 +549,8 @@ function listYear(){
 	KPIAjax.listYears(query,{
 		callback:function(data){
 			//alert(data);
-			   var str="<select id=\"yearElement\" style=\"width: 75px\" onchange=\"listDepartment()\">";
+			  // var str="<select id=\"yearElement\" style=\"width: 75px\" onchange=\"listDepartment()\">";
+			   var str="<select id=\"yearElement\" style=\"width: 75px\" onchange=\"listPeriod()\">";
 			  // str=str+"<option value=\"all\">All</option>";
 			if(data!=null && data.length>0){ 
 				for(var i=0;i<data.length;i++){
