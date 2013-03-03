@@ -52,12 +52,18 @@ a{cursor: pointer;}
 </head> 
 <body>   
      	<div id="_content" style="margin-left:3px;padding-top: 3px;width: 1100px">  
-	<table style="width: 1100px;"><tr><td>
-	<form class="form-inline"  style="border:1px solid #B3D2EE;background: #F9F9F9;padding-top:20px;padding-bottom:15px" action="" method="post" > 
-   <div style="padding-left:20px">
+	<!-- <table style="width: 1100px;"><tr><td> -->
+	<table style="border:1px solid #B3D2EE;background: #F9F9F9;padding-top:20px;padding-bottom:15px;width: 1100px;"><tr><td>
+	<!-- <form class="form-inline"  style="border:1px solid #B3D2EE;background: #F9F9F9;padding-top:20px;padding-bottom:15px" action="" method="post" > --> 
+    <div style="padding-left:20px;padding-top: 5px">
      Year:
     <span   id="yearSelection"> 
-    </span> 
+    </span>  
+     <span style="padding-left:10px;">
+    Period:
+    </span>
+    <span   id="periodSelection"> 
+    </span>
      <span style="padding-left:10px;">
     Department:
     </span>
@@ -68,22 +74,23 @@ a{cursor: pointer;}
     Position:
     </span>
     <span   id="positionSelection"> 
-    </span> 
-   <span style="padding-left:10px;">
+    </span>  
+   </div>
+    </td></tr>
+    <tr><td> 
+     <span style="padding-left:20px;">
     Employee:
     </span>
-    <span>  
+     <span>  
      <input type="hidden" id="employeeElement" />
      <input type="text" id="employeeSelection" />
-    </span>  
-    <span style="padding-left:20px;">
-    	<a class="btn btn-primary" style="font-size:12px" onclick="distplayEmployee()"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Search</span></a>
-    </span>
+    	<a class="btn btn-primary" style="font-size:12px;margin-top: -10px" onclick="distplayEmployee()"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Search</span></a>
+     </span>  
    <!--  <span> <input id="city" /></span> -->
    
-    </div>
+ <!--    </div>
     
-</form>
+</form> -->
 </td>
 	</tr>
   </table>
@@ -175,7 +182,8 @@ function listYear(){
 	KPIAjax.listYears(query,{
 		callback:function(data){
 			//alert(data);
-			   var str="<select id=\"yearElement\" style=\"width: 75px\" onchange=\"listDepartment()\">";
+			   //var str="<select id=\"yearElement\" style=\"width: 75px\" onchange=\"listDepartment()\">";
+			   var str="<select id=\"yearElement\" style=\"width: 75px\" onchange=\"listPeriod()\">";
 			  // str=str+"<option value=\"all\">All</option>";
 			if(data!=null && data.length>0){ 
 				for(var i=0;i<data.length;i++){
@@ -184,8 +192,38 @@ function listYear(){
 			}
 			str=str+"</select>";
 			$("#yearSelection").html(str); 
+			listPeriod();
 		}
     });
+}
+function listPeriod(){
+	 var year=$("#yearElement").val();
+	 var period_query="";
+		if(year!='all'){
+			period_query=" where result.year=" +year;
+		}
+		 
+	//var query="select period_no,period_desc  from "+SCHEMA_G+".period "+period_query;
+	var query="SELECT distinct result.period_no ,pd.period_desc FROM "+SCHEMA_G+".employee_result "+
+	 " result inner join "+SCHEMA_G+".period   pd on ( result.period_no=pd.period_no  and result.year=pd.year ) "+
+	// " where result.year=2012 "+
+	period_query+
+	" order by result.period_no desc  ";
+	//" order by department_name";
+	KPIAjax.listMaster(query,{
+		callback:function(data){
+			//alert(data); 
+			 var str="<select id=\"periodElement\">";
+			  //  str=str+"<option value=\"all\">All</option>";
+			if(data!=null && data.length>0){ 
+				for(var i=0;i<data.length;i++){
+					str=str+"<option value=\""+data[i].id+"\">"+data[i].name+"</option>";
+				}
+			} 
+			str=str+"</select>";
+			$("#periodSelection").html(str); 
+		}
+  });
 }
 function listDepartment(){
 	//var year=$("#yearElement").val();
@@ -284,6 +322,7 @@ function listEmployee(){
 }
 function distplayEmployee(){
 	 var year=$("#yearElement").val();
+	 var periodNo=jQuery.trim($("#periodElement").val());
 	 var employee_code=$("#employeeElement").val(); 
 	 var employee_name=$("#employeeSelection").val(); 
 	 var department_code=$("#departmentElement").val();
@@ -295,7 +334,8 @@ function distplayEmployee(){
 	 var position_code=$("#positionElement option:selected").text();
 	//alert("a")
 	//alert(position_code)
-	KPIAjax.searchEmployeeResult(SCHEMA_G,year,null,department_code,position_code,employee_code,employee_name,{
+	 
+	KPIAjax.searchEmployeeResult(SCHEMA_G,year,periodNo,department_code,position_code,employee_code,employee_name,{
 		callback:function(data){
 			//alert(data);
 			var haveData=false; 

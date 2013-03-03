@@ -336,7 +336,8 @@ function listYear(){
 	KPIAjax.listYears(query,{
 		callback:function(data){
 			//alert(data);
-			   var str="<select id=\"yearElement\" style=\"width: 75px\" onchange=\"listDepartment()\">";
+			   //var str="<select id=\"yearElement\" style=\"width: 75px\" onchange=\"listDepartment()\">";
+			   var str="<select id=\"yearElement\" style=\"width: 75px\" onchange=\"listPeriod()\">";
 			  // str=str+"<option value=\"all\">All</option>";
 			if(data!=null && data.length>0){ 
 				for(var i=0;i<data.length;i++){
@@ -353,16 +354,21 @@ function listPeriod(){
 	 var year=$("#yearElement").val();
 	 var period_query="";
 		if(year!='all'){
-			period_query=" where year=" +year;
+			period_query=" where result.year=" +year;
 		}
 		 
-	var query="select period_no,period_desc  from "+SCHEMA_G+".period "+period_query;
+	//var query="select period_no,period_desc  from "+SCHEMA_G+".period "+period_query;
+	var query="SELECT distinct result.period_no ,pd.period_desc FROM "+SCHEMA_G+".kpi_result "+
+	 " result inner join "+SCHEMA_G+".period   pd on ( result.period_no=pd.period_no  and result.year=pd.year ) "+
+	// " where result.year=2012 "+
+	period_query+
+	" order by result.period_no desc  ";
 	//" order by department_name";
 	KPIAjax.listMaster(query,{
 		callback:function(data){
 			//alert(data); 
 			 var str="<select id=\"periodElement\">";
-			    str=str+"<option value=\"all\">All</option>";
+			  //  str=str+"<option value=\"all\">All</option>";
 			if(data!=null && data.length>0){ 
 				for(var i=0;i<data.length;i++){
 					str=str+"<option value=\""+data[i].id+"\">"+data[i].name+"</option>";
