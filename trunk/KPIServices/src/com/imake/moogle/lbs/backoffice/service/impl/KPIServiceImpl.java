@@ -132,6 +132,13 @@ public class KPIServiceImpl implements KPIService {
 				sb.append(" where em_result.year="+year.trim());
 			haveWhere=true;
 		}
+		if(!periodNo.equalsIgnoreCase("all")){
+			if(haveWhere)
+				sb.append(" and em_result.period_no="+periodNo.trim());
+			else
+				sb.append(" where em_result.period_no="+periodNo.trim());
+			haveWhere=true;
+		}
 		if(!employeeCode.equalsIgnoreCase("all")  &&  employeeCode.trim().length()>0){
 			if(haveWhere)
 				sb.append(" and em_result.employee_code='"+employeeCode+"' " );
