@@ -31,8 +31,8 @@
 			p:password=""/>
 	-->
   <bean id="dataSourceFactory" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
-			p:driverClassName="com.mysql.jdbc.Driver" p:url="jdbc:mysql://localhost:3306/FSD2" p:username="root"
-			p:password="015482543a6e"/>
+			p:driverClassName="com.mysql.jdbc.Driver" p:url="jdbc:mysql://localhost:3306/mcic_kpi_app_test" p:username="root"
+			p:password="yourpassword"/>
     <!--
 	<bean id="dataSourceFactory" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
 			p:driverClassName="com.mysql.jdbc.Driver" p:url="jdbc:mysql://localhost:3306/snp" p:username="root"
@@ -67,6 +67,7 @@
   		
    		 <property name="annotatedClasses">
      		<list>     		 
+     		<value>com.imake.moogle.lbs.backoffice.dto.Threshold</value>  
      		 <!--  
 				<value>com.moogle.lbs.balancescorecard.domain.Dimdate</value>  
 				<value>com.moogle.lbs.balancescorecard.domain.Kpiresult</value> 
