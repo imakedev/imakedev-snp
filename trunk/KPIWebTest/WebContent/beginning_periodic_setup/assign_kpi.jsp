@@ -322,7 +322,7 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
 	</tr>
   </table>
  </div> 
- <%@ include file="/WEB-INF/jsp/schema_test.jsp" %>  
+ <%@ include file="/WEB-INF/jsp/schema.jsp" %>  
      <script type="text/javascript">
 //var _path="/KPIWebTest/";
 //var SCHEMA_G='mcic_kpi_app_test';
@@ -1343,7 +1343,7 @@ function doSubmitAction(){
 	var targetData2=$("#targetData2").val();
 	var targetScore2=$("#targetScore2").val();  
 		var mode=$("#mode").val();
-	var queryEtlFlag="SELECT  kpi.etl_flag,kpi_code  FROM mcic_kpi_app_test.kpi kpi where kpi_code='"+kpi_code_input2+"'";
+	var queryEtlFlag="SELECT  kpi.etl_flag,kpi_code  FROM "+SCHEMA_G+".kpi kpi where kpi_code='"+kpi_code_input2+"'";
 	
 		KPIAjax.searchObject(queryEtlFlag,{
 			callback:function(data){ 
@@ -1970,7 +1970,7 @@ function selectKPI(){
  		alert("Please fill KPI Code or KPI Name.")
  		return false;
  	}
- 	var queryEtlFlag="SELECT  kpi.etl_flag,kpi_code  FROM mcic_kpi_app_test.kpi kpi where kpi_code='"+kpiCode+"'";
+ 	var queryEtlFlag="SELECT  kpi.etl_flag,kpi_code  FROM "+SCHEMA_G+".kpi kpi where kpi_code='"+kpiCode+"'";
 	
 	KPIAjax.searchObject(queryEtlFlag,{
 		callback:function(data){ 
