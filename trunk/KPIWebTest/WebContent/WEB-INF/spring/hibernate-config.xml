@@ -31,8 +31,9 @@
 			p:password=""/>
 	-->
   <bean id="dataSourceFactory" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
-			p:driverClassName="com.mysql.jdbc.Driver" p:url="jdbc:mysql://localhost:3306/FSD2" p:username="root"
-			p:password="015482543a6e"/>
+			p:driverClassName="com.mysql.jdbc.Driver" p:url="jdbc:mysql://localhost:3306/mcic_kpi_app_test?useEncoding=true&amp;characterEncoding=UTF-8" p:username="root"
+			p:password="yourpassword"/>
+			
     <!--
 	<bean id="dataSourceFactory" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
 			p:driverClassName="com.mysql.jdbc.Driver" p:url="jdbc:mysql://localhost:3306/snp" p:username="root"
@@ -59,6 +60,7 @@
 				<prop key="hibernate.show_sql">true</prop>
 				<prop key="hibernate.generate_statistics">true</prop>		
 				<prop key="hibernate.connection.autocommit">false</prop>
+				<prop key="hibernate.connection.characterEncoding">UTF-8</prop>
 				<!--
 				  <prop key=" hibernate.hbm2ddl.auto">create</prop>				
 				  hibernate.hbm2ddl.auto update | create | create-drop  -->
@@ -67,6 +69,7 @@
   		
    		 <property name="annotatedClasses">
      		<list>     		 
+     		<value>com.imake.moogle.lbs.backoffice.dto.Threshold</value>
      		 <!--  
 				<value>com.moogle.lbs.balancescorecard.domain.Dimdate</value>  
 				<value>com.moogle.lbs.balancescorecard.domain.Kpiresult</value> 
