@@ -113,6 +113,8 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
       	<option value="0">---</option>
       	<option value="Staff">Staff</option> 
       	<option value="Manager">Manager</option>
+      	<option value="Executive">Executive</option>
+      	
       </select>
 	 </span>
 	 <span>
