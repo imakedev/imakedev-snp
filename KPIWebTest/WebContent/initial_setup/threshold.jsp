@@ -155,6 +155,10 @@ var mail_toG;
 var mail_subjectG;
 var mail_messageG;
 var mail_attachG;   
+var intRegex = /^\d+$/;
+//var floatRegex = /^((\d+(\.\d *)?)|((\d*\.)?\d+))$/;
+var floatRegex = /^((\d+(\.\d *)?)|((\d*\.)?\d+)|(-\d+(\.\d *)?)|((-\d*\.)?\d+))$/;
+
 $(document).ready(function() {  
 	 $('#colorpickerfield').ColorPicker({
 	        onSubmit: function(hsb, hex, rgb, el, parent) {
@@ -354,11 +358,24 @@ function confirmDelete(id){
 	});
 }
 function doSubmitAction(){ 
-    var thresholdID=$("#thresholdID_form").val();
-    var thresholdName=$("#thresholdName_form").val();
-    var thresholdBegin=$("#thresholdBegin_form").val();
-    var thresholdEnd=$("#thresholdEnd_form").val();
-    var thresholdcolor=$("#colorpickerfield").val(); 
+    var thresholdID=jQuery.trim($("#thresholdID_form").val());
+    var thresholdName=jQuery.trim($("#thresholdName_form").val());
+    var thresholdBegin=jQuery.trim($("#thresholdBegin_form").val());
+    var thresholdEnd=jQuery.trim($("#thresholdEnd_form").val());
+    var thresholdcolor=jQuery.trim($("#colorpickerfield").val()); 
+   // alert(thresholdcolor)
+    if( thresholdName.length==0 || thresholdBegin.length==0  || thresholdEnd.length==0 || thresholdcolor.length==0 ){
+     	alert("Data must not empty.");
+     	return false;
+     }
+    if(!(intRegex.test(thresholdBegin) || floatRegex.test(thresholdBegin))) {
+        alert('Begin Threshold must be  Number !!!');  
+        return false;
+     }
+    if(!(intRegex.test(thresholdEnd) || floatRegex.test(thresholdEnd))) {
+    	 alert('End Threshold must be  Number !!!'); 
+    	 return false;
+     }
 	var mode=$("#mode").val();
 	var query="";
 	 var queryCheck="SELECT * FROM "+SCHEMA_G+".threshold where ("+thresholdBegin+" BETWEEN begin_threshold AND end_threshold  "+

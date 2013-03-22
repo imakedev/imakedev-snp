@@ -527,6 +527,11 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
          var perspective_input= jQuery.trim($("#perspective_input").val());
          var uom_input= jQuery.trim($("#uom_input").val());
          var dataSource_input= jQuery.trim($("#dataSource_input").val());
+          
+         if(kpi_code_input.length==0 || kpi_name_input.length==0){
+         	alert("KPI Code and  KPI Name must not empty.");
+         	return false;
+         }
          var etl_flag_input='N';
          if($("#etl_flag_input").attr("checked"))
         	 etl_flag_input='Y';
