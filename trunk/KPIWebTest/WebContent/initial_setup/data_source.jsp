@@ -283,8 +283,14 @@ function confirmDelete(id){
 	});
 }
 function doSubmitAction(){ 
+	
     var dataSourceID=$("#dataSourceID_form").val();
-    var dataSourceName=$("#dataSourceName_form").val();
+    var dataSourceName=jQuery.trim($("#dataSourceName_form").val());
+    if(!dataSourceName.length>0){
+    	alert("Data Source Name must not empty.");
+    	return false;
+    }
+    		
 	var mode=$("#mode").val();
 	var query="";
 	if(mode=='add'){
