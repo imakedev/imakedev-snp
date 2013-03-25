@@ -281,7 +281,12 @@ function confirmDelete(id){
 }
 function doSubmitAction(){ 
     var perspectiveID=$("#perspectiveID_form").val();
-    var perspectiveName=$("#perspectiveName_form").val();
+    var perspectiveName=jQuery.trim($("#perspectiveName_form").val());
+    if(!perspectiveName.length>0){
+    	alert("Perspective Name must not empty.");
+    	return false;
+    }
+    	
 	var mode=$("#mode").val();
 	var query="";
 	if(mode=='add'){
