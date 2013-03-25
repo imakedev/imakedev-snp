@@ -281,7 +281,11 @@ function confirmDelete(id){
 }
 function doSubmitAction(){ 
     var uomID=$("#uomID_form").val();
-    var uomName=$("#uomName_form").val();
+    var uomName=jQuery.trim($("#uomName_form").val());
+    if(!uomName.length>0){
+    	alert("UOM Name must not empty.");
+    	return false;
+    }
 	var mode=$("#mode").val();
 	var query="";
 	if(mode=='add'){
