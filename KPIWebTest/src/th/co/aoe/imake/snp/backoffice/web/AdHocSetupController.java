@@ -1,9 +1,6 @@
 package th.co.aoe.imake.snp.backoffice.web;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 //import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
