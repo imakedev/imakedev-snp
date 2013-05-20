@@ -343,11 +343,16 @@ function showForm(mode,id_year,id_period){
      $('#year_input').attr('readonly', false);
      $('#period_no_input').attr('readonly', false);
      $("#mode").val(mode);
+     var height_dialog=382;
+     if ($.browser.msie)
+    	 height_dialog=420;
+     
 	if(mode=='add'){
 		//$("#id_element").hide();
 		$( "#dialog-form" ).dialog({ 
 			position: 'top',
-			 height: 382,
+			 //height: 382,
+			 height:height_dialog,
 			 width:727,
 			modal: true,
 			  hide: 'fold',
@@ -369,7 +374,8 @@ function showForm(mode,id_year,id_period){
 			     
 				$( "#dialog-form" ).dialog({ 
 					position: 'top',
-					 height: 382,
+					// height: 382,
+					height:height_dialog,
 					 width:727,
 					modal: true,
 					 hide: 'fold',
