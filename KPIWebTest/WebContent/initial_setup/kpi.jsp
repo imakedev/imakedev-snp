@@ -14,10 +14,7 @@
 <link href="<%=request.getContextPath()%>/resources/css/smoothness/jquery-ui-1.9.2.custom.css" type="text/css"  rel="stylesheet" /> 
 <link href="<%=request.getContextPath()%>/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet"  type="text/css"/>
 <link href="<%=request.getContextPath()%>/resources/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet"  type="text/css"/>    
- <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="<%=request.getContextPath()%>/resources/js/html5shiv.js"></script>
-    <![endif]--> 
+ 
  <!-- 
 	DWR
 	-->
@@ -82,6 +79,7 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
    <form class="form-inline"  style="border:1px solid #B3D2EE;background: #F9F9F9;padding-top:20px;padding-bottom:15px" action="" method="post" >
  <div  style="padding-left:20px">
       <span style="padding-left:10px;">
+       
     KPI Code: <input type="text" id="kpiCode" style="width: 100px"/>
     </span> 
      <span style="padding-left:10px;">
@@ -342,6 +340,9 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
   		    $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
   		  }
   		}); 
+     	 if ($.browser.msie){
+    		 $('#kpiCode').focus(); 
+    		} 
      	//searchKPI();
      }); 
      function searchKPI(){

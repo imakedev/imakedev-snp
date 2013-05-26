@@ -14,10 +14,7 @@
 <link href="<%=request.getContextPath() %>/resources/css/smoothness/jquery-ui-1.9.2.custom.css" type="text/css"  rel="stylesheet" /> 
 <link href="<%=request.getContextPath() %>/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet"  type="text/css"/>
 <link href="<%=request.getContextPath() %>/resources/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet"  type="text/css"/>    
- <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="<%=request.getContextPath() %>/resources/js/html5shiv.js"></script>
-    <![endif]-->  
+ 
  <!-- 
 	DWR
 	-->
@@ -39,7 +36,7 @@
  Arial, sans-serif; font-size: 12px; }
 input[type=text] {
 	height: 30px;
-	line-height: 30px
+	line-height: 30px   
 }
 label, input, button, select, textarea {
 font-size: 12px;
@@ -72,7 +69,8 @@ a{cursor: pointer;}
     <div class="controls">
    <!--  <input type="hidden" id="employeeElement" />
      <input type="text" id="employeeSelection" /> -->
-      <input class="input_snp" type="text"  id="dataSourceName"> <a class="btn btn-primary" onclick="searchDataSource()"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Search</span></a>
+     <!--  <input class="input_snp" type="text"  id="dataSourceName"> <a class="btn btn-primary" onclick="searchDataSource()"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Search</span></a> -->
+      <input  type="text"  id="dataSourceName"  > <a class="btn btn-primary" onclick="searchDataSource()"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Search</span></a>
     </div> 
   </div> 
 </form> 
@@ -109,13 +107,15 @@ a{cursor: pointer;}
   <div class="control-group" id="id_element">
     <label class="control-label" for="inputEmail">Data Source ID:</label>
     <div class="controls">
-      <input class="input_snp" type="text" id="dataSourceID_form" readonly="readonly">
+      <!-- <input class="input_snp" type="text" id="dataSourceID_form" readonly="readonly"> -->
+      <input   type="text" id="dataSourceID_form" readonly="readonly">
     </div>
   </div>
   <div class="control-group">
     <label class="control-label">Data Source Name:</label>
     <div class="controls">
-      <input class="input_snp"  type="text" id="dataSourceName_form" >
+      <!-- <input class="input_snp"  type="text" id="dataSourceName_form" > -->
+      <input   type="text" id="dataSourceName_form" >
     </div>
   </div> 
   <div class="control-group">
@@ -139,13 +139,16 @@ var mail_toG;
 var mail_subjectG;
 var mail_messageG;
 var mail_attachG;   
-$(document).ready(function() {   
+$(document).ready(function() {  
+	
+	 
 	 $("#dataSourceName").keypress(function(event) {
   if ( event.which == 13 ) {
      event.preventDefault();
      searchDataSource();
    } 
 });   
+	  
 	$( "#dataSourceName" ).autocomplete({
 		  source: function( request, response ) { 
 				var query="SELECT data_source_id,data_source_name FROM "+SCHEMA_G+".data_source where data_source_name like '%"+request.term+"%'";
@@ -182,7 +185,9 @@ $(document).ready(function() {
 		    $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
 		  }
 		}); 
-
+	  if ($.browser.msie){
+		 $('input').focus(); 
+		}
 	//searchDataSource();
 }); 
 function searchDataSource(){

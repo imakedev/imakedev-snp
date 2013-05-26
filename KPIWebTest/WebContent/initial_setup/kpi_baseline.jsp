@@ -14,15 +14,12 @@
 <link href="<%=request.getContextPath() %>/resources/css/smoothness/jquery-ui-1.9.2.custom.css" type="text/css"  rel="stylesheet" /> 
 <link href="<%=request.getContextPath() %>/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet"  type="text/css"/>
 <link href="<%=request.getContextPath() %>/resources/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet"  type="text/css"/>    
- <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="<%=request.getContextPath() %>/resources/js/html5shiv.js"></script>
-    <![endif]--> 
+ 
  <!-- 
 	DWR
 	-->
 	<script type="text/javascript"
-        	src="<%=request.getContextPath() %>/dwr/interface/KPIAjax.js"></script>
+        	src="<%=request.getContextPath()%>/dwr/interface/KPIAjax.js"></script>
 	<script type="text/javascript"
         	src="<%=request.getContextPath() %>/dwr/engine.js"></script> 
 	<script type="text/javascript"
@@ -39,7 +36,7 @@
  Arial, sans-serif; font-size: 12px; }
 input[type=text] {
 	height: 30px;
-	line-height: 30px
+	line-height: 30px 
 }
 label, input, button, select, textarea {
 font-size: 12px;
@@ -180,25 +177,29 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
   <div class="control-group" id="id_element">
     <label class="control-label">Baseline ID:</label>
     <div class="controls">
-      <input class="input_snp" type="text" id="baselineID_input">
+      <!-- <input class="input_snp" type="text" id="baselineID_input"> -->
+      <input   type="text" id="baselineID_input">
     </div>
   </div>
   <div class="control-group">
     <label class="control-label">Begin Baseline:</label>
     <div class="controls">
-      <input class="input_snp"  type="text" id="begin_baseline_input" >
+      <!-- <input class="input_snp"  type="text" id="begin_baseline_input" > -->
+      <input   type="text" id="begin_baseline_input" >
     </div>
   </div> 
    <div class="control-group">
     <label class="control-label">End Baseline:</label>
     <div class="controls">
-      <input class="input_snp"  type="text" id="end_baseline_input" >
+      <!-- <input class="input_snp"  type="text" id="end_baseline_input" > -->
+      <input   type="text" id="end_baseline_input" >
     </div>
   </div> 
    <div class="control-group">
     <label class="control-label">Actual Score:</label>
     <div class="controls">
-      <input class="input_snp"  type="text" id="actual_score_input" >
+      <!-- <input class="input_snp"  type="text" id="actual_score_input" > -->
+      <input   type="text" id="actual_score_input" >
     </div>
   </div> 
   <div class="control-group">
@@ -227,6 +228,8 @@ var intRegex = /^\d+$/;
 var floatRegex = /^((\d+(\.\d *)?)|((\d*\.)?\d+)|(-\d+(\.\d *)?)|((-\d*\.)?\d+))$/;
 
 $(document).ready(function() {  
+	  
+	
 	/* $('#togle_emp').click(function() {
 		 //$("#dialog-Message").slideDown("slow"); 
 		  $('#dialog-Message_1').toggle('slow', function() {
@@ -234,6 +237,7 @@ $(document).ready(function() {
 		  });
 		}); */ 
 		//etl_flag = 'Y'
+	 
 	$( "#kpiCode" ).autocomplete({
 		  source: function( request, response ) { 
 				var query="SELECT kpi_code,kpi_name FROM "+SCHEMA_G+".kpi where kpi_code like '%"+request.term+"%'";// and etl_flag = 'Y' ";		      
@@ -307,6 +311,9 @@ $(document).ready(function() {
 		    $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
 		  }
 		});
+	if ($.browser.msie){
+	 $('#kpiCode').focus(); 
+	}
 }); 
 function loadDynamicPage(pageId){  
 	pageId=_path+"ending_periodic_data_entry/template/"+pageId+".jsp";  
@@ -396,11 +403,15 @@ function showForm(mode,id1,id2){
     $("#actual_score_input").val("");
     $('#baselineID_input').attr('readonly', false);
     $("#mode").val(mode);
+    var height_dialog=340;
+    if ($.browser.msie){
+    	height_dialog=360;
+		}
 	if(mode=='add'){
 	//	$("#id_element").hide();
 		$( "#dialog-form" ).dialog({ 
 			position: 'top',
-			 height: 340,
+			 height: height_dialog,
 			 width:727,
 			modal: true,
 			  hide: 'fold',
@@ -423,7 +434,7 @@ function showForm(mode,id1,id2){
               $("#uomName_form").val(data[0][1]); */
 				$( "#dialog-form" ).dialog({ 
 					position: 'top',
-					 height: 340,
+					 height: height_dialog,
 					 width:727,
 					modal: true,
 					 hide: 'fold',

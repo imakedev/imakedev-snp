@@ -292,6 +292,9 @@ $(document).ready(function() {
 		    $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
 		  }
 		}); 
+	if ($.browser.msie){
+		 $('#employeeSelection').focus(); 
+		}
 }); 
 function loadDynamicPage(pageId){  
 	pageId=_path+"ending_periodic_data_entry/template/"+pageId+".jsp";  
@@ -688,11 +691,17 @@ Weight Percentage = KPI Weighting * Performance Percentage
 				}else
 					$("#performance_percentage_input_hidden").val("0");
 				  
-				
+				 var height_dialog=360;
+				 var width_dialog=650;
+			     if ($.browser.msie){
+			     	height_dialog=430;
+			     	 width_dialog=690;
+			 		}
 				$( "#dialog-form" ).dialog({ 
 					position: 'top',
-					 height: 360,
-					 width:650,
+					// height: 360,
+					 height: height_dialog,
+					 width:width_dialog,
 					modal: true,
 					 hide: 'fold',
 				     show: 'blind' 
