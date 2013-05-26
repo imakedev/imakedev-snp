@@ -14,10 +14,7 @@
 <link href="<%=request.getContextPath() %>/resources/css/smoothness/jquery-ui-1.9.2.custom.css" type="text/css"  rel="stylesheet" /> 
 <link href="<%=request.getContextPath() %>/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet"  type="text/css"/>
 <link href="<%=request.getContextPath() %>/resources/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet"  type="text/css"/>    
- <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="<%=request.getContextPath() %>/resources/js/html5shiv.js"></script>
-    <![endif]--> 
+ 
  <!-- 
 	DWR
 	-->
@@ -255,6 +252,9 @@ $(document).ready(function() {
 		    $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
 		  }
 		});
+	if ($.browser.msie){
+		 $('#year').focus(); 
+		}
 }); 
   
 function distPlayPeriod(){ 

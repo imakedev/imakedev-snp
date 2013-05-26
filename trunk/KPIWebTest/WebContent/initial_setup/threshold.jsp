@@ -14,10 +14,7 @@
 <link href="<%=request.getContextPath() %>/resources/css/smoothness/jquery-ui-1.9.2.custom.css" type="text/css"  rel="stylesheet" /> 
 <link href="<%=request.getContextPath() %>/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet"  type="text/css"/>
 <link href="<%=request.getContextPath() %>/resources/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet"  type="text/css"/>    
- <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="<%=request.getContextPath() %>/resources/js/html5shiv.js"></script>
-    <![endif]--> 
+ 
  <!-- 
 	DWR
 	-->
@@ -215,7 +212,10 @@ $(document).ready(function() {
 			  close: function() {
 			    $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
 			  }
-			}); 
+			});
+		 if ($.browser.msie){
+			 $('#thresholdName').focus(); 
+			}
 		//searchThreshold();
 });  
 function searchThreshold(){
@@ -307,11 +307,15 @@ function showForm(mode,id){
      $("#thresholdEnd_form").val(""); 
      $("#colorpickerfield").val("");  
      $("#mode").val(mode);
+     var height_dialog=345;
+     if ($.browser.msie){
+     	height_dialog=365;
+ 		}
 	if(mode=='add'){
 		$("#id_element").hide();
 		$( "#dialog-form" ).dialog({ 
 			position: 'top',
-			 height: 345,
+			 height: height_dialog,
 			 width:727,
 			modal: true,
 			  hide: 'fold',
@@ -330,7 +334,8 @@ function showForm(mode,id){
                $("#colorpickerfield").val(data[0][4]);  
 				$( "#dialog-form" ).dialog({ 
 					position: 'top',
-					 height: 395,
+					 //height: 395,
+					height: (height_dialog+60),
 					 width:727,
 					modal: true,
 					 hide: 'fold',

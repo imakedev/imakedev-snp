@@ -541,6 +541,9 @@ $(document).ready(function() {
 		    $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
 		  }
 		});
+	if ($.browser.msie){
+		 $('#employeeSelection').focus(); 
+		}
 	//distplayKPI();
 }); 
 
