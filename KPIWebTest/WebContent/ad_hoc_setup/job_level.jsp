@@ -210,9 +210,11 @@ $(document).ready(function() {
 		  close: function() {
 		    $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
 		  }
-		});
+		}); 
 	if ($.browser.msie){
 		 $('#employeeCode').focus(); 
+		 $('#employeeName').css("width","250px");
+		 $('#employeeName_result').css("width","250px"); 
 		}
 }); 
 function loadDynamicPage(pageId){  
