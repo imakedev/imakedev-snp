@@ -80,12 +80,12 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
     Employee Code: <input type="text" id="employeeCode" style="width: 120px;text-align: right;"/>
     </span> 
      <span style="padding-left:10px;">
-    Employee Name: <input type="text" id="employeeName" style="width: 300px"/>
+    Employee Name: <input type="text" id="employeeName" style="width: 280px"/>
     </span> 
     <span style="padding-left:10px;">
      <input type="hidden" id="employeeCode_hidden"/>
      <input type="hidden" id="employeeName_hidden"/>
-     <input type="text" id="employeeName_result" readonly="readonly" style="width: 300px"/>
+     <input type="text" id="employeeName_result" readonly="readonly" style="width: 280px"/>
     </span>
      <span style="padding-left:20px;">
     	<a class="btn btn-primary" style="font-size:12px" onclick="getJobLevel()"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Search</span></a>
