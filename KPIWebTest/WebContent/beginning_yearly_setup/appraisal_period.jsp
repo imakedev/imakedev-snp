@@ -348,11 +348,11 @@ function showForm(mode,id_year,id_period){
     	 height_dialog=420;
      
 	if(mode=='add'){
-		//$("#id_element").hide();
+		//$("#id_element").hide(); 
 		$( "#dialog-form" ).dialog({ 
 			position: 'top',
-			 //height: 382,
-			 height:height_dialog,
+			// height: 382,
+			 height: height_dialog,
 			 width:727,
 			modal: true,
 			  hide: 'fold',
@@ -374,8 +374,8 @@ function showForm(mode,id_year,id_period){
 			     
 				$( "#dialog-form" ).dialog({ 
 					position: 'top',
-					// height: 382,
-					height:height_dialog,
+					 //height: 382,
+					  height: height_dialog,
 					 width:727,
 					modal: true,
 					 hide: 'fold',
