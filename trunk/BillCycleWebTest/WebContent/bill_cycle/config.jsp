@@ -4,6 +4,7 @@
 <head>
 <title>BackOffice</title>
 <!--  <meta charset="UTF-8" />   --> 
+<meta http-equiv="X-UA-Compatible" content="IE=7, IE=9"/>   
 <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script  src="<%=request.getContextPath() %>/resources/js/jquery-1.8.3.min.js" type="text/javascript"></script> 
