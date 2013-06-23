@@ -82,41 +82,48 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
 						<form class="form-inline"  style="border:1px solid #B3D2EE;background: #F9F9F9;padding-top:20px;padding-bottom:15px" action="" method="post" >
  							  <table style="width: 100%;" border="0">
  							      <tr>
- 							      	<td width="20%">
+ 							      	<td width="30%">
  							      		<div  style="padding-left:20px;padding-bottom: 5px">
   	<span style="padding-left:10px;">
     รหัสลูกค้า : <input type="text" id="customer_code" style="width: 120px;text-align: left;"/>
     </span> 
     </div>
  							      	</td>
- 							      	<td width="80%">
- 							      	<div  style="padding-left:20px;padding-bottom: 5px">
-  	<span style="padding-left:10px;">
+ 							      	<td width="70%">
+ 							      	<div  style="padding-left:0px;padding-bottom: 5px">
+  	<span style="padding-left:0px;">
     ชื่อลูกค้า : <input type="text" id="customer_name" style="width: 500px"/>
     </span> 
     </div>
  							      	</td>
  							      </tr>
  							      <tr>
- 							      	<td width="100%" colspan="2">
+ 							      	<td  width="30%">
  							      		<div  style="padding-left:50px;padding-bottom: 5px">
   	<span style="padding-left:10px;">
-  	<!-- <input type="hidden" id="district_code"> -->
     พื้นที่ : <span id="province_name_element"></span>
     </span> 
-     <span style="padding-left:10px;">
+    </div>
+    	</td>
+    	<td width="70%">
+    	<div>
+     <span style="padding-left:0px;">
     เขต: <span id="district_name_element"></span> 
     </span> 
     </div>
  							      	</td>
  							      </tr>
  							      <tr>
- 							      	<td width="100%" colspan="2">
+ 							      	<td width="30%">
  							      		<div  style="padding-left:5px;padding-bottom: 5px">
   	<span style="padding-left:10px;">
    เบอร์โทรศัพท์ : <input type="text" id="phone_no" style="width: 120px;text-align: right;"/>
     </span> 
-      <span style="padding-left:20px;">
+    </div>
+    </td>
+    	<td width="70%">
+    	<div>
+      <span style="padding-left:0px;">
     	<a class="btn btn-primary" style="font-size:12px" onclick="getConfig()"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Get Config</span></a>
     </span> 
     </div>
@@ -723,7 +730,7 @@ $(document).ready(function() {
 			  $("#customer_name" ).val(""); 
 			  $("#configElement").slideUp("slow"); 
 				var query=" SELECT customer_code, customer_name, province_name, district_code, district_name, phone_no, include_receipt_flag,shift_bill_date_flag,created_dttm,"+
-					  " update_dttm FROM "+SCHEMA_G+".ar_customer where customer_code like '%"+request.term+"%'   ";		      
+					  " updated_dttm FROM "+SCHEMA_G+".ar_customer where customer_code like '%"+request.term+"%'   ";		      
 				BillCycleAjax.searchObject(query,{
 					callback:function(data){ 
 						if(data!=null && data.length>0){
@@ -738,7 +745,7 @@ $(document).ready(function() {
 					        	  include_receipt_flag:item[6],
 					        	  shift_bill_date_flag:item[7],
 					        	  created_dttm:item[8],
-					        	  update_dttm:item[9]
+					        	  updated_dttm:item[9]
 					          }
 					        }));
 						}else{
@@ -776,7 +783,7 @@ $(document).ready(function() {
 			  $("#customer_code" ).val(""); 
 			  $("#configElement").slideUp("slow"); 
 				var query=" SELECT customer_code, customer_name, province_name, district_code, district_name, phone_no, include_receipt_flag,shift_bill_date_flag,created_dttm,"+
-				  " update_dttm FROM "+SCHEMA_G+".ar_customer where customer_name like '%"+request.term+"%'   ";			      
+				  " updated_dttm FROM "+SCHEMA_G+".ar_customer where customer_name like '%"+request.term+"%'   ";			      
 				BillCycleAjax.searchObject(query,{
 					callback:function(data){ 
 						if(data!=null && data.length>0){
@@ -791,7 +798,7 @@ $(document).ready(function() {
 					        	  include_receipt_flag:item[6],
 					        	  shift_bill_date_flag:item[7],
 					        	  created_dttm:item[8],
-					        	  update_dttm:item[9]
+					        	  updated_dttm:item[9]
 					          }
 					        }));
 						}else{
@@ -1169,7 +1176,7 @@ function getConfig(){
  		return false;
  	}
  	var query=" SELECT customer_code, customer_name, province_name, district_code, district_name, phone_no, include_receipt_flag,shift_bill_date_flag,created_dttm,"+
-	  " update_dttm FROM "+SCHEMA_G+".ar_customer where customer_code ='"+customer_code+"'";	
+	  " updated_dttm FROM "+SCHEMA_G+".ar_customer where customer_code ='"+customer_code+"'";	
  	 
  	BillCycleAjax.searchObject(query,{
  		callback:function(data){   
@@ -1332,7 +1339,10 @@ function saveConfig(){
 	 	  
 	//	private int districtCode;
 
-	      
+	      var includeReceiptFlag='N';
+	      if($("#include_receipt_flag").prop("checked"))
+	      		includeReceiptFlag='Y';
+	     
 	  
 	 var ar_customer={
 			 customerCode:jQuery.trim($("#customer_code").val()),
@@ -1340,7 +1350,8 @@ function saveConfig(){
 			// districtCode:jQuery.trim($("#district_code").val()),
 			 districtCode:jQuery.trim($("#district_code").val()), 
 			 districtName:jQuery.trim($("#district_code option:selected").text()),
-			 includeReceiptFlag:jQuery.trim($("#include_receipt_flag").val()),
+			 //includeReceiptFlag:jQuery.trim($("#include_receipt_flag").val()),
+			 includeReceiptFlag:includeReceiptFlag,
 			 phoneNo:jQuery.trim($("#phone_no").val()),
 			 provinceName:jQuery.trim($("#province_name").val()),
 			 shiftBillDateFlag:jQuery.trim($("#shift_bill_date_flag").val())
