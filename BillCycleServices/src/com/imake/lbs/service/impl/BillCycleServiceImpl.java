@@ -1,6 +1,5 @@
 package com.imake.lbs.service.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +21,7 @@ import com.imake.lbs.service.BillCycleService;
 @Repository
 @Transactional
 public class BillCycleServiceImpl implements BillCycleService {
-	private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	//private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private SessionFactory sessionAnnotationFactory;
 	
 	public SessionFactory getSessionAnnotationFactory() {
@@ -84,7 +83,7 @@ public class BillCycleServiceImpl implements BillCycleService {
 		    try{
 			Session session=sessionAnnotationFactory.getCurrentSession();
 			/*String str="SELECT	customer_code, customer_name, province_name,district_code,district_name,phone_no,include_receipt_flag,"+
-						" shift_bill_date_flag,created_dttm,update_dttm	FROM "+schema+".ar_customer ";*/
+						" shift_bill_date_flag,created_dttm,updated_dttm	FROM "+schema+".ar_customer ";*/
 			java.sql.Timestamp timeStampStartDate = new java.sql.Timestamp(new Date().getTime());
 			//update ar_customer 
 			StringBuffer querySb=new StringBuffer("UPDATE "+schema+".ar_customer SET ");
@@ -109,7 +108,8 @@ public class BillCycleServiceImpl implements BillCycleService {
 					setStr.add("shift_bill_date_flag='"+ arCustomer.getShiftBillDateFlag()+"'"); 
 			  } 
 			 setStr.add("district_code="+ arCustomer.getDistrictCode()+"");  
-			 setStr.add("update_dttm='"+format.format(timeStampStartDate)+"'"); 
+			// setStr.add("updated_dttm='"+format.format(timeStampStartDate)+"'"); 
+			 setStr.add("updated_dttm=now() ");
 			 int size=setStr.size();
 			 for (int i=0;i<size;i++) {
 				 querySb.append(setStr.get(i));
