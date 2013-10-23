@@ -114,7 +114,7 @@ public class KPIServiceImpl implements KPIService {
 	@Transactional(readOnly=true)
 	@Override
 	public List<com.imake.moogle.lbs.backoffice.dto.EmployeeResult> searchEmployeeResult(String SCHEMA,String year,String periodNo,
-			String departmentCode,String positionCode,String employeeCode,String employeeName) {
+			String departmentCode,String positionCode,String employeeCode,String employeeName,String jobLevelG,String employee_codeG) {
 	//public List<com.imake.moogle.lbs.backoffice.dto.EmployeeResult> searchEmployeeResult(Integer year,Integer periodNo,String employeeCode) {
 		// TODO Auto-generated method stub
 		List<com.imake.moogle.lbs.backoffice.dto.EmployeeResult> employeeResult =null;
@@ -172,6 +172,13 @@ public class KPIServiceImpl implements KPIService {
 				sb.append(" and em.position_name='"+positionCode+"' " );
 			else
 				sb.append(" where em.position_name='"+positionCode+"' ");
+			haveWhere=true;
+		}
+		if(jobLevelG.equalsIgnoreCase("Manager")){		
+			if(haveWhere)
+				sb.append("  and em_result.employee_code !='"+employee_codeG+"'");
+			else
+				sb.append("  where em_result.employee_code!= '"+employee_codeG+"'");
 			haveWhere=true;
 		}
 		sb.append(" order by  em_result.period_no asc ");

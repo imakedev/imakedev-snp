@@ -11,7 +11,7 @@ public interface KPIService {
 	public List<KPIMaster> listMaster(String query); 
 	//public List<com.imake.moogle.lbs.backoffice.dto.EmployeeResult> searchEmployeeResult(Integer year,Integer periodNo,String employeeCode);
 	public List<com.imake.moogle.lbs.backoffice.dto.EmployeeResult> searchEmployeeResult(String SCHEMA,String year,String periodNo,
-			String departmentCode,String positionCode,String employeeCode,String employeeName);
+			String departmentCode,String positionCode,String employeeCode,String employeeName,String jobLevelG,String employee_codeG);
 	
 	public int updateAdjustPercentage(String SCHEMA,BigDecimal[] adjustPercentage,BigDecimal[] finalPercentage,
 			Integer[] year, Integer[] periodNo, String[] employeeCode,String[] reason);
