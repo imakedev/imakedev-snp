@@ -71,7 +71,7 @@ public class Main {
         		"  and   position_code = '177' order by emp_name";
     	System.out.println("employee size="+kpipService.listMaster(emp).size());
     	
-    System.out.println(kpipService.searchEmployeeResult("ss","2012", null,"","all","all", "1050140001"));
+    System.out.println(kpipService.searchEmployeeResult("ss","2012", null,"","all","all", "1050140001","",""));
     	
     	BigDecimal[] adjustPercentage={BigDecimal.valueOf(1)};
     	double finalD=adjustPercentage[0].doubleValue()+56.00d;
