@@ -177,7 +177,7 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
 	</tr>
   </table>
       	</div> 
- <%@ include file="/WEB-INF/jsp/schema_test.jsp" %>  
+ <%@ include file="/WEB-INF/jsp/schema.jsp" %>  
      <script type="text/javascript">
 //var _path="/KPIWebTest/";
 //var SCHEMA_G='mcic_kpi_app_test';
@@ -348,11 +348,11 @@ function showForm(mode,id_year,id_period){
     	 height_dialog=420;
      
 	if(mode=='add'){
-		//$("#id_element").hide(); 
+		//$("#id_element").hide();
 		$( "#dialog-form" ).dialog({ 
 			position: 'top',
-			// height: 382,
-			 height: height_dialog,
+			 //height: 382,
+			 height:height_dialog,
 			 width:727,
 			modal: true,
 			  hide: 'fold',
@@ -374,8 +374,8 @@ function showForm(mode,id_year,id_period){
 			     
 				$( "#dialog-form" ).dialog({ 
 					position: 'top',
-					 //height: 382,
-					  height: height_dialog,
+					// height: 382,
+					height:height_dialog,
 					 width:727,
 					modal: true,
 					 hide: 'fold',
