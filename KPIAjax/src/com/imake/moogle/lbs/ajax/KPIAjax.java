@@ -45,8 +45,8 @@ public class KPIAjax {
 	/*public List<com.imake.moogle.lbs.backoffice.dto.EmployeeResult> searchEmployeeResult(Integer year,Integer periodNo,String employeeCode){
 		return kpiService.searchEmployeeResult(year, periodNo, employeeCode);
 	}*/
-	public List<com.imake.moogle.lbs.backoffice.dto.EmployeeResult> searchEmployeeResult(String SCHEMA,String year,String periodNo,String departmentCode,String positionCode,String employeeCode,String employeeName){
-		return kpiService.searchEmployeeResult(  SCHEMA,year, periodNo,departmentCode,positionCode, employeeCode, employeeName);
+	public List<com.imake.moogle.lbs.backoffice.dto.EmployeeResult> searchEmployeeResult(String SCHEMA,String year,String periodNo,String departmentCode,String positionCode,String employeeCode,String employeeName,String jobLevelG,String employee_codeG){
+		return kpiService.searchEmployeeResult(  SCHEMA,year, periodNo,departmentCode,positionCode, employeeCode, employeeName,jobLevelG,employee_codeG);
 	}
 	public int updateAdjustPercentage(String SCHEMA,BigDecimal[] adjustPercentage,BigDecimal[] finalPercentage,
 			Integer[] year, Integer[] periodNo, String[] employeeCode,String[] reason){
