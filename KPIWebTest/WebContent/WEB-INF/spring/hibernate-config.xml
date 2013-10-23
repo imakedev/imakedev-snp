@@ -31,8 +31,8 @@
 			p:password=""/>
 	-->
   <bean id="dataSourceFactory" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
-			p:driverClassName="com.mysql.jdbc.Driver" p:url="jdbc:mysql://localhost:3306/mcic_kpi_app_test?useEncoding=true&amp;characterEncoding=UTF-8" p:username="root"
-			p:password="yourpassword"/>
+			p:driverClassName="com.mysql.jdbc.Driver" p:url="jdbc:mysql://172.18.88.221:3306/mcic_kpi_app_test?useEncoding=true&amp;characterEncoding=UTF-8" p:username="root"
+			p:password="root"/>
 			
     <!--
 	<bean id="dataSourceFactory" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
