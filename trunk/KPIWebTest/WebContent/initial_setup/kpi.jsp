@@ -249,7 +249,7 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
       	</div>
      	</div>
      </div>  -->
- <%@ include file="/WEB-INF/jsp/schema_test.jsp" %>
+ <%@ include file="/WEB-INF/jsp/schema.jsp" %>
      <script type="text/javascript"> 
      var _path='<%=request.getContextPath()%>'+'/'; 
      var mail_toG;

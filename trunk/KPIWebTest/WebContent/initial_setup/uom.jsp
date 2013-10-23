@@ -126,7 +126,7 @@ a{cursor: pointer;}
      	<!-- </div>
   
      </div>  -->
-  <%@ include file="/WEB-INF/jsp/schema_test.jsp" %>
+  <%@ include file="/WEB-INF/jsp/schema.jsp" %>
      <script type="text/javascript"> 
 //var SCHEMA_G='mcic_kpi_app_test'; 
 var _path='<%=request.getContextPath()%>'+'/'; 

@@ -213,7 +213,7 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
 	</tr>
   </table>
       	</div> 
-<%@ include file="/WEB-INF/jsp/schema_test.jsp" %> 
+<%@ include file="/WEB-INF/jsp/schema.jsp" %> 
      <script type="text/javascript">
 //var _path="/KPIWebTest/";
 //var SCHEMA_G='mcic_kpi_app_test';
