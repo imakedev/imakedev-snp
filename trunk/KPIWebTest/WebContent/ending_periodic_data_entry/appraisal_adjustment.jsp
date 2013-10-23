@@ -123,7 +123,7 @@ a{cursor: pointer;}
    <div id="dialog-Message-alert" title="Message" style="display: none;background: ('images/ui-bg_highlight-soft_75_cccccc_1x100.png') repeat-x scroll 50% 50% rgb(204, 204, 204)">
 	<span id="_message_show"></span>
 </div>
-<%@ include file="/WEB-INF/jsp/schema_test.jsp" %>  
+<%@ include file="/WEB-INF/jsp/schema.jsp" %>  
 
      <script type="text/javascript">
 //var _path="/KPIWebTest/";
