@@ -1,5 +1,21 @@
-<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %> 
+<%@ page language="java" pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %> 
 <%@ include file="/WEB-INF/jsp/includes.jsp" %>  
+<%@ page language="java" 
+    import="java.util.ArrayList,
+            org.pentaho.platform.engine.core.system.PentahoSystem,
+            org.pentaho.platform.api.engine.IPentahoSession,
+            org.pentaho.platform.web.jsp.messages.Messages,
+            org.pentaho.platform.web.http.WebTemplateHelper,
+            org.pentaho.platform.api.engine.IUITemplater,
+            org.pentaho.platform.util.messages.LocaleHelper,
+            org.pentaho.platform.util.VersionHelper,
+            org.pentaho.platform.api.ui.INavigationComponent,
+            org.pentaho.platform.uifoundation.component.HtmlComponent,
+            org.pentaho.platform.util.web.SimpleUrlFactory,
+            org.pentaho.platform.engine.core.solution.SimpleParameterProvider,
+            org.pentaho.platform.uifoundation.chart.ChartHelper,
+      org.pentaho.platform.web.http.PentahoHttpSessionHelper" %>
+      <% String remoteUser = request.getRemoteUser();%>
 <html> 
 <head>
 <title>BackOffice</title>
@@ -85,7 +101,7 @@ a{cursor: pointer;}
      <span>  
      <input type="hidden" id="employeeElement" />
      <input type="text" id="employeeSelection" />
-    	<a class="btn btn-primary" style="font-size:12px;margin-top: -10px" onclick="distplayEmployee()"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Search</span></a>
+    	<a id="distplayApproveKPIResultElement" class="btn btn-primary" style="font-size:12px;margin-top: -10px" onclick="distplayEmployee()"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Search</span></a>
      </span>  
    <!--  <span> <input id="city" /></span> -->
    
@@ -129,6 +145,11 @@ a{cursor: pointer;}
 //var _path="/KPIWebTest/";
 //var SCHEMA_G='mcic_kpi_app';
 //var SCHEMA_G='FSD2';
+var remoteUser ="<%=remoteUser%>";
+var jobLevelG="unauthorized";
+var department_codeG="";
+var employee_codeG="";
+
 var _path='<%=request.getContextPath()%>'+'/'; 
 var mail_toG;
 var mail_subjectG;
@@ -140,12 +161,144 @@ var floatRegex = /^((\d+(\.\d *)?)|((\d*\.)?\d+)|(-\d+(\.\d *)?)|((-\d*\.)?\d+))
 
 
 $(document).ready(function() {   
+	var query="select emp_code from "+SCHEMA_G+".authen_user" +
+	"   where username='"+remoteUser+"'";
+	 KPIAjax.searchObject(query,{
+			callback:function(data){ 
+				if(data.length>0 && data[0]!=null && data[0].length>0){
+					employee_codeG=data[0];
+				  query="select department_code , job_level from "+SCHEMA_G+".employee" +
+					"   where employee_code='"+data[0]+"'";
+				  KPIAjax.searchObject(query,{
+						callback:function(data1){
+							jobLevelG= data1[1];
+							department_codeG=data1[0]
+							//listDepartment(data1[1],data1[0]);
+							_initPage();
+						}
+				 });
+				}else
+					_initPage();
+				
+			}
+	 });
+	
+	
+}); 
+function _initPage(){
 	listYear();
 	listDepartment();
+ if(jobLevelG!="unauthorized"){
+	$( "#employeeSelection" ).autocomplete({
+		  source: function( request, response ) {
+			  var position_value=$("#positionElement").val();
+				//alert(position_value) 
+				var department_value=$("#departmentElement").val();
+				//alert(department_value)
+				var where_query="";
+				var haveWhere=false;
+				if(department_value!='all'){
+					if(haveWhere)
+						where_query=where_query+" and department_code ='"+department_value+"'";
+					else
+						where_query=where_query+" where department_code ='"+department_value+"'";
+					haveWhere=true;
+				}
+				if(position_value!='all'){
+					if(haveWhere)
+						where_query=where_query+" and position_code ='"+position_value+"'";
+					else
+						where_query=where_query+" where position_code ='"+position_value+"'";
+					haveWhere=true;
+				}
+			  var query="select * from (select distinct employee_code, concat(employee_name,' ',employee_surname) " +
+				" as emp_name ,department_code,position_code from "+SCHEMA_G+".employee  "+where_query+" order by emp_name "+
+				") as xx where emp_name like '%"+request.term+"%'";
+			 
+				/* var query="select distinct employee_code, concat(employee_name,' ',employee_surname) " +
+					" as emp_name ,department_code,position_code from "+SCHEMA_G+".employee where  department_code = '"+department_value+"'" +
+					"  and   position_code = '"+position_value+"' order by emp_name"; */
+					//alert(request.term);
+				KPIAjax.listMaster(query,{
+					callback:function(data){
+						//alert(data);
+						/* var str="<select id=\"employeeElement\"  style=\"width: 140px\" >";
+						str=str+"<option value=\"all\">All</option>";
+						if(data!=null && data.length>0){ 
+							for(var i=0;i<data.length;i++){
+								str=str+"<option value=\""+data[i].id+"\">"+data[i].name+"</option>";
+							} 
+						}
+						str=str+"</select>"; 
+						alert(str); */
+						//$("#employeeSelection").html(str);
+						//distplayEmployee();
+						if(data!=null && data.length>0){
+							response( $.map( data, function( item ) {
+					          return {
+					        	  label: item.name,
+					        	  value: item.id
+					            //label: item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", " + item.countryName,
+					            //value: item.name 
+					          }
+					        }));
+						}else{
+							var xx=[];
+							//alert("not have data")
+							response( $.map(xx));
+						}
+					}
+			 });
+		  /*   $.ajax({
+		      url: "http://ws.geonames.org/searchJSON",
+		      dataType: "jsonp",
+		      data: {
+		        featureClass: "P",
+		        style: "full",
+		        maxRows: 12,
+		        name_startsWith: request.term
+		      },
+		      success: function( data ) {
+		    	//  alert(data.geonames)
+		        response( $.map( data.geonames, function( item ) {
+		          return {
+		            label: item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", " + item.countryName,
+		            value: item.name
+		          }
+		        }));
+		      }
+		    }); */
+		  },
+		  minLength: 2,
+		  select: function( event, ui ) {
+			 /*  if( ui.item ){
+				  alert(ui.item.label)
+			  }else{
+				  alert( this.value)
+			  }  */
+			 // this.value=ui.item.label;
+			 //alert(this.value+" label ="+ui.item.label+" value="+ui.item.value);  
+			//  $("#city" ).val(ui.item.label);
+			  this.value = ui.item.label;
+			  $("#employeeElement").val(ui.item.value);
+		      return false;
+		  },
+		  open: function() {
+		    $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+		  },
+		  close: function() {
+		    $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+		  }
+		}); 
+  }else{
+	   $("#employeeSelection").attr("readonly","readonly");
+	   //$("#employeeSelection").val("Unauthorized");
+	   $("#distplayApproveKPIResultElement").hide();
+  }
 	if ($.browser.msie){
 		 $('#employeeSelection').focus(); 
 		}
-}); 
+}
 function loadDynamicPage(pageId){  
 	pageId=_path+"ending_periodic_data_entry/template/"+pageId+".jsp";  
 			$.ajax({
@@ -232,7 +385,17 @@ function listPeriod(){
 function listDepartment(){
 	//var year=$("#yearElement").val();
 	//alert(year)
-	var query="select distinct department_code, department_name  from "+SCHEMA_G+".employee" +
+	var where_department="";
+	  var isAuthorized=false; 
+	  if(jobLevelG=='Executive'){ 
+		  isAuthorized=true;
+	  }else  if(jobLevelG=='Manager'){
+		  where_department=" where  department_code='"+department_codeG+"'";
+		  isAuthorized=true;
+	  } 
+	 
+ if(isAuthorized){
+	var query="select distinct department_code, department_name  from "+SCHEMA_G+".employee " +where_department+
 	" order by department_name";
 	KPIAjax.listMaster(query,{
 		callback:function(data){
@@ -249,6 +412,17 @@ function listDepartment(){
 			listPosition(); 
 		}
     });
+ }else{
+	  var str="<select id=\"departmentElement\" >";
+		 str=str+"<option value=\"unauthorized\">Unauthorized</option>"; 
+		 str=str+"</select>";
+		$("#departmentSelection").html(str); 
+		var str="<select id=\"positionElement\"    onchange=\"clearEmployee()\">";
+		str=str+"<option value=\"unauthorized\">Unauthorized</option>"; 
+		str=str+"</select>";
+		$("#positionSelection").html(str);
+		clearEmployee(); 
+ }
 }
 function listPosition(){
 	var department_value=$("#departmentElement").val();
@@ -339,7 +513,7 @@ function distplayEmployee(){
 	//alert("a")
 	//alert(position_code)
 	 
-	KPIAjax.searchEmployeeResult(SCHEMA_G,year,periodNo,department_code,position_code,employee_code,employee_name,{
+	KPIAjax.searchEmployeeResult(SCHEMA_G,year,periodNo,department_code,position_code,employee_code,employee_name,jobLevelG,employee_codeG,{
 		callback:function(data){
 			//alert(data);
 			var haveData=false; 
@@ -537,107 +711,7 @@ function searchKPIResult(){
 	$("#dialog-Message").slideDown("slow"); 
 	distplayEmployee();
 } 
-$( "#employeeSelection" ).autocomplete({
-  source: function( request, response ) {
-	  var position_value=$("#positionElement").val();
-		//alert(position_value) 
-		var department_value=$("#departmentElement").val();
-		//alert(department_value)
-		var where_query="";
-		var haveWhere=false;
-		if(department_value!='all'){
-			if(haveWhere)
-				where_query=where_query+" and department_code ='"+department_value+"'";
-			else
-				where_query=where_query+" where department_code ='"+department_value+"'";
-			haveWhere=true;
-		}
-		if(position_value!='all'){
-			if(haveWhere)
-				where_query=where_query+" and position_code ='"+position_value+"'";
-			else
-				where_query=where_query+" where position_code ='"+position_value+"'";
-			haveWhere=true;
-		}
-	  var query="select * from (select distinct employee_code, concat(employee_name,' ',employee_surname) " +
-		" as emp_name ,department_code,position_code from "+SCHEMA_G+".employee  "+where_query+" order by emp_name "+
-		") as xx where emp_name like '%"+request.term+"%'";
-	 
-		/* var query="select distinct employee_code, concat(employee_name,' ',employee_surname) " +
-			" as emp_name ,department_code,position_code from "+SCHEMA_G+".employee where  department_code = '"+department_value+"'" +
-			"  and   position_code = '"+position_value+"' order by emp_name"; */
-			//alert(request.term);
-		KPIAjax.listMaster(query,{
-			callback:function(data){
-				//alert(data);
-				/* var str="<select id=\"employeeElement\"  style=\"width: 140px\" >";
-				str=str+"<option value=\"all\">All</option>";
-				if(data!=null && data.length>0){ 
-					for(var i=0;i<data.length;i++){
-						str=str+"<option value=\""+data[i].id+"\">"+data[i].name+"</option>";
-					} 
-				}
-				str=str+"</select>"; 
-				alert(str); */
-				//$("#employeeSelection").html(str);
-				//distplayEmployee();
-				if(data!=null && data.length>0){
-					response( $.map( data, function( item ) {
-			          return {
-			        	  label: item.name,
-			        	  value: item.id
-			            //label: item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", " + item.countryName,
-			            //value: item.name 
-			          }
-			        }));
-				}else{
-					var xx=[];
-					//alert("not have data")
-					response( $.map(xx));
-				}
-			}
-	 });
-  /*   $.ajax({
-      url: "http://ws.geonames.org/searchJSON",
-      dataType: "jsonp",
-      data: {
-        featureClass: "P",
-        style: "full",
-        maxRows: 12,
-        name_startsWith: request.term
-      },
-      success: function( data ) {
-    	//  alert(data.geonames)
-        response( $.map( data.geonames, function( item ) {
-          return {
-            label: item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", " + item.countryName,
-            value: item.name
-          }
-        }));
-      }
-    }); */
-  },
-  minLength: 2,
-  select: function( event, ui ) {
-	 /*  if( ui.item ){
-		  alert(ui.item.label)
-	  }else{
-		  alert( this.value)
-	  }  */
-	 // this.value=ui.item.label;
-	 //alert(this.value+" label ="+ui.item.label+" value="+ui.item.value);  
-	//  $("#city" ).val(ui.item.label);
-	  this.value = ui.item.label;
-	  $("#employeeElement").val(ui.item.value);
-      return false;
-  },
-  open: function() {
-    $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
-  },
-  close: function() {
-    $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
-  }
-}); 
+
 
 </script> 
 </body>

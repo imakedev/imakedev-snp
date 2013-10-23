@@ -1,5 +1,21 @@
-<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %> 
-<%@ include file="/WEB-INF/jsp/includes.jsp" %>  
+<%@ page  language="java" pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %> 
+<%@ include file="/WEB-INF/jsp/includes.jsp" %> 
+<%@ page language="java" 
+    import="java.util.ArrayList,
+            org.pentaho.platform.engine.core.system.PentahoSystem,
+            org.pentaho.platform.api.engine.IPentahoSession,
+            org.pentaho.platform.web.jsp.messages.Messages,
+            org.pentaho.platform.web.http.WebTemplateHelper,
+            org.pentaho.platform.api.engine.IUITemplater,
+            org.pentaho.platform.util.messages.LocaleHelper,
+            org.pentaho.platform.util.VersionHelper,
+            org.pentaho.platform.api.ui.INavigationComponent,
+            org.pentaho.platform.uifoundation.component.HtmlComponent,
+            org.pentaho.platform.util.web.SimpleUrlFactory,
+            org.pentaho.platform.engine.core.solution.SimpleParameterProvider,
+            org.pentaho.platform.uifoundation.chart.ChartHelper,
+      org.pentaho.platform.web.http.PentahoHttpSessionHelper" %>
+      <% String remoteUser = request.getRemoteUser();%>
 <html> 
 <head>
 <title>BackOffice</title>
@@ -111,8 +127,8 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
     </span>
      <span>  
      <input type="hidden" id="employeeElement" />
-     <input type="text" id="employeeSelection" />
-     <a class="btn btn-primary" style="font-size:12px;margin-top: -10px" onclick="distplayApproveKPIResult()"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Search</span></a>
+     <input type="text" id="employeeSelection"/>
+     <a id="distplayApproveKPIResultElement" class="btn btn-primary" style="font-size:12px;margin-top: -10px" onclick="distplayApproveKPIResult()"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Search</span></a>
     </span>  
    <!--  <span style="padding-left:20px;">
     	<a class="btn btn-primary" style="font-size:12px" onclick="distplayEmployee()"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Search</span></a>
@@ -227,6 +243,11 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
 //var _path="/KPIWebTest/";
 //var SCHEMA_G='mcic_kpi_app';
 //var SCHEMA_G='FSD2';
+var remoteUser ="<%=remoteUser%>";
+var jobLevelG="unauthorized";
+var department_codeG="";
+var employee_codeG="";
+//alert(remoteUser);
 var _path='<%=request.getContextPath()%>'+'/'; 
 var mail_toG;
 var mail_subjectG;
@@ -239,8 +260,34 @@ $(document).ready(function() {
  
 		  });  
 		}); */
+	var query="select emp_code from "+SCHEMA_G+".authen_user" +
+		"   where username='"+remoteUser+"'";
+		 KPIAjax.searchObject(query,{
+				callback:function(data){ 
+					if(data.length>0 && data[0]!=null && data[0].length>0){
+						employee_codeG=data[0];
+					  query="select department_code , job_level from "+SCHEMA_G+".employee" +
+						"   where employee_code='"+data[0]+"'";
+					  KPIAjax.searchObject(query,{
+							callback:function(data1){
+								jobLevelG= data1[1];
+								department_codeG=data1[0]
+								//listDepartment(data1[1],data1[0]);
+								_initPage();
+							}
+					 });
+					}else
+						_initPage();
+					
+				}
+		 });
+	
+}); 
+function _initPage(){ 
 	listYear();
+	//getJobLevel();
 	listDepartment();
+if(jobLevelG!="unauthorized"){
 	$( "#employeeSelection" ).autocomplete({
 		  source: function( request, response ) {
 			  var position_value=$("#positionElement").val();
@@ -296,10 +343,15 @@ $(document).ready(function() {
 		    $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
 		  }
 		}); 
+   }else{
+	   $("#employeeSelection").attr("readonly","readonly");
+	   //$("#employeeSelection").val("Unauthorized");
+	   $("#distplayApproveKPIResultElement").hide();
+   }
 	if ($.browser.msie){
 		 $('#employeeSelection').focus(); 
 		}
-}); 
+}
 function loadDynamicPage(pageId){  
 	pageId=_path+"ending_periodic_data_entry/template/"+pageId+".jsp";  
 			$.ajax({
@@ -383,10 +435,43 @@ function listPeriod(){
 		}
    });
 }
+function getJobLevel(){ 
+	//remoteUser='jeeranun'; 
+	var query="select emp_code from "+SCHEMA_G+".authen_user" +
+	"   where username='"+remoteUser+"'";
+	 KPIAjax.searchObject(query,{
+			callback:function(data){
+				//alert(data[0]); 
+				if(data.length>0 && data[0]!=null && data[0].length>0){
+				  query="select department_code , job_level from "+SCHEMA_G+".employee" +
+					"   where employee_code='"+data[0]+"'";
+				  KPIAjax.searchObject(query,{
+						callback:function(data1){
+							 
+							//listDepartment(data1[1],data1[0]);
+						}
+				 });
+				}else{
+					listDepartment("unauthorized","");
+				}
+			}
+	 });
+	 
+}
 function listDepartment(){
 	//var year=$("#yearElement").val();
-	//alert(year)
-	var query="select distinct department_code, department_name  from "+SCHEMA_G+".employee" +
+	//alert(year) 
+	  var where_department="";
+	  var isAuthorized=false; 
+	  if(jobLevelG=='Executive'){ 
+		  isAuthorized=true;
+	  }else  if(jobLevelG=='Manager'){
+		  where_department=" where  department_code='"+department_codeG+"'";
+		  isAuthorized=true;
+	  } 
+	 
+   if(isAuthorized){ 
+	var query="select distinct department_code, department_name  from "+SCHEMA_G+".employee " +where_department+
 	" order by department_name";
 	KPIAjax.listMaster(query,{
 		callback:function(data){
@@ -403,6 +488,17 @@ function listDepartment(){
 			listPosition(); 
 		}
     });
+  }else{
+	  var str="<select id=\"departmentElement\" >";
+		 str=str+"<option value=\"unauthorized\">Unauthorized</option>"; 
+		 str=str+"</select>";
+		$("#departmentSelection").html(str); 
+		var str="<select id=\"positionElement\"    onchange=\"clearEmployee()\">";
+		str=str+"<option value=\"unauthorized\">Unauthorized</option>"; 
+		str=str+"</select>";
+		$("#positionSelection").html(str);
+		clearEmployee(); 
+  }
 }
 function listPosition(){
 	var department_value=$("#departmentElement").val();
@@ -478,6 +574,10 @@ function listEmployee(){
  });
 }
 function distplayApproveKPIResult(){
+	if(jobLevelG=="unauthorized"){
+		alert("Unauthorized");
+		return false;
+	}
 	 var year=jQuery.trim($("#yearElement").val());
 	 var periodNo=jQuery.trim($("#periodElement").val());
 	 var department_code=jQuery.trim($("#departmentElement").val());
@@ -553,9 +653,15 @@ function distplayApproveKPIResult(){
 		else
 			approveKPIWhere=approveKPIWhere+" where result.approved_flag = '"+approved_flag+"'";
 		haveWhere=true;
+	} 
+	
+	if(jobLevelG=='Manager'){		
+		if(haveWhere)
+			approveKPIWhere=approveKPIWhere+" and result.employee_code !='"+employee_codeG+"'";
+		else
+			approveKPIWhere=approveKPIWhere+" where result.employee_code!= '"+employee_codeG+"'";
+		haveWhere=true;
 	}
-	
-	
 	 
 	// var position_code=$("#positionElement").val();
 	var query ="select result.year,result.period_no,p.period_desc,result.employee_code" +
