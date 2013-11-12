@@ -80,54 +80,46 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
      			<tr>
      				<td>
 						<form class="form-inline"  style="border:1px solid #B3D2EE;background: #F9F9F9;padding-top:20px;padding-bottom:15px" action="" method="post" >
- 							  <table style="width: 100%;" border="0">
+ 							  <table style="width: 85%;" border="0">
  							      <tr>
- 							      	<td width="30%">
- 							      		<div  style="padding-left:20px;padding-bottom: 5px">
-  	<span style="padding-left:10px;">
-    รหัสลูกค้า : <input type="text" id="customer_code" style="width: 120px;text-align: left;"/>
-    </span> 
-    </div>
+ 							      	<td width="15%" style="text-align: right;">
+									    รหัสลูกค้า : 
+ 							      	</td>	
+ 							      	<td width="20%">
+									   <input type="text" id="customer_code" style="width: 120px;text-align: left: ;"/>
  							      	</td>
- 							      	<td width="70%">
- 							      	<div  style="padding-left:0px;padding-bottom: 5px">
-  	<span style="padding-left:0px;">
-    ชื่อลูกค้า : <input type="text" id="customer_name" style="width: 500px"/>
-    </span> 
-    </div>
+ 							      	<td width="15%"  style="text-align: right;">
+									    ชื่อลูกค้า : 
+ 							      	</td>
+ 							      	<td width="35%">
+									    <input type="text" id="customer_name" style="width: 500px"/>
  							      	</td>
  							      </tr>
  							      <tr>
- 							      	<td  width="30%">
- 							      		<div  style="padding-left:50px;padding-bottom: 5px">
-  	<span style="padding-left:10px;">
-    พื้นที่ : <span id="province_name_element"></span>
-    </span> 
-    </div>
-    	</td>
-    	<td width="70%">
-    	<div>
-     <span style="padding-left:0px;">
-    เขต: <span id="district_name_element"></span> 
-    </span> 
-    </div>
+ 							      	<td  width="15%"  style="text-align: right;">
+									    พื้นที่ :
+							    	</td>
+    								<td  width="20%">
+    									<span id="province_name_element"></span>
+							     	</td>
+    								<td  width="15%"  style="text-align: right;">
+									     เขต: 
+    								</td>
+							    	<td width="35%">
+    									<span id="district_name_element"></span>
  							      	</td>
  							      </tr>
  							      <tr>
- 							      	<td width="30%">
- 							      		<div  style="padding-left:5px;padding-bottom: 5px">
-  	<span style="padding-left:10px;">
-   เบอร์โทรศัพท์ : <input type="text" id="phone_no" style="width: 120px;text-align: right;"/>
-    </span> 
-    </div>
-    </td>
-    	<td width="70%">
-    	<div>
-      <span style="padding-left:0px;">
-    	<a class="btn btn-primary" style="font-size:12px" onclick="getConfig()"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Get Config</span></a>
-    </span> 
-    </div>
- 							      	</td>
+ 							      	<td width="15%"  style="text-align: right;">
+									   เบอร์โทรศัพท์ : 
+    								</td>
+    								<td width="20%" colspan="3">
+   										<input type="text" id="phone_no" style="width: 120px;text-align: right;"/>
+   										<span style="padding-left: 10px"> <a class="btn btn-primary" style="font-size:12px" onclick="getConfig()"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Get Config</span></a></span>
+								    </td>
+    								<!-- <td width="50%" colspan="2"> 
+    									<a class="btn btn-primary" style="font-size:12px" onclick="getConfig()"><i class="icon-search icon-white"></i>&nbsp;<span style="color: white;font-weight: bold;font-size: 12px;">Get Config</span></a>
+								    </td>  -->
  							      </tr>
  							  </table> 
 </form> 
@@ -296,6 +288,9 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
   	 										<td width="100px">
   	 										<input type="checkbox" name="billing_schedule_all_2" value="Fri">&nbsp;&nbsp;ทุกศุกร์
   	 										</td>
+  	 										<td width="100px">
+  	 										<input type="checkbox" name="billing_schedule_all_2" value="Sat">&nbsp;&nbsp;ทุกเสาร์
+  	 										</td>
   	 										<td  width="100px">
   	 										<input type="checkbox" name="billing_schedule_all" value="All">&nbsp;&nbsp;ทุกวัน
   	 										</td> 
@@ -316,6 +311,9 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
   	 										<td width="100px">
   	 										<input type="checkbox" name="billing_schedule_2" value="FriW1">&nbsp;&nbsp;ศุกร์W1
   	 										</td>
+  	 										<td width="100px">
+  	 										<input type="checkbox" name="billing_schedule_2" value="SatW1">&nbsp;&nbsp;เสาร์W1
+  	 										</td>
   	 										<td  width="100px"> 
   	 										</td> 
   	 										</tr>
@@ -334,6 +332,9 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
   	 										</td>
   	 										<td width="100px">
   	 										<input type="checkbox" name="billing_schedule_2" value="FriW2">&nbsp;&nbsp;ศุกร์W2
+  	 										</td>
+  	 										<td width="100px">
+  	 										<input type="checkbox" name="billing_schedule_2" value="SatW2">&nbsp;&nbsp;เสาร์W2
   	 										</td>
   	 										<td  width="100px">
   	 										
@@ -355,6 +356,9 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
   	 										<td width="100px">
   	 										<input type="checkbox" name="billing_schedule_2" value="FriW3">&nbsp;&nbsp;ศุกร์W3
   	 										</td>
+  	 										<td width="100px">
+  	 										<input type="checkbox" name="billing_schedule_2" value="SatW3">&nbsp;&nbsp;เสาร์W3
+  	 										</td>
   	 										<td  width="100px">
   	 										
   	 										</td> 
@@ -374,6 +378,9 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
   	 										</td>
   	 										<td width="100px">
   	 										<input type="checkbox" name="billing_schedule_2" value="FriW4">&nbsp;&nbsp;ศุกร์W4
+  	 										</td>
+  	 										<td width="100px">
+  	 										<input type="checkbox" name="billing_schedule_2" value="SatW4">&nbsp;&nbsp;เสาร์W4
   	 										</td>
   	 										<td  width="100px">
   	 										
@@ -597,6 +604,9 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
   	 										<td width="100px">
   	 										<input type="checkbox" name="payment_schedule_all_2" value="Fri">&nbsp;&nbsp;ทุกศุกร์
   	 										</td>
+  	 										<td width="100px">
+  	 										<input type="checkbox" name="payment_schedule_all_2" value="Sat">&nbsp;&nbsp;ทุกเสาร์
+  	 										</td>
   	 										<td  width="100px">
   	 										<input type="checkbox" name="payment_schedule_all" value="All">&nbsp;&nbsp;ทุกวัน
   	 										</td> 
@@ -617,6 +627,9 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
   	 										<td width="100px">
   	 										<input type="checkbox" name="payment_schedule_2" value="FriW1">&nbsp;&nbsp;ศุกร์W1
   	 										</td>
+  	 										<td width="100px">
+  	 										<input type="checkbox" name="payment_schedule_2" value="SatW1">&nbsp;&nbsp;เสาร์W1
+  	 										</td>
   	 										<td  width="100px"> 
   	 										</td> 
   	 										</tr>
@@ -635,6 +648,9 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
   	 										</td>
   	 										<td width="100px">
   	 										<input type="checkbox" name="payment_schedule_2" value="FriW2">&nbsp;&nbsp;ศุกร์W2
+  	 										</td>
+  	 										<td width="100px">
+  	 										<input type="checkbox" name="payment_schedule_2" value="SatW2">&nbsp;&nbsp;เสาร์W2
   	 										</td>
   	 										<td  width="100px">
   	 										
@@ -656,6 +672,9 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
   	 										<td width="100px">
   	 										<input type="checkbox" name="payment_schedule_2" value="FriW3">&nbsp;&nbsp;ศุกร์W3
   	 										</td>
+  	 										<td width="100px">
+  	 										<input type="checkbox" name="payment_schedule_2" value="SatW3">&nbsp;&nbsp;เสาร์W3
+  	 										</td>
   	 										<td  width="100px">
   	 										
   	 										</td> 
@@ -675,6 +694,9 @@ th{ font-family:Tahoma; font-size:12px; font-weight:bold;
   	 										</td>
   	 										<td width="100px">
   	 										<input type="checkbox" name="payment_schedule_2" value="FriW4">&nbsp;&nbsp;ศุกร์W4
+  	 										</td>
+  	 										<td width="100px">
+  	 										<input type="checkbox" name="payment_schedule_2" value="SatW4">&nbsp;&nbsp;เสาร์W4
   	 										</td>
   	 										<td  width="100px">
   	 										
@@ -1561,7 +1583,7 @@ function saveConfig(){
 	//  BillCycleAjax.executeBillCycleQuery(SCHEMA_G,ar_customer,ar_billing_schedules,ar_payment_schedules,{
 		 BillCycleAjax.executeBillCycleQuery(SCHEMA_G,ar_customer,ar_billing_schedules,ar_payment_schedules,{
 		callback:function(data){
-			 $('html, body').animate({ scrollTop: 0 }, 'slow'); 
+			// $('html, body').animate({ scrollTop: 0 }, 'slow'); 
 			var _message="";
 			if(data==0)
 				_message="Can not Update confing.";//alert("Can not Update confing.");
@@ -1577,11 +1599,15 @@ function saveConfig(){
 					"Ok": function() { 
 						$( this ).dialog( "close" );
 					}
+				}, 
+				beforeClose: function( event, ui ) {
+					//alert("ok");
+					 $('html, body').animate({ scrollTop: 0 }, 'slow');
 				}
 			});
 		},
 		errorHandler:function(errorString, exception) { 
-			 $('html, body').animate({ scrollTop: 0 }, 'slow'); 
+			 //$('html, body').animate({ scrollTop: 0 }, 'slow'); 
 			//alert("errorString->"+errorString+",exception-->"+exception);
 			//alert(dwr.util.toDescriptiveString(exception, 2)); 
 			$("#_message" ).html(dwr.util.toDescriptiveString(exception, 2));
@@ -1593,6 +1619,10 @@ function saveConfig(){
 					"Ok": function() { 
 						$( this ).dialog( "close" );
 					}
+				},
+				beforeClose: function( event, ui ) {
+					//alert("ok");
+					 $('html, body').animate({ scrollTop: 0 }, 'slow');
 				}
 			});
 		}
