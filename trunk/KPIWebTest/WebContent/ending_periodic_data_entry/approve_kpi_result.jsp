@@ -270,8 +270,8 @@ $(document).ready(function() {
 						"   where employee_code='"+data[0]+"'";
 					  KPIAjax.searchObject(query,{
 							callback:function(data1){
-								jobLevelG= data1[1];
-								department_codeG=data1[0]
+								jobLevelG= data1[0][1];
+								department_codeG=data1[0][0];
 								//listDepartment(data1[1],data1[0]);
 								_initPage();
 							}

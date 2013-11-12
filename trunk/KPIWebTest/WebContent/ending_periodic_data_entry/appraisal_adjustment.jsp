@@ -164,15 +164,16 @@ $(document).ready(function() {
 	var query="select emp_code from "+SCHEMA_G+".authen_user" +
 	"   where username='"+remoteUser+"'";
 	 KPIAjax.searchObject(query,{
-			callback:function(data){ 
+			callback:function(data){  
 				if(data.length>0 && data[0]!=null && data[0].length>0){
 					employee_codeG=data[0];
 				  query="select department_code , job_level from "+SCHEMA_G+".employee" +
 					"   where employee_code='"+data[0]+"'";
 				  KPIAjax.searchObject(query,{
 						callback:function(data1){
-							jobLevelG= data1[1];
-							department_codeG=data1[0]
+							//alert(data1[0][1]);
+							jobLevelG=data1[0][1];
+							department_codeG=data1[0][0];
 							//listDepartment(data1[1],data1[0]);
 							_initPage();
 						}
@@ -187,7 +188,7 @@ $(document).ready(function() {
 }); 
 function _initPage(){
 	listYear();
-	listDepartment();
+	listDepartment(); 
  if(jobLevelG!="unauthorized"){
 	$( "#employeeSelection" ).autocomplete({
 		  source: function( request, response ) {
